@@ -2,10 +2,11 @@
     <div class="relative h-screen w-full text-primary bg-secondary transition-colors duration-1000 ">
         <canvas ref="canvasRef" class="absolute inset-0"></canvas>
         <div class="relative  h-full w-full flex flex-col items-center justify-center pointer-events-none">
-            <button @click="toggleDarkMode()" class="absolute top-10 left-10 hover:opacity-80 transition-opacity pointer-events-auto">
+            <button @click="toggleDarkMode()"
+                class="absolute top-10 left-10 hover:opacity-80 transition-opacity pointer-events-auto">
                 <Icon :name="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'" size="1.5em" />
             </button>
-            <h1 class="text-4xl font-primary font-bold">Hi, I'm <span class="font-secondary italic">Jean</span>.</h1>
+            <!-- <h1 class="text-4xl font-primary font-bold">Hi, I'm <span class="font-secondary italic">Jean</span>.</h1> -->
         </div>
     </div>
 </template>
@@ -14,16 +15,15 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
+import vertexShader from '~/assets/shaders/vertex.glsl?raw'
+import fragmentShader from '~/assets/shaders/fragment.glsl?raw'
+
 const isDark = ref(false)
 const canvasRef = ref(null)
 let sphere = null
 
 const getCSSColor = (variable) => getComputedStyle(document.documentElement).getPropertyValue(variable).trim()
 const toggleDarkMode = () => isDark.value = !isDark.value
-watch(isDark, (newValue) => {
-    document.documentElement.classList.toggle('dark', newValue)
-    sphere.material.color.set(getCSSColor('--color-neutral'))
-})
 
 onMounted(() => {
     if (!canvasRef.value) return
@@ -42,24 +42,36 @@ onMounted(() => {
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.5)
     scene.add(ambientLight)
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 2)
-    directionalLight.position.set(2, 2, 2)
-    scene.add(directionalLight)
+    // const directionalLight = new THREE.DirectionalLight(0xffffff, 2)
+    // directionalLight.position.set(2, 2, 2)
+    // scene.add(directionalLight)
 
-    const geometry = new THREE.SphereGeometry(1, 32, 32)
-    const material = new THREE.MeshPhongMaterial({
-        color: getCSSColor('--color-neutral'),
-        transparent: true,
-        opacity: 0.3,
-        specular: '#000000'
+    const geometry = new THREE.SphereGeometry(1, 512, 512)
+    // const material = new THREE.MeshPhongMaterial({
+    //     // color: getCSSColor('--color-neutral'),
+    //     // transparent: true,
+    //     // opacity: 1,
+    //     // specular: '#000000',
+    //     wireframe: true
+    // })
+
+    const material = new THREE.ShaderMaterial({
+        uniforms: {
+            uTime: { value: 0 },
+            uInvert: { value: false },
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader
     })
     sphere = new THREE.Mesh(geometry, material)
     scene.add(sphere)
 
+    const clock = new THREE.Clock()
     const animate = () => {
         requestAnimationFrame(animate)
-        sphere.rotation.x += 0.01
-        sphere.rotation.y += 0.01
+        // sphere.rotation.x += 0.01
+        // sphere.rotation.y += 0.01
+        material.uniforms.uTime.value = clock.getElapsedTime()
         controls.update()
         renderer.render(scene, camera)
     }
@@ -72,6 +84,13 @@ onMounted(() => {
     }
 
     window.addEventListener('resize', handleResize)
+
+    watch(isDark, (newValue) => {
+        document.documentElement.classList.toggle('dark', newValue)
+        // sphere.material.color.set(getCSSColor('--color-neutral'))
+        material.uniforms.uInvert.value = newValue
+    })
+
 
     onBeforeUnmount(() => {
         window.removeEventListener('resize', handleResize)

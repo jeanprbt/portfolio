@@ -9,7 +9,7 @@ export default defineNuxtConfig({
             tailwindcss(),
         ],
     },
-    modules: ['@nuxt/fonts', '@nuxt/icon'],
+    modules: ['@nuxt/fonts', '@nuxt/icon', '@nuxt/ui'],
     app: {
         head: {
             link: [

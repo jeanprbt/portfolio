@@ -1,14 +1,21 @@
 @import "tailwindcss";
+@import "@nuxt/ui";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-primary: "Montserrat", "sans-serif";
+    --font-primary: "Roboto Slab", "sans-serif";
     --font-secondary: "Bitcount Grid Double", "sans-serif";
 
     --color-primary: #ffffff;
     --color-secondary: #000000;
     --color-neutral: #333333;
+}
+
+:root {
+    --ui-primary: var(--color-primary);
+    --ui-secondary: var(--color-secondary);
+    --ui-neutral: var(--color-neutral);
 }
 
 .dark {

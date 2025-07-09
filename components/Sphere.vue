@@ -5,7 +5,6 @@
 <script setup lang="ts">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GUI } from 'lil-gui';
 import vertexShader from '~/assets/shaders/vertex.glsl?raw';
 import fragmentShader from '~/assets/shaders/fragment.glsl?raw';
 
@@ -15,7 +14,6 @@ const smallScreenCamera = 3.4;
 const regularScreenCamera = 3;
 
 const canvasRef = ref(null);
-let gui: GUI | null = null;
 
 onMounted(() => {
     if (!canvasRef.value) return;
@@ -29,6 +27,7 @@ onMounted(() => {
 
     const controls = new OrbitControls(camera, canvasRef.value);
     controls.enableZoom = false;
+    controls.enablePan = false;
 
     const geometry = new THREE.SphereGeometry(1, 512, 512);
     const material = new THREE.ShaderMaterial({
@@ -40,6 +39,7 @@ onMounted(() => {
             uDistortionStrength: { value: 2.0 },
             uDisplacementFrequency: { value: 1.0 },
             uDisplacementStrength: { value: 0.1 },
+            uOffset: { value: new THREE.Vector3(0, 0, 0) }
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
@@ -47,23 +47,6 @@ onMounted(() => {
 
     const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
-
-    gui = new GUI();
-    gui.domElement.style.position = 'absolute';
-    gui.domElement.style.top = '10px';
-    gui.domElement.style.right = '10px';
-    gui.domElement.style.zIndex = '1000';
-
-    const distortionFolder = gui.addFolder('Distortion');
-    distortionFolder.add({ frequency: 2.0 }, 'frequency', 0, 10, 0.001).onChange((value: number) => material.uniforms.uDistortionFrequency.value = value);
-    distortionFolder.add({ strength: 2.0 }, 'strength', 0, 10, 0.001).onChange((value: number) => material.uniforms.uDistortionStrength.value = value);
-
-    const displacementFolder = gui.addFolder('Displacement');
-    displacementFolder.add({ frequency: 1.0 }, 'frequency', 0, 5, 0.001).onChange((value: number) => material.uniforms.uDisplacementFrequency.value = value);
-    displacementFolder.add({ strength: 0.1 }, 'strength', 0, 1, 0.001).onChange((value: number) => material.uniforms.uDisplacementStrength.value = value);
-
-    const timeFolder = gui.addFolder('Time');
-    timeFolder.add({ frequency: 0.5 }, 'frequency', 0.1, 2.0, 0.1).onChange((value: number) => material.uniforms.uTimeFrequency.value = value);
 
     const clock = new THREE.Clock();
     const animate = () => {

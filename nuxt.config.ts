@@ -9,6 +9,9 @@ export default defineNuxtConfig({
             tailwindcss(),
         ],
     },
+    ui: {
+        colorMode: false,
+    },
     modules: ['@nuxt/fonts', '@nuxt/icon', '@nuxt/ui'],
     app: {
         head: {

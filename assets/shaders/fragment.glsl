@@ -1,5 +1,4 @@
 uniform bool uInvert;
-varying vec3 vNormal;
 varying float vPerlinStrength;
 
 void main() {

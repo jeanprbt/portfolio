@@ -4,8 +4,6 @@ uniform float uDistortionFrequency;
 uniform float uDistortionStrength;
 uniform float uDisplacementFrequency;
 uniform float uDisplacementStrength;
-uniform vec3 uOffset;
-varying vec3 vNormal;
 varying float vPerlinStrength;
 
 vec4 permute(vec4 x) {
@@ -158,9 +156,7 @@ void main() {
     vec3 newPosition = position;
     newPosition += normal * perlinStrength;
 
-    vec4 viewPosition = viewMatrix * vec4(newPosition + uOffset, 1.0);
+    vec4 viewPosition = viewMatrix * modelMatrix * vec4(newPosition, 1.0);
     gl_Position = projectionMatrix * viewPosition;
-
-    vNormal = normal;
     vPerlinStrength = perlinStrength;
 }

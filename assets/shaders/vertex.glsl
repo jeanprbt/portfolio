@@ -6,9 +6,9 @@ uniform float uDisplacementFrequency;
 uniform float uDisplacementStrength;
 uniform vec3 uTorusPosition;
 uniform vec3 uTorusRotation;
+uniform float uTorusTransition;
 varying float vPerlinStrength;
-varying float vBelowTorus;
-varying float vInvert; // NEW: for smooth transition
+varying float vInvert;
 
 vec4 permute(vec4 x) {
     return mod(((x * 34.0) + 1.0) * x, 289.0);
@@ -168,7 +168,7 @@ void main() {
     vec3 torusUp = normalize(vec3(-s, c, 0.0)); // y-rotation only
     float d = dot(worldPosition.xyz - torusAxis, torusUp);
     float smoothing = 0.1;
-    vInvert = smoothstep(-smoothing, smoothing, d);
+    vInvert = smoothstep(-smoothing, smoothing, (uTorusTransition == 2.0) ? -d : d);
 
     // Compute the final position in view space
     vec4 viewPosition = viewMatrix * worldPosition;

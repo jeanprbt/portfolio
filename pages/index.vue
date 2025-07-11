@@ -26,10 +26,15 @@
             </p>
         </div>
     </div>
+    <div ref="projects"
+        class="h-screen w-full  bg-secondary text-primary transition-colors duration-500 flex justify-center items-center">
+        <h1 class="text-6xl font-primary font-bold  drop-shadow-sm dark:drop-shadow-primary">Placeholder</h1>
+    </div>
 </template>
 
 <script setup lang="ts">
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -38,8 +43,8 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 import vertexShader from '~/assets/shaders/vertex.glsl?raw';
 import fragmentShader from '~/assets/shaders/fragment.glsl?raw';
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
+// COLOR MODE --------------------------------------------------
 const colorMode = useColorMode();
 const isDark = ref(false);
 const toggleDarkMode = () => isDark.value = !isDark.value;
@@ -47,20 +52,23 @@ watch(isDark, (newValue) => {
     document.documentElement.classList.toggle('dark', newValue)
 });
 
-const isSmallScreen = computed(() => window.innerWidth <= 755);
-const smallScreenCamera = 3.5;
-const regularScreenCamera = 3;
-
+// HTML ELEMENTS --------------------------------------------------
 const canvas = ref(null);
 const hero = ref(null);
 const about = ref(null);
 const aboutText = ref(null);
+const projects = ref(null);
 
+// UTILS --------------------------------------------------
 const getCSSColor = (variable: string) => getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
+const isSmallScreen = computed(() => window.innerWidth <= 755);
+const smallScreenCamera = 3.5;
+const regularScreenCamera = 3;
 
 onMounted(() => {
     if (!canvas.value) return;
 
+    // SCENE, RENDERER, CAMERA --------------------------------------------------
     const scene = new THREE.Scene();
     const renderer = new THREE.WebGLRenderer({ canvas: canvas.value, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -68,9 +76,11 @@ onMounted(() => {
     if (isSmallScreen.value) camera.position.z = smallScreenCamera;
     else camera.position.z = regularScreenCamera;
 
+    // CONTROLS (DEBUG) --------------------------------------------------
     const controls = new OrbitControls(camera, canvas.value);
     controls.enableZoom = false;
 
+    // SPHERE --------------------------------------------------
     const sphereGeometry = new THREE.SphereGeometry(1, 512, 512);
     const sphereMaterial = new THREE.ShaderMaterial({
         uniforms: {
@@ -82,33 +92,40 @@ onMounted(() => {
             uDisplacementStrength: { value: 0.1 },
             uTorusPosition: { value: new THREE.Vector3() },
             uTorusRotation: { value: new THREE.Vector3() },
+            uTorusTransition: { value: 1.0 },
             uDarkMode: { value: false }
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
     });
-
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);
 
+    // TORUS n°1 & n°2 --------------------------------------------------
     const torusGeometry = new THREE.TorusGeometry(1.5, 0.05, 10, 50);
     const torusMaterial = new THREE.MeshBasicMaterial({
         color: getCSSColor('--color-primary')
     })
-    const torus = new THREE.Mesh(torusGeometry, torusMaterial);
-    torus.position.set(0, -6, -2);
-    torus.rotation.set(Math.PI / 2, -Math.PI / 5, 0);
-    scene.add(torus);
+    const torus1 = new THREE.Mesh(torusGeometry, torusMaterial);
+    torus1.position.set(0, -6, -2);
+    torus1.rotation.set(Math.PI / 2, -Math.PI / 5, 0);
+    scene.add(torus1);
+    const torus2 = new THREE.Mesh(torusGeometry, torusMaterial);
+    torus2.position.set(0, -6, -2);
+    torus2.rotation.set(Math.PI / 2, Math.PI / 5, 0);
+    scene.add(torus2);
 
+    // ANIMATION LOOP --------------------------------------------------
     const clock = new THREE.Clock();
     const animate = () => {
         sphereMaterial.uniforms.uTime.value = clock.getElapsedTime();
-        sphereMaterial.uniforms.uTorusPosition.value.copy(torus.position);
-        sphereMaterial.uniforms.uTorusRotation.value.copy(torus.rotation);
+        sphereMaterial.uniforms.uTorusPosition.value.copy(sphereMaterial.uniforms.uTorusTransition.value === 1 ? torus1.position : torus2.position);
+        sphereMaterial.uniforms.uTorusRotation.value.copy(sphereMaterial.uniforms.uTorusTransition.value === 1 ? torus1.rotation : torus2.rotation);
         renderer.render(scene, camera);
     };
     renderer.setAnimationLoop(animate);
 
+    // RESIZE HANDLER --------------------------------------------------
     let lastWidth = window.innerWidth;
     const onResize = () => {
         if (window.innerWidth != lastWidth) {
@@ -122,8 +139,21 @@ onMounted(() => {
     };
     window.addEventListener('resize', onResize);
 
-    // TORUS & SPHERE ANIMATION
-    gsap.to(torus.position, {
+    // ANIMATIONS -------------------------------------------------
+    // sphere general rotation ----------
+    gsap.to(sphere.rotation, {
+        y: 10 * Math.PI,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: document.body,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: true,
+        }
+    }); // ------------------------------
+
+    // torus n°1 (hero) ----------
+    gsap.to(torus1.position, {
         y: 6,
         scrollTrigger: {
             trigger: hero.value,
@@ -132,16 +162,17 @@ onMounted(() => {
             scrub: true,
         }
     });
-    gsap.to(torus.rotation, {
+    gsap.to(torus1.rotation, {
         y: Math.PI / 5,
         scrollTrigger: {
             trigger: hero.value,
             start: 'bottom 90%',
             end: 'bottom 40%',
-            scrub: true
+            scrub: true,
         }
-    })
+    }); // -----------------------
 
+    // sphere movement n°1 (hero) ----------
     const tl1 = gsap.timeline({
         scrollTrigger: {
             trigger: hero.value,
@@ -154,7 +185,6 @@ onMounted(() => {
         ease: 'power2.out',
         duration: 0.25
     });
-
     const tl2 = gsap.timeline({
         scrollTrigger: {
             trigger: hero.value,
@@ -166,16 +196,12 @@ onMounted(() => {
         y: -1,
         duration: 0.5
     });
-
     if (isSmallScreen.value) {
-        tl1.to({}, { duration: 0.75 })
+        tl1.to({}, { duration: 0.75 });
         tl2.to(sphere.scale, {
-            x: 0,
-            y: 0,
-            z: 0,
+            ...new THREE.Vector3(0, 0, 0),
             duration: 0.3
-        })
-            .to({}, { duration: 0.2 });
+        }).to({}, { duration: 0.2 });
     } else {
         tl1.to(sphere.position, {
             z: -1,
@@ -193,21 +219,10 @@ onMounted(() => {
                 end: 'bottom top',
                 scrub: true
             }
-        })
-    }
+        });
+    }; // ----------------------------------
 
-    gsap.to(sphere.rotation, {
-        y: 10 * Math.PI,
-        ease: 'none',
-        scrollTrigger: {
-            trigger: document.body,
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: true
-        }
-    });
-
-    // ABOUT TEXT ANIMATION
+    // about text (about) ----------
     const split = new SplitText(aboutText.value, { type: "words" });
     gsap.from(split.words, {
         opacity: 0.05,
@@ -216,12 +231,94 @@ onMounted(() => {
         ease: "none",
         scrollTrigger: {
             trigger: about.value,
+            endTrigger: projects.value,
+            start: 'top 60%',
+            end: 'top 60%',
+            scrub: true,
+        },
+    });
+    gsap.to(split.words, {
+        opacity: 0.05,
+        stagger: 3,
+        duration: 2,
+        ease: "none",
+        scrollTrigger: {
+            trigger: about.value,
+            start: 'top+=20% top',
+            end: 'bottom 30%',
+            scrub: true,
+        }
+    }); // -------------------------
+
+    // torus n°2 (projects) ----------
+    gsap.to(torus2.position, {
+        y: 6,
+        scrollTrigger: {
+            trigger: projects.value,
             start: 'top 50%',
-            end: 'bottom bottom',
+            end: 'top top',
+            scrub: true,
+        }
+    });
+    gsap.to(torus2.rotation, {
+        y: - Math.PI / 5,
+        scrollTrigger: {
+            trigger: projects.value,
+            start: 'top 40%',
+            end: 'top 20%',
+            scrub: true,
+        }
+    }); // ----------------------------
+
+    // sphere movement n°2 (projects) ----------
+    ScrollTrigger.create({
+        trigger: about.value,
+        start: "top top",
+        onEnter: () => {
+            sphereMaterial.uniforms.uTorusTransition.value = 2;
+        }
+    });
+    gsap.to(sphere.position, {
+        z: -2,
+        scrollTrigger: {
+            trigger: projects.value,
+            start: 'top bottom',
+            end: 'top 50%',
             scrub: true
         }
-    })
-    
+    });
+    gsap.to(sphere.position, {
+        x: 0,
+        scrollTrigger: {
+            trigger: projects.value,
+            start: 'top 80%',
+            end: 'top 40%',
+            scrub: true,
+        }
+    }); // -------------------------------------
+
+    // gsap.to(sphere.scale, {
+    //     x: 5,
+    //     y: 5,
+    //     z: 5,
+    //     scrollTrigger: {
+    //         trigger: projects.value,
+    //         start: 'top 20%',
+    //         end: 'top top',
+    //         scrub: true
+    //     }
+    // });
+
+    // COLOR MODE
+    watch(isDark, (newValue) => {
+        sphereMaterial.uniforms.uDarkMode.value = newValue;
+        torusMaterial.color.set(getCSSColor('--color-primary'));
+    });
+    watch(colorMode, (newValue) => {
+        sphereMaterial.uniforms.uDarkMode.value = newValue.value === 'dark';
+        torusMaterial.color.set(getCSSColor('--color-primary'));
+    });
+
     onUnmounted(() => {
         controls.dispose();
         renderer.dispose();
@@ -231,14 +328,5 @@ onMounted(() => {
         torusMaterial.dispose();
         window.removeEventListener('resize', onResize);
     });
-
-    watch(isDark, (newValue) => {
-        sphereMaterial.uniforms.uDarkMode.value = newValue;
-        torusMaterial.color.set(getCSSColor('--color-primary'));
-    });
-    watch(colorMode, (newValue) => {
-        sphereMaterial.uniforms.uDarkMode.value = newValue.value === 'dark';
-        torusMaterial.color.set(getCSSColor('--color-primary'));
-    })
 });
 </script>

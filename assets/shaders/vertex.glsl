@@ -4,7 +4,11 @@ uniform float uDistortionFrequency;
 uniform float uDistortionStrength;
 uniform float uDisplacementFrequency;
 uniform float uDisplacementStrength;
+uniform vec3 uTorusPosition;
+uniform vec3 uTorusRotation;
 varying float vPerlinStrength;
+varying float vBelowTorus;
+varying float vInvert; // NEW: for smooth transition
 
 vec4 permute(vec4 x) {
     return mod(((x * 34.0) + 1.0) * x, 289.0);
@@ -104,7 +108,7 @@ float perlin4d(vec4 P) {
     g1000 *= norm00.z;
     g1100 *= norm00.w;
 
-    vec4 norm01 = taylorInvSqrt(vec4(dot(g0001, g0001), dot(g0101, g0101), dot(g1001, g1001), dot(g1101, g1101)));
+    vec4 norm01 = taylorInvSqrt(vec4(dot(g0001, g0001), dot(g0101, g0101), dot(g1001, g1011), dot(g1101, g1101)));
     g0001 *= norm01.x;
     g0101 *= norm01.y;
     g1001 *= norm01.z;
@@ -149,14 +153,25 @@ float perlin4d(vec4 P) {
 }
 
 void main() {
+    // Add noise distortion to the vertex position
     vec3 displacementPosition = position;
     displacementPosition += perlin4d(vec4(displacementPosition * uDistortionFrequency, uTime * uTimeFrequency)) * uDistortionStrength;
     float perlinStrength = perlin4d(vec4(displacementPosition * uDisplacementFrequency, uTime * uTimeFrequency)) * uDisplacementStrength;
-
     vec3 newPosition = position;
     newPosition += normal * perlinStrength;
 
-    vec4 viewPosition = viewMatrix * modelMatrix * vec4(newPosition, 1.0);
+    // Compute intersection with torus
+    vec4 worldPosition = modelMatrix * vec4(newPosition, 1.0);
+    vec3 torusAxis = uTorusPosition;
+    float c = cos(uTorusRotation.y);
+    float s = sin(uTorusRotation.y);
+    vec3 torusUp = normalize(vec3(-s, c, 0.0)); // y-rotation only
+    float d = dot(worldPosition.xyz - torusAxis, torusUp);
+    float smoothing = 0.1;
+    vInvert = smoothstep(-smoothing, smoothing, d);
+
+    // Compute the final position in view space
+    vec4 viewPosition = viewMatrix * worldPosition;
     gl_Position = projectionMatrix * viewPosition;
     vPerlinStrength = perlinStrength;
 }

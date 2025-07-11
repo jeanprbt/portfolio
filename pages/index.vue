@@ -6,14 +6,14 @@
             <Icon :name="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'" size="1.5em" />
         </button>
         <h1
-            class="text-6xl font-primary font-bold drop-shadow-primary drop-shadow-sm dark:drop-shadow-none absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-1 text-center">
+            class="text-6xl font-primary font-bold  drop-shadow-sm dark:drop-shadow-primary absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-1 text-center">
             Hi, I'm <span class="font-secondary italic">Jean</span>.
         </h1>
     </div>
     <div ref="about" class="h-screen w-full flex bg-secondary text-primary transition-colors duration-500">
         <div class="w-2/5 hidden md:block"></div>
         <div class="w-full md:w-3/5 flex items-center justify-center text-center">
-            <h1 class="text-6xl font-primary font-bold drop-shadow-primary drop-shadow-sm dark:drop-shadow-none">
+            <h1 class="text-6xl font-primary font-bold  drop-shadow-sm dark:drop-shadow-primary">
                 About
             </h1>
         </div>
@@ -29,7 +29,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 import vertexShader from '~/assets/shaders/vertex.glsl?raw';
 import fragmentShader from '~/assets/shaders/fragment.glsl?raw';
+import { OrbitControls } from 'three/examples/jsm/Addons.js';
 
+const colorMode = useColorMode();
 const isDark = ref(false);
 const toggleDarkMode = () => isDark.value = !isDark.value;
 watch(isDark, (newValue) => {
@@ -56,16 +58,21 @@ onMounted(() => {
     if (isSmallScreen.value) camera.position.z = smallScreenCamera;
     else camera.position.z = regularScreenCamera;
 
+    const controls = new OrbitControls(camera, canvas.value);
+    controls.enableZoom = false;
+
     const sphereGeometry = new THREE.SphereGeometry(1, 512, 512);
     const sphereMaterial = new THREE.ShaderMaterial({
         uniforms: {
             uTime: { value: 0 },
             uTimeFrequency: { value: 0.5 },
-            uInvert: { value: false },
             uDistortionFrequency: { value: 2.0 },
             uDistortionStrength: { value: 2.0 },
             uDisplacementFrequency: { value: 1.0 },
             uDisplacementStrength: { value: 0.1 },
+            uTorusPosition: { value: new THREE.Vector3() },
+            uTorusRotation: { value: new THREE.Vector3() },
+            uDarkMode: { value: false }
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
@@ -85,8 +92,10 @@ onMounted(() => {
 
     const clock = new THREE.Clock();
     const animate = () => {
-        sphereMaterial.uniforms.uTime.value = clock.getElapsedTime()
-        renderer.render(scene, camera)
+        sphereMaterial.uniforms.uTime.value = clock.getElapsedTime();
+        sphereMaterial.uniforms.uTorusPosition.value.copy(torus.position);
+        sphereMaterial.uniforms.uTorusRotation.value.copy(torus.rotation);
+        renderer.render(scene, camera);
     };
     renderer.setAnimationLoop(animate);
 
@@ -188,7 +197,7 @@ onMounted(() => {
 
 
     onUnmounted(() => {
-        // controls.dispose();
+        controls.dispose();
         renderer.dispose();
         sphereGeometry.dispose();
         sphereMaterial.dispose();
@@ -198,9 +207,12 @@ onMounted(() => {
     });
 
     watch(isDark, (newValue) => {
-        sphereMaterial.uniforms.uInvert.value = newValue;
-        console.log(sphereMaterial.uniforms.uInvert.value);
+        sphereMaterial.uniforms.uDarkMode.value = newValue;
         torusMaterial.color.set(getCSSColor('--color-primary'));
     });
+    watch(colorMode, (newValue) => {
+        sphereMaterial.uniforms.uDarkMode.value = newValue.value === 'dark';
+        torusMaterial.color.set(getCSSColor('--color-primary'));
+    })
 });
 </script>

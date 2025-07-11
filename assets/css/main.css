@@ -6,6 +6,7 @@
 @theme {
     --font-primary: "Roboto Slab", "sans-serif";
     --font-secondary: "Bitcount Grid Double", "sans-serif";
+    --font-text: "JetBrains Mono", "sans-serif";
 
     --color-primary: #000000;
     --color-secondary: #ffffff;

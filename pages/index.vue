@@ -10,12 +10,20 @@
             Hi, I'm <span class="font-secondary italic">Jean</span>.
         </h1>
     </div>
-    <div ref="about" class="h-screen w-full flex bg-secondary text-primary transition-colors duration-500">
+    <div ref="about" class="h-auto w-full flex bg-secondary text-primary transition-colors duration-500">
         <div class="w-2/5 hidden md:block"></div>
-        <div class="w-full md:w-3/5 flex items-center justify-center text-center">
-            <h1 class="text-6xl font-primary font-bold  drop-shadow-sm dark:drop-shadow-primary">
+        <div class="w-full md:w-3/5 flex flex-col gap-4 items-center justify-center">
+            <!-- <h1 class="text-7xl md:text-9xl font-primary font-bold">
                 About
-            </h1>
+            </h1> -->
+            <p ref="aboutText" class="w-2/3 font-text text-6xl md:text-8xl text-center">
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+                scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap
+                into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the
+                release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing
+                software like Aldus PageMaker including versions of Lorem Ipsum.
+            </p>
         </div>
     </div>
 </template>
@@ -25,7 +33,8 @@ import * as THREE from 'three';
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-gsap.registerPlugin(ScrollTrigger);
+import { SplitText } from 'gsap/all';
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 import vertexShader from '~/assets/shaders/vertex.glsl?raw';
 import fragmentShader from '~/assets/shaders/fragment.glsl?raw';
@@ -45,6 +54,7 @@ const regularScreenCamera = 3;
 const canvas = ref(null);
 const hero = ref(null);
 const about = ref(null);
+const aboutText = ref(null);
 
 const getCSSColor = (variable: string) => getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
 
@@ -112,6 +122,7 @@ onMounted(() => {
     };
     window.addEventListener('resize', onResize);
 
+    // TORUS & SPHERE ANIMATION
     gsap.to(torus.position, {
         y: 6,
         scrollTrigger: {
@@ -186,7 +197,8 @@ onMounted(() => {
     }
 
     gsap.to(sphere.rotation, {
-        y: 4 * Math.PI,
+        y: 10 * Math.PI,
+        ease: 'none',
         scrollTrigger: {
             trigger: document.body,
             start: 'top top',
@@ -195,7 +207,21 @@ onMounted(() => {
         }
     });
 
-
+    // ABOUT TEXT ANIMATION
+    const split = new SplitText(aboutText.value, { type: "words" });
+    gsap.from(split.words, {
+        opacity: 0.05,
+        stagger: 3,
+        duration: 2,
+        ease: "none",
+        scrollTrigger: {
+            trigger: about.value,
+            start: 'top 50%',
+            end: 'bottom bottom',
+            scrub: true
+        }
+    })
+    
     onUnmounted(() => {
         controls.dispose();
         renderer.dispose();

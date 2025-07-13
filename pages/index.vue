@@ -1,10 +1,12 @@
 <template>
     <canvas ref="canvas" class="fixed z-2"></canvas>
     <div ref="hero" class="h-screen w-full bg-secondary text-primary transition-colors duration-500">
-        <button @click="toggleDarkMode()"
-            class="fixed top-10 left-10 text-primary hover:opacity-80 transition-opacity z-3">
-            <Icon :name="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'" size="1.5em" />
-        </button>
+        <ClientOnly>
+            <button @click="toggleDarkMode()"
+                class="fixed top-10 left-10 text-primary hover:opacity-80 transition-opacity z-3">
+                <Icon :name="isDark ? 'i-heroicons-moon' : 'i-heroicons-sun'" size="1.5em" />
+            </button>
+        </ClientOnly>
         <h1
             class="text-6xl font-primary font-bold  drop-shadow-sm dark:drop-shadow-primary absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-1 text-center">
             Hi, I'm <span class="font-secondary italic">Jean</span>.
@@ -13,9 +15,6 @@
     <div ref="about" class="h-auto w-full flex bg-secondary text-primary transition-colors duration-500">
         <div class="w-2/5 hidden md:block"></div>
         <div class="w-full md:w-3/5 flex flex-col gap-4 items-center justify-center">
-            <!-- <h1 class="text-7xl md:text-9xl font-primary font-bold">
-                About
-            </h1> -->
             <p ref="aboutText" class="w-2/3 font-text text-4xl md:text-8xl text-center">
                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                 industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
@@ -32,7 +31,7 @@
 
 <script setup lang="ts">
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import GUI from 'lil-gui';
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -42,9 +41,10 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 import vertexShader from '~/assets/shaders/vertex.glsl?raw';
 import fragmentShader from '~/assets/shaders/fragment.glsl?raw';
 
+
 // COLOR MODE --------------------------------------------------
 const colorMode = useColorMode();
-const isDark = ref(false);
+const isDark = ref(colorMode.value === "dark" ? true : false);
 const toggleDarkMode = () => isDark.value = !isDark.value;
 watch(isDark, (newValue) => {
     document.documentElement.classList.toggle('dark', newValue)
@@ -91,11 +91,23 @@ onMounted(() => {
             uTorusPosition: { value: new THREE.Vector3() },
             uTorusRotation: { value: new THREE.Vector3() },
             uTorusTransition: { value: 1.0 },
-            uDarkMode: { value: false }
+            uDarkMode: { value: false },
+            uBrightness: { value: 0.05 },
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
     });
+
+    // LIL-GUI CONTROLS FOR UNIFORMS
+    // const gui = new GUI();
+    // const uniforms = sphereMaterial.uniforms;
+    // gui.add(uniforms.uTimeFrequency, 'value').name('uTimeFrequency').min(0).max(5).step(0.01);
+    // gui.add(uniforms.uDistortionFrequency, 'value').name('uDistortionFrequency').min(0).max(10).step(0.01);
+    // gui.add(uniforms.uDistortionStrength, 'value').name('uDistortionStrength').min(0).max(10).step(0.01);
+    // gui.add(uniforms.uDisplacementFrequency, 'value').name('uDisplacementFrequency').min(0).max(10).step(0.01);
+    // gui.add(uniforms.uDisplacementStrength, 'value').name('uDisplacementStrength').min(0).max(2).step(0.01);
+    // gui.add(uniforms.uBrightness, 'value').name('uBrightness').min(0).max(1).step(0.01);
+    
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);
 
@@ -236,7 +248,7 @@ onMounted(() => {
         },
     });
     gsap.to(split.words, {
-        opacity: 0.1,
+        opacity: 0,
         stagger: 3,
         duration: 2,
         ease: "none",
@@ -284,24 +296,64 @@ onMounted(() => {
         scrollTrigger: {
             trigger: projects.value,
             start: 'top bottom',
-            end: 'top top',
-            scrub: true
+            end: 'top 25%',
+            scrub: true,
         }
     });
     if (isSmallScreen.value) {
-        tl3.to({}, { duration: 0.4 })
-        .to(sphere.scale, {
-            ...new THREE.Vector3(1, 1, 1),
-            duration: 0.4
-        }).to({}, { duration: 0.2 });
+        tl3.to({}, { duration: 0.5 })
+            .to(sphere.scale, {
+                ...new THREE.Vector3(1, 1, 1),
+                duration: 0.5
+            });
     } else {
-        tl3.to({}, { duration: 0.3 })
-        .to(sphere.position, {
-            z: -2,
-            x: 0,
-            duration: 0.4
-        }).to({}, { duration: 0.3 });
+        tl3.to({}, { duration: 0.4 })
+            .to(sphere.position, {
+                z: -2,
+                x: 0,
+                duration: 0.6
+            });
     }; // -------------------------------------
+
+    gsap.to(sphere.scale, {
+        ...new THREE.Vector3(4, 4, 4),
+        scrollTrigger: {
+            trigger: projects.value,
+            start: 'top 25%',
+            end: 'top top',
+            scrub: true,
+
+        }
+    });
+    gsap.to(sphereMaterial.uniforms.uDisplacementStrength, {
+        value: 0,
+        scrollTrigger: {
+            trigger: projects.value,
+            start: 'top 25%',
+            end: 'top top',
+            scrub: true,
+        }
+    });
+    gsap.to(sphereMaterial.uniforms.uBrightness, {
+        value: 0,
+        scrollTrigger: {
+            trigger: projects.value,
+            start: 'top 25%',
+            end: 'top top',
+            scrub: true,
+        }
+    });
+
+    ScrollTrigger.create({
+        trigger: projects.value,
+        start: "top top",
+        onEnter: () => {
+            sphere.scale.set(0, 0, 0);
+        },
+        onLeaveBack: () => {
+            sphere.scale.set(5, 5, 5);
+        }
+    });
 
     // COLOR MODE
     watch(isDark, (newValue) => {

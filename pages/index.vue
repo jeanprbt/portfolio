@@ -16,13 +16,11 @@
             <!-- <h1 class="text-7xl md:text-9xl font-primary font-bold">
                 About
             </h1> -->
-            <p ref="aboutText" class="w-2/3 font-text text-6xl md:text-8xl text-center">
+            <p ref="aboutText" class="w-2/3 font-text text-4xl md:text-8xl text-center">
                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                 industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
                 scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap
-                into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the
-                release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing
-                software like Aldus PageMaker including versions of Lorem Ipsum.
+                into electronic typesetting, remaining essentially unchanged.
             </p>
         </div>
     </div>
@@ -77,8 +75,8 @@ onMounted(() => {
     else camera.position.z = regularScreenCamera;
 
     // CONTROLS (DEBUG) --------------------------------------------------
-    const controls = new OrbitControls(camera, canvas.value);
-    controls.enableZoom = false;
+    // const controls = new OrbitControls(camera, canvas.value);
+    // controls.enableZoom = false;
 
     // SPHERE --------------------------------------------------
     const sphereGeometry = new THREE.SphereGeometry(1, 512, 512);
@@ -142,7 +140,7 @@ onMounted(() => {
     // ANIMATIONS -------------------------------------------------
     // sphere general rotation ----------
     gsap.to(sphere.rotation, {
-        y: 10 * Math.PI,
+        y: 20 * Math.PI,
         ease: 'none',
         scrollTrigger: {
             trigger: document.body,
@@ -194,14 +192,14 @@ onMounted(() => {
         }
     }).to(sphere.position, {
         y: -1,
-        duration: 0.5
+        duration: 0.3
     });
     if (isSmallScreen.value) {
         tl1.to({}, { duration: 0.75 });
         tl2.to(sphere.scale, {
             ...new THREE.Vector3(0, 0, 0),
-            duration: 0.3
-        }).to({}, { duration: 0.2 });
+            duration: 0.2
+        }).to({}, { duration: 0.5 });
     } else {
         tl1.to(sphere.position, {
             z: -1,
@@ -225,7 +223,7 @@ onMounted(() => {
     // about text (about) ----------
     const split = new SplitText(aboutText.value, { type: "words" });
     gsap.from(split.words, {
-        opacity: 0.05,
+        opacity: 0.1,
         stagger: 3,
         duration: 2,
         ease: "none",
@@ -238,7 +236,7 @@ onMounted(() => {
         },
     });
     gsap.to(split.words, {
-        opacity: 0.05,
+        opacity: 0.1,
         stagger: 3,
         duration: 2,
         ease: "none",
@@ -264,8 +262,8 @@ onMounted(() => {
         y: - Math.PI / 5,
         scrollTrigger: {
             trigger: projects.value,
-            start: 'top 40%',
-            end: 'top 20%',
+            start: 'top 50%',
+            end: 'top top',
             scrub: true,
         }
     }); // ----------------------------
@@ -276,38 +274,34 @@ onMounted(() => {
         start: "top top",
         onEnter: () => {
             sphereMaterial.uniforms.uTorusTransition.value = 2;
+        },
+        onLeaveBack: () => {
+            sphereMaterial.uniforms.uTorusTransition.value = 1;
         }
     });
-    gsap.to(sphere.position, {
-        z: -2,
+
+    const tl3 = gsap.timeline({
         scrollTrigger: {
             trigger: projects.value,
             start: 'top bottom',
-            end: 'top 50%',
+            end: 'top top',
             scrub: true
         }
     });
-    gsap.to(sphere.position, {
-        x: 0,
-        scrollTrigger: {
-            trigger: projects.value,
-            start: 'top 80%',
-            end: 'top 40%',
-            scrub: true,
-        }
-    }); // -------------------------------------
-
-    // gsap.to(sphere.scale, {
-    //     x: 5,
-    //     y: 5,
-    //     z: 5,
-    //     scrollTrigger: {
-    //         trigger: projects.value,
-    //         start: 'top 20%',
-    //         end: 'top top',
-    //         scrub: true
-    //     }
-    // });
+    if (isSmallScreen.value) {
+        tl3.to({}, { duration: 0.4 })
+        .to(sphere.scale, {
+            ...new THREE.Vector3(1, 1, 1),
+            duration: 0.4
+        }).to({}, { duration: 0.2 });
+    } else {
+        tl3.to({}, { duration: 0.3 })
+        .to(sphere.position, {
+            z: -2,
+            x: 0,
+            duration: 0.4
+        }).to({}, { duration: 0.3 });
+    }; // -------------------------------------
 
     // COLOR MODE
     watch(isDark, (newValue) => {
@@ -320,7 +314,6 @@ onMounted(() => {
     });
 
     onUnmounted(() => {
-        controls.dispose();
         renderer.dispose();
         sphereGeometry.dispose();
         sphereMaterial.dispose();

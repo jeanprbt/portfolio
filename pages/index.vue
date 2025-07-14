@@ -25,8 +25,16 @@
     </div>
     <div ref="experience"
         class="h-screen w-full  bg-secondary text-primary transition-colors duration-500 flex justify-center items-center">
-        <h1 class="text-6xl font-primary font-bold  drop-shadow-sm dark:drop-shadow-primary">Placeholder</h1>
+        <div ref="experienceContent" style="clip-path: circle(0% at 50% 50%);" v-if="showExperience">
+            <p class="font-text text-4xl md:text-8xl text-center">
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+                scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap
+                into electronic typesetting, remaining essentially unchanged.
+            </p>
+        </div>
     </div>
+    <p>spacer</p>
 </template>
 
 <script setup lang="ts">
@@ -50,12 +58,16 @@ watch(isDark, (newValue) => {
     document.documentElement.classList.toggle('dark', newValue)
 });
 
+// LAYOUT --------------------------------------------------
+const showExperience = ref(false);
+
 // HTML ELEMENTS --------------------------------------------------
 const canvas = ref(null);
 const hero = ref(null);
 const about = ref(null);
 const aboutText = ref(null);
 const experience = ref(null);
+const experienceContent = ref(null);
 
 // UTILS --------------------------------------------------
 const getCSSColor = (variable: string) => getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
@@ -281,9 +293,20 @@ onMounted(() => {
         start: "top top",
         onEnter: () => {
             sphere.scale.set(0, 0, 0);
+            showExperience.value = true;
+            setTimeout(() => {
+                gsap.to(experienceContent.value,
+                    {
+                        clipPath: "circle(100% at 50% 50%)",
+                        duration: 1.5,
+                        ease: "power2.out",
+                    }
+                );
+            }, 100);
         },
         onLeaveBack: () => {
             sphere.scale.set(5, 5, 5);
+            showExperience.value = false;
         }
     });
     // -------------------------------------------------------

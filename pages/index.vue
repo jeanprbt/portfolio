@@ -23,7 +23,7 @@
             </p>
         </div>
     </div>
-    <div ref="projects"
+    <div ref="experience"
         class="h-screen w-full  bg-secondary text-primary transition-colors duration-500 flex justify-center items-center">
         <h1 class="text-6xl font-primary font-bold  drop-shadow-sm dark:drop-shadow-primary">Placeholder</h1>
     </div>
@@ -55,7 +55,7 @@ const canvas = ref(null);
 const hero = ref(null);
 const about = ref(null);
 const aboutText = ref(null);
-const projects = ref(null);
+const experience = ref(null);
 
 // UTILS --------------------------------------------------
 const getCSSColor = (variable: string) => getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
@@ -107,7 +107,7 @@ onMounted(() => {
     // gui.add(uniforms.uDisplacementFrequency, 'value').name('uDisplacementFrequency').min(0).max(10).step(0.01);
     // gui.add(uniforms.uDisplacementStrength, 'value').name('uDisplacementStrength').min(0).max(2).step(0.01);
     // gui.add(uniforms.uBrightness, 'value').name('uBrightness').min(0).max(1).step(0.01);
-    
+
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);
 
@@ -163,73 +163,35 @@ onMounted(() => {
     }); // ------------------------------
 
     // torus n°1 (hero) ----------
-    gsap.to(torus1.position, {
-        y: 6,
+    gsap.timeline({
         scrollTrigger: {
             trigger: hero.value,
             start: 'top top',
             end: 'bottom top',
             scrub: true,
         }
-    });
-    gsap.to(torus1.rotation, {
-        y: Math.PI / 5,
-        scrollTrigger: {
-            trigger: hero.value,
-            start: 'bottom 90%',
-            end: 'bottom 40%',
-            scrub: true,
-        }
-    }); // -----------------------
+    })
+        .to(torus1.position, { y: 6 })
+        .to(torus1.rotation, { y: Math.PI / 4 }, "<");
+    // ----------------------------
 
     // sphere movement n°1 (hero) ----------
-    const tl1 = gsap.timeline({
+    const sphereHeroTL = gsap.timeline({
         scrollTrigger: {
             trigger: hero.value,
             start: 'top top',
             end: 'bottom top',
             scrub: true,
         }
-    }).to(sphere.position, {
-        z: -2,
-        ease: 'power2.out',
-        duration: 0.25
-    });
-    const tl2 = gsap.timeline({
-        scrollTrigger: {
-            trigger: hero.value,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true
-        }
-    }).to(sphere.position, {
-        y: -1,
-        duration: 0.3
-    });
+    })
+        .to(sphere.position, { y: -1, z: -2, ease: 'power1.out', duration: 0.25 });
     if (isSmallScreen.value) {
-        tl1.to({}, { duration: 0.75 });
-        tl2.to(sphere.scale, {
-            ...new THREE.Vector3(0, 0, 0),
-            duration: 0.2
-        }).to({}, { duration: 0.5 });
+        sphereHeroTL
+            .to(sphere.scale, { x: 0, y: 0, z: 0, duration: 0.2 }).to({}, { duration: 0.5 });
     } else {
-        tl1.to(sphere.position, {
-            z: -1,
-            duration: 0.75
-        });
-        tl2.to(sphere.position, {
-            y: 0,
-            duration: 0.5
-        });
-        gsap.to(sphere.position, {
-            x: -2,
-            scrollTrigger: {
-                trigger: hero.value,
-                start: 'bottom 60%',
-                end: 'bottom top',
-                scrub: true
-            }
-        });
+        sphereHeroTL
+            .to(sphere.position, { z: -1, duration: 0.75 })
+            .to(sphere.position, { x: -2, y: 0, duration: 0.5 }, "<");
     }; // ----------------------------------
 
     // about text (about) ----------
@@ -241,7 +203,7 @@ onMounted(() => {
         ease: "none",
         scrollTrigger: {
             trigger: about.value,
-            endTrigger: projects.value,
+            endTrigger: experience.value,
             start: 'top 60%',
             end: 'top 60%',
             scrub: true,
@@ -260,30 +222,23 @@ onMounted(() => {
         }
     }); // -------------------------
 
-    // torus n°2 (projects) ----------
-    gsap.to(torus2.position, {
-        y: 6,
+    // torus n°2 (experience) ----------
+    gsap.timeline({
         scrollTrigger: {
-            trigger: projects.value,
+            trigger: experience.value,
             start: 'top 50%',
             end: 'top top',
             scrub: true,
         }
-    });
-    gsap.to(torus2.rotation, {
-        y: - Math.PI / 5,
-        scrollTrigger: {
-            trigger: projects.value,
-            start: 'top 50%',
-            end: 'top top',
-            scrub: true,
-        }
-    }); // ----------------------------
+    })
+        .to(torus2.position, { y: 6 })
+        .to(torus2.rotation, { y: - Math.PI / 5 }, "<");
+    // ----------------------------
 
-    // sphere movement n°2 (projects) ----------
+    // sphere movement n°2 (experience, torus) ----------
     ScrollTrigger.create({
-        trigger: about.value,
-        start: "top top",
+        trigger: experience.value,
+        start: "top bottom",
         onEnter: () => {
             sphereMaterial.uniforms.uTorusTransition.value = 2;
         },
@@ -291,61 +246,38 @@ onMounted(() => {
             sphereMaterial.uniforms.uTorusTransition.value = 1;
         }
     });
-
-    const tl3 = gsap.timeline({
+    const sphereExperienceTimeline = gsap.timeline({
         scrollTrigger: {
-            trigger: projects.value,
-            start: 'top bottom',
+            trigger: experience.value,
+            start: 'top 70%',
             end: 'top 25%',
             scrub: true,
         }
     });
     if (isSmallScreen.value) {
-        tl3.to({}, { duration: 0.5 })
-            .to(sphere.scale, {
-                ...new THREE.Vector3(1, 1, 1),
-                duration: 0.5
-            });
+        sphereExperienceTimeline
+            .to(sphere.scale, { x: 1, y: 1, z: 1, ease: "none" })
+            .to(sphere.position, { y: 0 }, "<");
     } else {
-        tl3.to({}, { duration: 0.4 })
-            .to(sphere.position, {
-                z: -2,
-                x: 0,
-                duration: 0.6
-            });
-    }; // -------------------------------------
+        sphereExperienceTimeline
+            .to(sphere.position, { z: -2, x: 0 });
+    }; // -----------------------------------------------
 
-    gsap.to(sphere.scale, {
-        ...new THREE.Vector3(4, 4, 4),
+    // sphere movement n°3 (experience - scale out) ----------
+    gsap.timeline({
         scrollTrigger: {
-            trigger: projects.value,
-            start: 'top 25%',
-            end: 'top top',
-            scrub: true,
-
-        }
-    });
-    gsap.to(sphereMaterial.uniforms.uDisplacementStrength, {
-        value: 0,
-        scrollTrigger: {
-            trigger: projects.value,
+            trigger: experience.value,
             start: 'top 25%',
             end: 'top top',
             scrub: true,
         }
-    });
-    gsap.to(sphereMaterial.uniforms.uBrightness, {
-        value: 0,
-        scrollTrigger: {
-            trigger: projects.value,
-            start: 'top 25%',
-            end: 'top top',
-            scrub: true,
-        }
-    });
+    })
+        .to(sphere.scale, { x: 4, y: 4, z: 4 })
+        .to(sphereMaterial.uniforms.uDisplacementStrength, { value: 0 }, "<")
+        .to(sphereMaterial.uniforms.uBrightness, { value: 0 }, "<");
 
     ScrollTrigger.create({
-        trigger: projects.value,
+        trigger: experience.value,
         start: "top top",
         onEnter: () => {
             sphere.scale.set(0, 0, 0);
@@ -354,6 +286,7 @@ onMounted(() => {
             sphere.scale.set(5, 5, 5);
         }
     });
+    // -------------------------------------------------------
 
     // COLOR MODE
     watch(isDark, (newValue) => {

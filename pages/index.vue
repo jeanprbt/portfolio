@@ -3,7 +3,7 @@
     <div ref="hero" class="h-screen w-full bg-secondary text-primary transition-colors duration-500">
         <ClientOnly>
             <button @click="toggleDarkMode()"
-                class="fixed top-10 left-10 text-primary hover:opacity-80 transition-opacity z-3">
+                class="fixed top-10 left-10 text-primary hover:opacity-80 transition-opacity z-10">
                 <Icon :name="isDark ? 'i-heroicons-moon' : 'i-heroicons-sun'" size="1.5em" />
             </button>
         </ClientOnly>
@@ -15,7 +15,7 @@
     <div ref="about" class="h-auto w-full flex bg-secondary text-primary transition-colors duration-500">
         <div class="w-2/5 hidden md:block"></div>
         <div class="w-full md:w-3/5 flex flex-col gap-4 items-center justify-center">
-            <p ref="aboutText" class="w-2/3 font-text text-4xl md:text-8xl text-center">
+            <p ref="aboutText" class="w-2/3 font-text text-3xl md:text-7xl text-center">
                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                 industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
                 scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap
@@ -23,10 +23,11 @@
             </p>
         </div>
     </div>
-    <div ref="experience"
-        class="h-screen w-full  bg-secondary text-primary transition-colors duration-500 flex justify-center items-center">
-        <div ref="experienceContent" style="clip-path: circle(0% at 50% 50%);" v-if="showExperience">
-            <p class="font-text text-4xl md:text-8xl text-center">
+    <div ref="experience" class="h-[150vh] w-full  bg-secondary text-primary transition-colors duration-500">
+        <div ref="experienceContent" style="clip-path: circle(8% at 50% 50%)"
+            class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full z-3 opacity-0"
+            v-if="showExperience">
+            <p class="font-text text-3xl md:text-7xl text-center">
                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                 industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
                 scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap
@@ -34,12 +35,10 @@
             </p>
         </div>
     </div>
-    <p>spacer</p>
 </template>
 
 <script setup lang="ts">
 import * as THREE from 'three';
-import GUI from 'lil-gui';
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -86,10 +85,6 @@ onMounted(() => {
     if (isSmallScreen.value) camera.position.z = smallScreenCamera;
     else camera.position.z = regularScreenCamera;
 
-    // CONTROLS (DEBUG) --------------------------------------------------
-    // const controls = new OrbitControls(camera, canvas.value);
-    // controls.enableZoom = false;
-
     // SPHERE --------------------------------------------------
     const sphereGeometry = new THREE.SphereGeometry(1, 512, 512);
     const sphereMaterial = new THREE.ShaderMaterial({
@@ -109,17 +104,6 @@ onMounted(() => {
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
     });
-
-    // LIL-GUI CONTROLS FOR UNIFORMS
-    // const gui = new GUI();
-    // const uniforms = sphereMaterial.uniforms;
-    // gui.add(uniforms.uTimeFrequency, 'value').name('uTimeFrequency').min(0).max(5).step(0.01);
-    // gui.add(uniforms.uDistortionFrequency, 'value').name('uDistortionFrequency').min(0).max(10).step(0.01);
-    // gui.add(uniforms.uDistortionStrength, 'value').name('uDistortionStrength').min(0).max(10).step(0.01);
-    // gui.add(uniforms.uDisplacementFrequency, 'value').name('uDisplacementFrequency').min(0).max(10).step(0.01);
-    // gui.add(uniforms.uDisplacementStrength, 'value').name('uDisplacementStrength').min(0).max(2).step(0.01);
-    // gui.add(uniforms.uBrightness, 'value').name('uBrightness').min(0).max(1).step(0.01);
-
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);
 
@@ -264,6 +248,7 @@ onMounted(() => {
             start: 'top 70%',
             end: 'top 25%',
             scrub: true,
+            markers: true
         }
     });
     if (isSmallScreen.value) {
@@ -284,34 +269,57 @@ onMounted(() => {
             scrub: true,
         }
     })
-        .to(sphere.scale, { x: 4, y: 4, z: 4 })
-        .to(sphereMaterial.uniforms.uDisplacementStrength, { value: 0 }, "<")
-        .to(sphereMaterial.uniforms.uBrightness, { value: 0 }, "<");
+        .to(sphere.scale, { x: 4, y: 4, z: 4, ease: "none" })
+        .to(sphere.scale, { x: 0, y: 0, z: 0, ease: "none", duration: 0.1 });
+
+    gsap.to(sphereMaterial.uniforms.uDisplacementStrength,
+        {
+            value: 0,
+            scrollTrigger: {
+                trigger: experience.value,
+                start: 'top 35%',
+                end: 'top 25%',
+                scrub: true,
+            }
+        }
+    )
+    gsap.to(sphereMaterial.uniforms.uBrightness, {
+        value: 0,
+        scrollTrigger: {
+            trigger: experience.value,
+            start: 'top 35%',
+            end: 'top top',
+            scrub: true,
+        }
+    })
 
     ScrollTrigger.create({
         trigger: experience.value,
-        start: "top top",
+        start: "top 25%",
         onEnter: () => {
-            sphere.scale.set(0, 0, 0);
             showExperience.value = true;
             setTimeout(() => {
                 gsap.to(experienceContent.value,
                     {
                         clipPath: "circle(100% at 50% 50%)",
-                        duration: 1.5,
-                        ease: "power2.out",
+                        opacity: 1,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: experience.value,
+                            start: 'top 25%',
+                            end: 'bottom-=5% bottom ',
+                            scrub: true,
+                        }
                     }
                 );
             }, 100);
         },
         onLeaveBack: () => {
-            sphere.scale.set(5, 5, 5);
             showExperience.value = false;
         }
-    });
-    // -------------------------------------------------------
+    }); 
 
-    // COLOR MODE
+    // COLOR MODE -------------------------------------------------
     watch(isDark, (newValue) => {
         sphereMaterial.uniforms.uDarkMode.value = newValue;
         torusMaterial.color.set(getCSSColor('--color-primary'));

@@ -15,7 +15,7 @@
     <div ref="about" class="h-auto w-full flex bg-secondary text-primary transition-colors duration-500">
         <div class="w-2/5 hidden md:block"></div>
         <div class="w-full md:w-3/5 flex flex-col gap-4 items-center justify-center">
-            <p ref="aboutText" class="w-2/3 font-text text-3xl md:text-7xl text-center">
+            <p ref="aboutText" class="w-2/3 font-text text-3xl md:text-8xl text-center">
                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                 industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
                 scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap
@@ -24,10 +24,9 @@
         </div>
     </div>
     <div ref="experience" class="h-[150vh] w-full  bg-secondary text-primary transition-colors duration-500">
-        <div ref="experienceContent" style="clip-path: circle(8% at 50% 50%)"
-            class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full z-3 opacity-0"
-            v-if="showExperience">
-            <p class="font-text text-3xl md:text-7xl text-center">
+        <div ref="experienceContent" :style="`clip-path: circle(${sphereRadiusPixels}px at 50% 50%)`"
+            class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full z-3">
+            <p ref="experienceText" class="font-text text-3xl md:text-8xl text-center opacity-0">
                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                 industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
                 scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap
@@ -58,7 +57,7 @@ watch(isDark, (newValue) => {
 });
 
 // LAYOUT --------------------------------------------------
-const showExperience = ref(false);
+const sphereRadiusPixels = ref(0);
 
 // HTML ELEMENTS --------------------------------------------------
 const canvas = ref(null);
@@ -67,6 +66,7 @@ const about = ref(null);
 const aboutText = ref(null);
 const experience = ref(null);
 const experienceContent = ref(null);
+const experienceText = ref(null);
 
 // UTILS --------------------------------------------------
 const getCSSColor = (variable: string) => getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
@@ -124,10 +124,18 @@ onMounted(() => {
     // ANIMATION LOOP --------------------------------------------------
     const clock = new THREE.Clock();
     const animate = () => {
+        // update sphere
         sphereMaterial.uniforms.uTime.value = clock.getElapsedTime();
         sphereMaterial.uniforms.uTorusPosition.value.copy(sphereMaterial.uniforms.uTorusTransition.value === 1 ? torus1.position : torus2.position);
         sphereMaterial.uniforms.uTorusRotation.value.copy(sphereMaterial.uniforms.uTorusTransition.value === 1 ? torus1.rotation : torus2.rotation);
         renderer.render(scene, camera);
+
+        // update clip-mask
+        const fov = camera.fov * (Math.PI / 180);
+        const distance = Math.abs(camera.position.z - sphere.position.z);
+        const visibleHeight = 2 * Math.tan(fov / 2) * distance;
+        const pixelsPerUnit = window.innerHeight / visibleHeight;
+        sphereRadiusPixels.value = sphere.scale.x * pixelsPerUnit;
     };
     renderer.setAnimationLoop(animate);
 
@@ -199,20 +207,16 @@ onMounted(() => {
         ease: "none",
         scrollTrigger: {
             trigger: about.value,
-            endTrigger: experience.value,
             start: 'top 60%',
-            end: 'top 60%',
+            end: 'bottom 60%',
             scrub: true,
         },
     });
-    gsap.to(split.words, {
+    gsap.to(aboutText.value, {
         opacity: 0,
-        stagger: 3,
-        duration: 2,
-        ease: "none",
         scrollTrigger: {
             trigger: about.value,
-            start: 'top+=20% top',
+            start: 'bottom 60%',
             end: 'bottom 30%',
             scrub: true,
         }
@@ -248,7 +252,6 @@ onMounted(() => {
             start: 'top 70%',
             end: 'top 25%',
             scrub: true,
-            markers: true
         }
     });
     if (isSmallScreen.value) {
@@ -260,21 +263,21 @@ onMounted(() => {
             .to(sphere.position, { z: -2, x: 0 });
     }; // -----------------------------------------------
 
+
+
     // sphere movement n°3 (experience - scale out) ----------
     gsap.timeline({
         scrollTrigger: {
             trigger: experience.value,
             start: 'top 25%',
-            end: 'top top',
+            end: 'bottom bottom',
             scrub: true,
         }
     })
-        .to(sphere.scale, { x: 4, y: 4, z: 4, ease: "none" })
-        .to(sphere.scale, { x: 0, y: 0, z: 0, ease: "none", duration: 0.1 });
-
-    gsap.to(sphereMaterial.uniforms.uDisplacementStrength,
-        {
-            value: 0,
+        .to(sphere.scale, { x: 8, y: 8, z: 8, ease: "none" })
+        .to(experienceText.value, { opacity: 1 }, "<");
+        
+    gsap.to(sphereMaterial.uniforms.uDisplacementStrength, { value: 0,
             scrollTrigger: {
                 trigger: experience.value,
                 start: 'top 35%',
@@ -282,42 +285,16 @@ onMounted(() => {
                 scrub: true,
             }
         }
-    )
+    );
     gsap.to(sphereMaterial.uniforms.uBrightness, {
         value: 0,
         scrollTrigger: {
             trigger: experience.value,
             start: 'top 35%',
-            end: 'top top',
+            end: 'top 10%',
             scrub: true,
         }
-    })
-
-    ScrollTrigger.create({
-        trigger: experience.value,
-        start: "top 25%",
-        onEnter: () => {
-            showExperience.value = true;
-            setTimeout(() => {
-                gsap.to(experienceContent.value,
-                    {
-                        clipPath: "circle(100% at 50% 50%)",
-                        opacity: 1,
-                        ease: "none",
-                        scrollTrigger: {
-                            trigger: experience.value,
-                            start: 'top 25%',
-                            end: 'bottom-=5% bottom ',
-                            scrub: true,
-                        }
-                    }
-                );
-            }, 100);
-        },
-        onLeaveBack: () => {
-            showExperience.value = false;
-        }
-    }); 
+    });
 
     // COLOR MODE -------------------------------------------------
     watch(isDark, (newValue) => {

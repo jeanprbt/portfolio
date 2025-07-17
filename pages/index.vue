@@ -7,15 +7,22 @@
                 <Icon :name="isDark ? 'i-heroicons-moon' : 'i-heroicons-sun'" size="1.5em" />
             </button>
         </ClientOnly>
-        <h1
-            class="text-6xl font-primary font-bold  drop-shadow-sm dark:drop-shadow-primary absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-1 text-center">
+        <h1 :class="[
+            'absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-1',
+            'font-primary text-center',
+            'text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl',
+            'drop-shadow-sm dark:drop-shadow-primary'
+        ]">
             Hi, I'm <span class="font-secondary italic">Jean</span>.
         </h1>
     </div>
     <div ref="about" class="h-auto w-full flex bg-secondary text-primary transition-colors duration-500">
-        <div class="w-2/5 hidden md:block"></div>
-        <div class="w-full md:w-3/5 flex flex-col gap-4 items-center justify-center">
-            <p ref="aboutText" class="w-2/3 font-text text-3xl md:text-8xl text-center">
+        <div class="w-2/5 hidden lg:block"></div>
+        <div class="w-full lg:w-3/5 flex flex-col gap-4 items-center justify-center">
+            <p ref="aboutText" :class="[
+                'w-2/3 font-text text-center',
+                'text-3xl sm:text-5xl md:text-6xl xl:text-7xl 2xl:text-8xl',
+            ]">
                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                 industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
                 scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap
@@ -67,9 +74,10 @@ const experienceText = ref(null);
 
 // UTILS --------------------------------------------------
 const getCSSColor = (variable: string) => getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
-const isSmallScreen = computed(() => window.innerWidth <= 755);
+const md = computed(() => window.innerWidth >= 768);
+const lg = computed(() => window.innerWidth >= 1024);
+const mediumScreenCamera = 3;
 const smallScreenCamera = 3.5;
-const regularScreenCamera = 3;
 
 onMounted(() => {
     if (!canvas.value) return;
@@ -79,8 +87,8 @@ onMounted(() => {
     const renderer = new THREE.WebGLRenderer({ canvas: canvas.value, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    if (isSmallScreen.value) camera.position.z = smallScreenCamera;
-    else camera.position.z = regularScreenCamera;
+    if (md.value) camera.position.z = mediumScreenCamera;
+    else camera.position.z = smallScreenCamera;
 
     // SPHERE --------------------------------------------------
     const sphereGeometry = new THREE.SphereGeometry(1, 512, 512);
@@ -143,8 +151,8 @@ onMounted(() => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-            if (isSmallScreen.value) camera.position.z = smallScreenCamera;
-            else camera.position.z = regularScreenCamera;
+            if (md.value) camera.position.z = mediumScreenCamera;
+            else camera.position.z = smallScreenCamera;
             lastWidth = window.innerWidth;
         }
     };
@@ -186,13 +194,13 @@ onMounted(() => {
         }
     })
         .to(sphere.position, { y: -1, z: -2, ease: 'power1.out', duration: 0.25 });
-    if (isSmallScreen.value) {
-        sphereHeroTL
-            .to(sphere.scale, { x: 0, y: 0, z: 0, duration: 0.2 }).to({}, { duration: 0.5 });
-    } else {
+    if (lg.value) {
         sphereHeroTL
             .to(sphere.position, { z: -1, duration: 0.75 })
             .to(sphere.position, { x: -2, y: 0, duration: 0.5 }, "<");
+    } else {
+        sphereHeroTL
+            .to(sphere.scale, { x: 0, y: 0, z: 0, duration: 0.2 }).to({}, { duration: 0.5 });
     }; // ----------------------------------
 
     // about text (about) ----------
@@ -251,13 +259,13 @@ onMounted(() => {
             scrub: true,
         }
     });
-    if (isSmallScreen.value) {
+    if (lg.value) {
+        sphereExperienceTimeline
+        .to(sphere.position, { z: -2, x: 0 });
+    } else {
         sphereExperienceTimeline
             .to(sphere.scale, { x: 1, y: 1, z: 1, ease: "none" })
             .to(sphere.position, { y: 0 }, "<");
-    } else {
-        sphereExperienceTimeline
-            .to(sphere.position, { z: -2, x: 0 });
     }; // -----------------------------------------------
 
 
@@ -272,16 +280,26 @@ onMounted(() => {
         }
     })
         .to(sphere.scale, { x: 8, y: 8, z: 8, ease: "none" })
-        .to(experienceText.value, { opacity: 1 }, "<");
-        
-    gsap.to(sphereMaterial.uniforms.uDisplacementStrength, { value: 0,
-            scrollTrigger: {
-                trigger: experience.value,
-                start: 'top 35%',
-                end: 'top 25%',
-                scrub: true,
-            }
+
+    gsap.to(experienceText.value, {
+        opacity: 1,
+        scrollTrigger: {
+            trigger: experience.value,
+            start: 'top 25%',
+            end: 'top 20%',
+            scrub: true
         }
+    });
+
+    gsap.to(sphereMaterial.uniforms.uDisplacementStrength, {
+        value: 0,
+        scrollTrigger: {
+            trigger: experience.value,
+            start: 'top 35%',
+            end: 'top 25%',
+            scrub: true,
+        }
+    }
     );
     gsap.to(sphereMaterial.uniforms.uBrightness, {
         value: 0,

@@ -27,10 +27,7 @@
         <div ref="experienceContent" :style="`clip-path: circle(${sphereRadiusPixels}px at 50% 50%)`"
             class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full z-3">
             <p ref="experienceText" class="font-text text-3xl md:text-8xl text-center opacity-0">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap
-                into electronic typesetting, remaining essentially unchanged.
+                <DottedMap />
             </p>
         </div>
     </div>

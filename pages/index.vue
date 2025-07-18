@@ -35,19 +35,31 @@
             class="w-full h-screen fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-3 ">
             <div ref="experienceText" class="opacity-0">
                 <ClientOnly>
-                    <DottedMap :md="md" />
+                    <DottedMap :md="md" :job="job" />
                     <p :class="[
-                        'fixed top-0 lg:top-1/2 left-1/2 lg:left-auto lg:right-0 transform -translate-x-1/2 lg:translate-x-0 translate-y-0 lg:-translate-y-1/2 lg:mr-10 mt-30 sm:mt-10 lg:mt-0',
+                        'fixed top-0 lg:top-1/2 left-1/2 lg:left-auto lg:right-0 transform -translate-x-1/2 lg:translate-x-0 translate-y-0 lg:-translate-y-1/2 lg:mr-10 mt-30 sm:mt-20 lg:mt-0',
                         'font-primary text-center lg:text-right',
-                        'text-5xl sm:text-7xl md:text-8xl lg:text-[9rem] xl:text-[10rem] 2xl:text-[11rem]'
+                        'text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] xl:text-[11rem] 2xl:text-[12rem]'
                     ]">
-                        <span class="lg:hover:opacity-30">EPFL</span>
+                        <span :class="[
+                            'transition-opacity duration-300',
+                            { 'opacity-20': job !== 'none' && job !== 'kth'},
+                        ]" @mouseenter="job = 'kth'" @mouseleave="job = 'none'">KTH</span>
                         <br v-if="lg"><span v-else>&nbsp;</span>
-                        <span class="lg:hover:opacity-30">KTH</span>
+                        <span :class="[
+                            'transition-opacity duration-300',
+                            { 'opacity-20': job !== 'none' && job !== 'finplify'},
+                        ]" @mouseenter="job = 'finplify'" @mouseleave="job = 'none'">Finplify</span>
                         <br>
-                        <span class="lg:hover:opacity-30">Finplify</span>
+                        <span :class="[
+                            'transition-opacity duration-300',
+                            { 'opacity-20': job !== 'none' && job !== 'epfl'},
+                        ]" @mouseenter="job = 'epfl'" @mouseleave="job = 'none'">EPFL</span>
                         <br v-if="lg"><span v-else>&nbsp;</span>
-                        <span class="lg:hover:opacity-30">CERN</span>
+                        <span :class="[
+                            'transition-opacity duration-300',
+                            { 'opacity-20': job !== 'none' && job !== 'cern'},
+                        ]" @mouseenter="job = 'cern'" @mouseleave="job = 'none'">CERN</span>
                     </p>
                 </ClientOnly>
             </div>
@@ -77,6 +89,7 @@ watch(isDark, (newValue) => {
 
 // LAYOUT --------------------------------------------------
 const sphereRadiusPixels = ref(0);
+const job = ref('none');
 
 // HTML ELEMENTS --------------------------------------------------
 const canvas = ref(null);

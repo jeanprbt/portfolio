@@ -20,7 +20,7 @@
         <div class="w-2/5 hidden lg:block"></div>
         <div class="w-full lg:w-3/5 flex flex-col gap-4 items-center justify-center">
             <p ref="aboutText" :class="[
-                'w-2/3 font-text text-center',
+                'w-4/5 font-text text-center',
                 'text-3xl sm:text-5xl md:text-6xl xl:text-7xl 2xl:text-8xl',
             ]">
                 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
@@ -32,10 +32,25 @@
     </div>
     <div ref="experience" class="h-[150vh] w-full  bg-secondary text-primary transition-colors duration-500">
         <div ref="experienceContent" :style="`clip-path: circle(${sphereRadiusPixels}px at 50% 50%)`"
-            class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full z-3">
-            <p ref="experienceText" class="font-text text-3xl md:text-8xl text-center opacity-0">
-                <DottedMap />
-            </p>
+            class="w-full h-screen fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-3 ">
+            <div ref="experienceText" class="opacity-0">
+                <ClientOnly>
+                    <DottedMap :md="md" />
+                    <p :class="[
+                        'fixed top-0 lg:top-1/2 left-1/2 lg:left-auto lg:right-0 transform -translate-x-1/2 lg:translate-x-0 translate-y-0 lg:-translate-y-1/2 lg:mr-10 mt-30 sm:mt-10 lg:mt-0',
+                        'font-primary text-center lg:text-right',
+                        'text-5xl sm:text-7xl md:text-8xl lg:text-[9rem] xl:text-[10rem] 2xl:text-[11rem]'
+                    ]">
+                        <span class="lg:hover:opacity-30">EPFL</span>
+                        <br v-if="lg"><span v-else>&nbsp;</span>
+                        <span class="lg:hover:opacity-30">KTH</span>
+                        <br>
+                        <span class="lg:hover:opacity-30">Finplify</span>
+                        <br v-if="lg"><span v-else>&nbsp;</span>
+                        <span class="lg:hover:opacity-30">CERN</span>
+                    </p>
+                </ClientOnly>
+            </div>
         </div>
     </div>
 </template>
@@ -74,8 +89,9 @@ const experienceText = ref(null);
 
 // UTILS --------------------------------------------------
 const getCSSColor = (variable: string) => getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
-const md = computed(() => window.innerWidth >= 768);
-const lg = computed(() => window.innerWidth >= 1024);
+const windowWidth = ref(0);
+const md = computed(() => windowWidth.value >= 768);
+const lg = computed(() => windowWidth.value >= 1024);
 const mediumScreenCamera = 3;
 const smallScreenCamera = 3.5;
 
@@ -87,8 +103,6 @@ onMounted(() => {
     const renderer = new THREE.WebGLRenderer({ canvas: canvas.value, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    if (md.value) camera.position.z = mediumScreenCamera;
-    else camera.position.z = smallScreenCamera;
 
     // SPHERE --------------------------------------------------
     const sphereGeometry = new THREE.SphereGeometry(1, 512, 512);
@@ -147,16 +161,18 @@ onMounted(() => {
     // RESIZE HANDLER --------------------------------------------------
     let lastWidth = window.innerWidth;
     const onResize = () => {
+        windowWidth.value = window.innerWidth;
+        if (md.value) camera.position.z = mediumScreenCamera;
+        else camera.position.z = smallScreenCamera;
         if (window.innerWidth != lastWidth) {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-            if (md.value) camera.position.z = mediumScreenCamera;
-            else camera.position.z = smallScreenCamera;
             lastWidth = window.innerWidth;
         }
     };
     window.addEventListener('resize', onResize);
+    onResize();
 
     // ANIMATIONS -------------------------------------------------
     // sphere general rotation ----------
@@ -214,7 +230,7 @@ onMounted(() => {
             trigger: about.value,
             start: 'top 60%',
             end: 'bottom 60%',
-            scrub: true,
+            scrub: true
         },
     });
     gsap.to(aboutText.value, {
@@ -261,14 +277,12 @@ onMounted(() => {
     });
     if (lg.value) {
         sphereExperienceTimeline
-        .to(sphere.position, { z: -2, x: 0 });
+            .to(sphere.position, { z: -2, x: 0 });
     } else {
         sphereExperienceTimeline
             .to(sphere.scale, { x: 1, y: 1, z: 1, ease: "none" })
             .to(sphere.position, { y: 0 }, "<");
     }; // -----------------------------------------------
-
-
 
     // sphere movement n°3 (experience - scale out) ----------
     gsap.timeline({

@@ -1,17 +1,19 @@
 <template>
-    <div class="flex items-center justify-center h-screen w-full">
-        <div :class="[
-            'relative w-full md:max-w-[80vw] 2xl:max-w-[70vw] mx-auto',
-            'aspect-[1/1] sm:aspect-[5/4]',
-            'mb-30 sm:mb-0',
-        ]">
-            <div v-for="(dot, i) in dots" :key="i"
-                :class="[
-                    'absolute rounded-full -translate-x-1/2 -translate-y-1/2 transition-colors duration-300',
-                    cityHighlight === 'none' ? 'bg-primary/20' : dot.label === cityHighlight ? 'bg-primary' : 'bg-primary/10'
-                ]"
-                :style="{ left: `${dot.x}%`, top: `${dot.y}%`, width: `${dotSize}px`, height: `${dotSize}px` }">
-            </div>
+    <div :class="[
+        'aspect-[1/1] sm:aspect-[5/4] mx-auto',
+        'relative flex items-center justify-center',
+    ]">
+        <div v-for="(dot, i) in dots" :key="i" :class="[
+            'absolute rounded-full -translate-x-1/2 -translate-y-1/2 transition-colors duration-200',
+            cityHighlight === 'none' ? 'bg-primary/20' : dot.label === cityHighlight ? 'bg-blue-500' : 'bg-primary/10'
+        ]" :style="{ left: `${dot.x}%`, top: `${dot.y}%`, width: `${dotSize}px`, height: `${dotSize}px` }">
+            <span :class="[
+                'absolute left-full top-1/2 -translate-y-1/2 ml-1 lg:ml-2',
+                'font-primary text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl',
+                'transition-opacity duration-200', dot.label === cityHighlight ? 'opacity-100' : 'opacity-0'
+            ]">
+                {{ dot.label }}
+            </span>
         </div>
     </div>
 </template>
@@ -31,10 +33,10 @@ const props = defineProps({
 });
 
 const cityHighlight = computed(() => {
-    if (props.job === 'kth') return 'stockholm';
-    if (props.job === 'finplify') return 'geneva';
-    if (props.job === 'epfl') return 'lausanne';
-    if (props.job === 'cern') return 'geneva';
+    if (props.job === 'kth') return 'Stockholm';
+    if (props.job === 'finplify') return 'Geneva';
+    if (props.job === 'epfl') return 'Lausanne';
+    if (props.job === 'cern') return 'Geneva';
     else return 'none';
 });
 

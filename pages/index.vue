@@ -30,38 +30,97 @@
             </p>
         </div>
     </div>
-    <div ref="experience" class="h-[150vh] w-full  bg-secondary text-primary transition-colors duration-500">
-        <div ref="experienceContent" :style="`clip-path: circle(${sphereRadiusPixels}px at 50% 50%)`"
-            class="w-full h-screen fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-3 ">
-            <div ref="experienceText" class="opacity-0">
+    <div ref="experience" class="h-[150vh] w-full bg-secondary text-primary transition-colors duration-500">
+        <div ref="experienceFrame" :style="`clip-path: circle(${sphereRadiusPixels}px at 50% 50%)`" :class="[
+            'fixed h-screen w-full z-3',
+            'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
+            { 'pointer-events-none': !hoverJobs }
+        ]">
+            <div ref="experienceContent" :class="[
+                'h-full opacity-0',
+                { 'flex flex-col justify-center': !lg }
+            ]">
                 <ClientOnly>
-                    <DottedMap :md="md" :job="job" />
-                    <p :class="[
-                        'fixed top-0 lg:top-1/2 left-1/2 lg:left-auto lg:right-0 transform -translate-x-1/2 lg:translate-x-0 translate-y-0 lg:-translate-y-1/2 lg:mr-10 mt-30 sm:mt-20 lg:mt-0',
-                        'font-primary text-center lg:text-right',
-                        'text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] xl:text-[11rem] 2xl:text-[12rem]'
-                    ]">
-                        <span :class="[
-                            'transition-opacity duration-300',
-                            { 'opacity-20': job !== 'none' && job !== 'kth'},
-                        ]" @mouseenter="job = 'kth'" @mouseleave="job = 'none'">KTH</span>
-                        <br v-if="lg"><span v-else>&nbsp;</span>
-                        <span :class="[
-                            'transition-opacity duration-300',
-                            { 'opacity-20': job !== 'none' && job !== 'finplify'},
-                        ]" @mouseenter="job = 'finplify'" @mouseleave="job = 'none'">Finplify</span>
-                        <br>
-                        <span :class="[
-                            'transition-opacity duration-300',
-                            { 'opacity-20': job !== 'none' && job !== 'epfl'},
-                        ]" @mouseenter="job = 'epfl'" @mouseleave="job = 'none'">EPFL</span>
-                        <br v-if="lg"><span v-else>&nbsp;</span>
-                        <span :class="[
-                            'transition-opacity duration-300',
-                            { 'opacity-20': job !== 'none' && job !== 'cern'},
-                        ]" @mouseenter="job = 'cern'" @mouseleave="job = 'none'">CERN</span>
-                    </p>
+                    <DottedMap :md="md" :job="job"
+                        class="w-full md:max-w-[80vw] lg:max-w-[75vw] xl:max-w-[65vw] 2xl:max-w-[60vw]" />
                 </ClientOnly>
+                <div :class="[
+                    'text-sm sm:text-base lg:text-lg',
+                    'mx-10 sm:mx-15 -mt-5 sm:-mt-10',
+                    { 'fixed bottom-8': lg }
+                ]">
+                    <p>
+                        <span class="font-primary opacity-40">ROLE</span>
+                        <transition 
+                            mode="out-in"
+                            enter-from-class="opacity-0"
+                            enter-active-class="duration-200 ease-in"
+                            enter-to-class="opacity-100" 
+                            leave-from-class="opacity-100"
+                            leave-active-class="duration-200 ease-in" 
+                            leave-to-class="opacity-0"
+                        >
+                            <span :key="role" :class="['font-text ml-2 transition-opacity duration-200', { 'opacity-0': job === 'none' }]">{{ role }}</span>
+                        </transition>
+                    </p>
+                    <p>
+                        <span class="font-primary opacity-40">PERIOD</span>
+                        <transition 
+                            mode="out-in"
+                            enter-from-class="opacity-0"
+                            enter-active-class="duration-200 ease-in"
+                            enter-to-class="opacity-100" 
+                            leave-from-class="opacity-100"
+                            leave-active-class="duration-200 ease-in" 
+                            leave-to-class="opacity-0"
+                        >
+                            <span :key="period" :class="['font-text ml-2 transition-opacity duration-200', { 'opacity-0': job === 'none' }]">{{ period }}</span>
+                        </transition>
+                    </p>
+                    <p class="text-justify">
+                        <span class="font-primary opacity-40">INFO</span>
+                        <transition 
+                            mode="out-in"
+                            enter-from-class="opacity-0"
+                            enter-active-class="duration-200 ease-in"
+                            enter-to-class="opacity-100" 
+                            leave-from-class="opacity-100"
+                            leave-active-class="duration-200 ease-in" 
+                            leave-to-class="opacity-0"
+                        >
+                            <span :key="info" :class="['font-text ml-2 transition-opacity duration-200', { 'opacity-0': job === 'none' }]">{{ info }}</span>
+                        </transition>
+                    </p>
+                </div>
+                <div :class="[
+                    'fixed w-5/6 top-0 left-1/2 lg:left-auto lg:right-0',
+                    'transform -translate-x-1/2 lg:translate-x-0',
+                    'font-primary text-center lg:text-right',
+                    'lg:mr-10 mt-20 lg:mt-4 xl:mt-0',
+                    'text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] xl:text-[10.5rem]',
+                    'lg:flex lg:flex-col lg:w-auto gap-4',
+                ]">
+                    <div class="flex flex-row lg:flex-col justify-center">
+                        <div :class="[
+                            'transition-opacity duration-200 w-full',
+                            { 'opacity-10': job !== 'none' && job !== 'kth' },
+                        ]" @mouseenter="job = 'kth'" @mouseleave="job = 'none'">KTH</div>
+                        <div :class="[
+                            'transition-opacity duration-200 w-full',
+                            { 'opacity-10': job !== 'none' && job !== 'finplify' },
+                        ]" @mouseenter="job = 'finplify'" @mouseleave="job = 'none'">Finplify</div>
+                    </div>
+                    <div class="flex flex-row lg:flex-col justify-center">
+                        <div :class="[
+                            'transition-opacity duration-200 w-full',
+                            { 'opacity-10': job !== 'none' && job !== 'epfl' },
+                        ]" @mouseenter="job = 'epfl'" @mouseleave="job = 'none'">EPFL</div>
+                        <div :class="[
+                            'transition-opacity duration-200 w-full',
+                            { 'opacity-10': job !== 'none' && job !== 'cern' },
+                        ]" @mouseenter="job = 'cern'" @mouseleave="job = 'none'">CERN</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -89,7 +148,11 @@ watch(isDark, (newValue) => {
 
 // LAYOUT --------------------------------------------------
 const sphereRadiusPixels = ref(0);
+const hoverJobs = ref(false);
 const job = ref('none');
+const role = ref('');
+const period = ref('');
+const info = ref('Cras commodo commodo nisi vitae euismod. Cras vitae pharetra tortor. Nulla vel massa congue, ultrices elit ut, facilisis nunc. In ut mollis augue. Nullam a tellus metus. Aenean nisl orci, luctus sit amet tincidunt at, auctor eu augue. Phasellus vulputate elit ligula, porttitor luctus metus dignissim quis. Vestibulum accumsan convallis arcu, eget commodo ex tincidunt at. Fusce molestie porta metus.');
 
 // HTML ELEMENTS --------------------------------------------------
 const canvas = ref(null);
@@ -97,8 +160,8 @@ const hero = ref(null);
 const about = ref(null);
 const aboutText = ref(null);
 const experience = ref(null);
+const experienceFrame = ref(null);
 const experienceContent = ref(null);
-const experienceText = ref(null);
 
 // UTILS --------------------------------------------------
 const getCSSColor = (variable: string) => getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
@@ -298,17 +361,19 @@ onMounted(() => {
     }; // -----------------------------------------------
 
     // sphere movement n°3 (experience - scale out) ----------
-    gsap.timeline({
+    gsap.to(sphere.scale, {
+        x: 8,
+        y: 8,
+        z: 8,
+        ease: "none",
         scrollTrigger: {
             trigger: experience.value,
             start: 'top 25%',
             end: 'bottom bottom',
             scrub: true,
         }
-    })
-        .to(sphere.scale, { x: 8, y: 8, z: 8, ease: "none" })
-
-    gsap.to(experienceText.value, {
+    });
+    gsap.to(experienceContent.value, {
         opacity: 1,
         scrollTrigger: {
             trigger: experience.value,
@@ -317,7 +382,6 @@ onMounted(() => {
             scrub: true
         }
     });
-
     gsap.to(sphereMaterial.uniforms.uDisplacementStrength, {
         value: 0,
         scrollTrigger: {
@@ -326,8 +390,7 @@ onMounted(() => {
             end: 'top 25%',
             scrub: true,
         }
-    }
-    );
+    });
     gsap.to(sphereMaterial.uniforms.uBrightness, {
         value: 0,
         scrollTrigger: {
@@ -336,6 +399,12 @@ onMounted(() => {
             end: 'top 10%',
             scrub: true,
         }
+    });
+    ScrollTrigger.create({
+        trigger: experience.value,
+        start: "bottom-=1% bottom",
+        onEnter: () => hoverJobs.value = true,
+        onLeaveBack: () => hoverJobs.value = false
     });
 
     // COLOR MODE -------------------------------------------------
@@ -346,6 +415,29 @@ onMounted(() => {
     watch(colorMode, (newValue) => {
         sphereMaterial.uniforms.uDarkMode.value = newValue.value === 'dark';
         torusMaterial.color.set(getCSSColor('--color-primary'));
+    });
+    watch(job, (newValue) => {
+        if (newValue === 'kth') {
+            role.value = 'Student Assistant';
+            period.value = '02/2024 - 05/2024';
+            info.value = 'Proin nec suscipit justo, eget tristique mauris. Fusce interdum dolor nisi, vel elementum nunc accumsan vel. Curabitur laoreet et elit a porttitor. Morbi a commodo massa. Nullam quam ligula, pulvinar id scelerisque in, bibendum sed sapien. In aliquet fermentum lectus eu bibendum. Ut sit amet libero sit amet diam volutpat vulputate eget rhoncus sem. Curabitur dictum at velit eu mollis.';
+        } else if (newValue === 'finplify') {
+            role.value = 'Data Science Intern';
+            period.value = '06/2024 - 08/2024';
+            info.value = 'Fusce sagittis quam id nisl porta interdum. Integer ac leo volutpat metus pretium commodo vitae eget neque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae dignissim nisi, ac pellentesque lorem. Aenean ac volutpat turpis. Vestibulum mattis pellentesque fringilla. Etiam iaculis nunc eu justo varius pretium. Phasellus vulputate sollicitudin elit at venenatis. Praesent id consectetur ante.';
+        } else if (newValue === 'epfl') {
+            role.value = 'ML Research Assistant';
+            period.value = '03/2025 - 05/2025';
+            info.value = 'Cras commodo commodo nisi vitae euismod. Cras vitae pharetra tortor. Nulla vel massa congue, ultrices elit ut, facilisis nunc. In ut mollis augue. Nullam a tellus metus. Aenean nisl orci, luctus sit amet tincidunt at, auctor eu augue. Phasellus vulputate elit ligula, porttitor luctus metus dignissim quis. Vestibulum accumsan convallis arcu, eget commodo ex tincidunt at. Fusce molestie porta metus.';
+        } else if (newValue === 'cern') {
+            role.value = 'DataOps Intern';
+            period.value = '06/2025 - 08/2025';
+            info.value = 'Maecenas nec venenatis sem, non tempor massa. Nulla quis dui lacus. Pellentesque in lectus urna. Maecenas a risus tempus neque vulputate varius. Phasellus id maximus magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer interdum in nunc sit amet interdum. Pellentesque ac sem nunc. Cras at mauris vel nisl sollicitudin venenatis. Maecenas libero arcu, lobortis ac diam.';
+        } else {
+            role.value = '';
+            period.value = '';
+            info.value = 'Cras commodo commodo nisi vitae euismod. Cras vitae pharetra tortor. Nulla vel massa congue, ultrices elit ut, facilisis nunc. In ut mollis augue. Nullam a tellus metus. Aenean nisl orci, luctus sit amet tincidunt at, auctor eu augue. Phasellus vulputate elit ligula, porttitor luctus metus dignissim quis. Vestibulum accumsan convallis arcu, eget commodo ex tincidunt at. Fusce molestie porta metus.';
+        }
     });
 
     onUnmounted(() => {

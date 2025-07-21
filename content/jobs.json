@@ -1,0 +1,34 @@
+{
+    "kth": {
+        "id": "kth",
+        "label": "KTH",
+        "role": "Student Assistant",
+        "period": "02/2024 - 05/2024",
+        "city": "Stockholm",
+        "info": "Proin nec suscipit justo, eget tristique mauris. Fusce interdum dolor nisi, vel elementum nunc accumsan vel. Curabitur laoreet et elit a porttitor. Morbi a commodo massa. Nullam quam ligula, pulvinar id scelerisque in, bibendum sed sapien. In aliquet fermentum lectus eu bibendum. Ut sit amet libero sit amet diam volutpat vulputate eget rhoncus sem. Curabitur dictum at velit eu mollis."
+    },
+    "finplify": {
+        "id": "finplify",
+        "label": "Finplify",
+        "role": "Data Science Intern",
+        "period": "06/2024 - 08/2024",
+        "city": "Geneva",
+        "info": "Fusce sagittis quam id nisl porta interdum. Integer ac leo volutpat metus pretium commodo vitae eget neque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae dignissim nisi, ac pellentesque lorem. Aenean ac volutpat turpis. Vestibulum mattis pellentesque fringilla. Etiam iaculis nunc eu justo varius pretium. Phasellus vulputate sollicitudin elit at venenatis."
+    },
+    "epfl": {
+        "id": "epfl",
+        "label": "EPFL",
+        "role": "Machine Learning Assistant",
+        "period": "02/2025 - 05/2025",
+        "city": "Lausanne",
+        "info": "Cras commodo commodo nisi vitae euismod. Cras vitae pharetra tortor. Nulla vel massa congue, ultrices elit ut, facilisis nunc. In ut mollis augue. Nullam a tellus metus. Aenean nisl orci, luctus sit amet tincidunt at, auctor eu augue. Phasellus vulputate elit ligula, porttitor luctus metus dignissim quis. Vestibulum accumsan convallis arcu, eget commodo ex tincidunt at."
+    },
+    "cern": {
+        "id": "cern",
+        "label": "CERN",
+        "role": "DataOps Intern",
+        "period": "06/2025 - 08/2025",
+        "city": "Geneva",
+        "info": "Maecenas nec venenatis sem, non tempor massa. Nulla quis dui lacus. Pellentesque in lectus urna. Maecenas a risus tempus neque vulputate varius. Phasellus id maximus magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer interdum in nunc sit amet interdum. Pellentesque ac sem nunc. Cras at mauris vel venenatis. Maecenas libero arcu, lobortis ac diam."
+    }
+}

@@ -11,9 +11,9 @@
             'absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-1',
             'font-primary text-center',
             'text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl',
-            'drop-shadow-sm dark:drop-shadow-primary'
         ]">
-            Hi, I'm <span class="font-secondary italic">Jean</span>.
+            Hi<span class="text-highlight">,</span> I<span class="text-highlight">'</span>m <span
+                class="font-secondary italic">Jean</span><span class="text-highlight">.</span>
         </h1>
     </div>
     <div ref="about" class="h-auto w-full flex bg-secondary text-primary transition-colors duration-500">
@@ -30,95 +30,53 @@
             </p>
         </div>
     </div>
-    <div ref="experience" class="h-[150vh] w-full bg-secondary text-primary transition-colors duration-500">
+    <div ref="experience" class="h-[400vh] w-full bg-secondary text-primary transition-colors duration-500">
         <div ref="experienceFrame" :style="`clip-path: circle(${sphereRadiusPixels}px at 50% 50%)`" :class="[
             'fixed h-screen w-full z-3',
             'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
             { 'pointer-events-none': !hoverJobs }
         ]">
-            <div ref="experienceContent" :class="[
-                'h-full opacity-0',
-                { 'flex flex-col justify-center': !lg }
-            ]">
+            <div ref="experienceContent"
+                class="h-full flex flex-col justify-center lg:justify-between items-center opacity-0">
                 <ClientOnly>
-                    <DottedMap :md="md" :job="job"
-                        class="w-full md:max-w-[80vw] lg:max-w-[75vw] xl:max-w-[65vw] 2xl:max-w-[60vw]" />
+                    <DottedMap :md="md" :city="selectedJob?.city || 'none'"
+                        class="w-full md:max-w-[85vw] lg:max-w-[75vw] xl:max-w-[65vw] 2xl:max-w-[60vw] transition-transform duration-300" />
                 </ClientOnly>
                 <div :class="[
-                    'text-sm sm:text-base lg:text-lg',
-                    'mx-10 sm:mx-15 -mt-5 sm:-mt-10',
-                    { 'fixed bottom-8': lg }
+                    'w-5/6 lg:w-11/12 -mt-5 sm:-mt-10 md:-mt-20 lg:-mt-100 lg:mb-10',
+                    'text-sm sm:text-base lg:text-lg xl:text-xl 2xl:text-2xl',
                 ]">
-                    <p>
-                        <span class="font-primary opacity-40">ROLE</span>
+                    <p v-for="pair in [
+                        { label: 'ROLE', value: selectedJob ? selectedJob.role : '' },
+                        { label: 'PERIOD', value: selectedJob ? selectedJob.period : '' },
+                        { label: 'INFO', value: selectedJob ? selectedJob.info : ' '.repeat(380) }
+                    ]" :key="pair.label"
+                        :class="['text-justify transition-opacity duration-500', { 'opacity-0': !selectedJob }]">
+                        <span class="font-primary text-highlight">{{ pair.label }}</span>
                         <transition 
-                            mode="out-in"
-                            enter-from-class="opacity-0"
+                            mode="out-in" 
+                            enter-from-class="opacity-0" 
                             enter-active-class="duration-200 ease-in"
                             enter-to-class="opacity-100" 
                             leave-from-class="opacity-100"
                             leave-active-class="duration-200 ease-in" 
                             leave-to-class="opacity-0"
                         >
-                            <span :key="role" :class="['font-text ml-2 transition-opacity duration-200', { 'opacity-0': job === 'none' }]">{{ role }}</span>
-                        </transition>
-                    </p>
-                    <p>
-                        <span class="font-primary opacity-40">PERIOD</span>
-                        <transition 
-                            mode="out-in"
-                            enter-from-class="opacity-0"
-                            enter-active-class="duration-200 ease-in"
-                            enter-to-class="opacity-100" 
-                            leave-from-class="opacity-100"
-                            leave-active-class="duration-200 ease-in" 
-                            leave-to-class="opacity-0"
-                        >
-                            <span :key="period" :class="['font-text ml-2 transition-opacity duration-200', { 'opacity-0': job === 'none' }]">{{ period }}</span>
-                        </transition>
-                    </p>
-                    <p class="text-justify">
-                        <span class="font-primary opacity-40">INFO</span>
-                        <transition 
-                            mode="out-in"
-                            enter-from-class="opacity-0"
-                            enter-active-class="duration-200 ease-in"
-                            enter-to-class="opacity-100" 
-                            leave-from-class="opacity-100"
-                            leave-active-class="duration-200 ease-in" 
-                            leave-to-class="opacity-0"
-                        >
-                            <span :key="info" :class="['font-text ml-2 transition-opacity duration-200', { 'opacity-0': job === 'none' }]">{{ info }}</span>
+                            <span :key="pair.value" :class="['font-text ml-2', { 'whitespace-break-spaces' : !selectedJob }]">{{ pair.value }}</span>
                         </transition>
                     </p>
                 </div>
                 <div :class="[
-                    'fixed w-5/6 top-0 left-1/2 lg:left-auto lg:right-0',
-                    'transform -translate-x-1/2 lg:translate-x-0',
+                    'fixed top-20 lg:top-0 left-1/2 lg:left-auto lg:right-10 transform -translate-x-1/2 lg:translate-x-0',
                     'font-primary text-center lg:text-right',
-                    'lg:mr-10 mt-20 lg:mt-4 xl:mt-0',
-                    'text-5xl sm:text-7xl md:text-8xl lg:text-[10rem] xl:text-[10.5rem]',
-                    'lg:flex lg:flex-col lg:w-auto gap-4',
+                    'text-[7vw] lg:text-[20vh] lg:leading-none',
+                    'flex flex-row lg:flex-col gap-2 sm:gap-4 md:gap-6 lg:gap-0',
                 ]">
-                    <div class="flex flex-row lg:flex-col justify-center">
-                        <div :class="[
-                            'transition-opacity duration-200 w-full',
-                            { 'opacity-10': job !== 'none' && job !== 'kth' },
-                        ]" @mouseenter="job = 'kth'" @mouseleave="job = 'none'">KTH</div>
-                        <div :class="[
-                            'transition-opacity duration-200 w-full',
-                            { 'opacity-10': job !== 'none' && job !== 'finplify' },
-                        ]" @mouseenter="job = 'finplify'" @mouseleave="job = 'none'">Finplify</div>
-                    </div>
-                    <div class="flex flex-row lg:flex-col justify-center">
-                        <div :class="[
-                            'transition-opacity duration-200 w-full',
-                            { 'opacity-10': job !== 'none' && job !== 'epfl' },
-                        ]" @mouseenter="job = 'epfl'" @mouseleave="job = 'none'">EPFL</div>
-                        <div :class="[
-                            'transition-opacity duration-200 w-full',
-                            { 'opacity-10': job !== 'none' && job !== 'cern' },
-                        ]" @mouseenter="job = 'cern'" @mouseleave="job = 'none'">CERN</div>
+                    <div v-for="job in jobs" :key="job.id" :class="[
+                        'transition-opacity duration-500 w-full',
+                        { 'opacity-5 dark:opacity-10': (selectedJob === null) || selectedJob?.id !== job.id },
+                    ]" @mouseenter="selectedJob = job" @mouseleave="selectedJob = null">
+                        {{ job.label }}
                     </div>
                 </div>
             </div>
@@ -136,6 +94,7 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 import vertexShader from '~/assets/shaders/vertex.glsl?raw';
 import fragmentShader from '~/assets/shaders/fragment.glsl?raw';
+import jobs from '~/content/jobs.json';
 
 
 // COLOR MODE --------------------------------------------------
@@ -149,10 +108,15 @@ watch(isDark, (newValue) => {
 // LAYOUT --------------------------------------------------
 const sphereRadiusPixels = ref(0);
 const hoverJobs = ref(false);
-const job = ref('none');
-const role = ref('');
-const period = ref('');
-const info = ref('Cras commodo commodo nisi vitae euismod. Cras vitae pharetra tortor. Nulla vel massa congue, ultrices elit ut, facilisis nunc. In ut mollis augue. Nullam a tellus metus. Aenean nisl orci, luctus sit amet tincidunt at, auctor eu augue. Phasellus vulputate elit ligula, porttitor luctus metus dignissim quis. Vestibulum accumsan convallis arcu, eget commodo ex tincidunt at. Fusce molestie porta metus.');
+type Job = {
+    id: string;
+    label: string;
+    role: string;
+    period: string;
+    city: string;
+    info: string;
+};
+const selectedJob = ref<Job | null>(null);
 
 // HTML ELEMENTS --------------------------------------------------
 const canvas = ref(null);
@@ -369,7 +333,7 @@ onMounted(() => {
         scrollTrigger: {
             trigger: experience.value,
             start: 'top 25%',
-            end: 'bottom bottom',
+            end: '+=75%',
             scrub: true,
         }
     });
@@ -399,13 +363,31 @@ onMounted(() => {
             end: 'top 10%',
             scrub: true,
         }
-    });
-    ScrollTrigger.create({
-        trigger: experience.value,
-        start: "bottom-=1% bottom",
-        onEnter: () => hoverJobs.value = true,
-        onLeaveBack: () => hoverJobs.value = false
-    });
+    }); // ---------------------------------------------------
+
+    // scrolling through jobs (experience, selectedJob) ----------
+    const base = window.innerHeight / 2;
+    const sectionHeight = window.innerHeight / 2;
+    const jobKeys = ['kth', 'finplify', 'epfl', 'cern'];
+    jobKeys.forEach((key, idx) => {
+        ScrollTrigger.create({
+            trigger: experience.value,
+            start: () => `top+=${base + idx * sectionHeight} top`,
+            end: () => `top+=${base + (idx + 1) * sectionHeight} top`,
+            onEnter: () => selectedJob.value = jobs[key as keyof typeof jobs],
+            onLeaveBack: () => selectedJob.value = idx > 0 ? jobs[jobKeys[idx - 1] as keyof typeof jobs] : null,
+        });
+        if (idx === jobKeys.length - 1) {
+            ScrollTrigger.create({
+                trigger: experience.value,
+                start: () => `top+=${base + (idx + 1) * sectionHeight} top`,
+                end: () => `top+=${base + (idx + 2) * sectionHeight} top`,
+                onEnter: () => selectedJob.value = null,
+                onLeaveBack: () => selectedJob.value = jobs[jobKeys[idx] as keyof typeof jobs],
+            });
+        }
+    }); // -------------------------------------------------------
+
 
     // COLOR MODE -------------------------------------------------
     watch(isDark, (newValue) => {
@@ -415,29 +397,6 @@ onMounted(() => {
     watch(colorMode, (newValue) => {
         sphereMaterial.uniforms.uDarkMode.value = newValue.value === 'dark';
         torusMaterial.color.set(getCSSColor('--color-primary'));
-    });
-    watch(job, (newValue) => {
-        if (newValue === 'kth') {
-            role.value = 'Student Assistant';
-            period.value = '02/2024 - 05/2024';
-            info.value = 'Proin nec suscipit justo, eget tristique mauris. Fusce interdum dolor nisi, vel elementum nunc accumsan vel. Curabitur laoreet et elit a porttitor. Morbi a commodo massa. Nullam quam ligula, pulvinar id scelerisque in, bibendum sed sapien. In aliquet fermentum lectus eu bibendum. Ut sit amet libero sit amet diam volutpat vulputate eget rhoncus sem. Curabitur dictum at velit eu mollis.';
-        } else if (newValue === 'finplify') {
-            role.value = 'Data Science Intern';
-            period.value = '06/2024 - 08/2024';
-            info.value = 'Fusce sagittis quam id nisl porta interdum. Integer ac leo volutpat metus pretium commodo vitae eget neque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae dignissim nisi, ac pellentesque lorem. Aenean ac volutpat turpis. Vestibulum mattis pellentesque fringilla. Etiam iaculis nunc eu justo varius pretium. Phasellus vulputate sollicitudin elit at venenatis. Praesent id consectetur ante.';
-        } else if (newValue === 'epfl') {
-            role.value = 'ML Research Assistant';
-            period.value = '03/2025 - 05/2025';
-            info.value = 'Cras commodo commodo nisi vitae euismod. Cras vitae pharetra tortor. Nulla vel massa congue, ultrices elit ut, facilisis nunc. In ut mollis augue. Nullam a tellus metus. Aenean nisl orci, luctus sit amet tincidunt at, auctor eu augue. Phasellus vulputate elit ligula, porttitor luctus metus dignissim quis. Vestibulum accumsan convallis arcu, eget commodo ex tincidunt at. Fusce molestie porta metus.';
-        } else if (newValue === 'cern') {
-            role.value = 'DataOps Intern';
-            period.value = '06/2025 - 08/2025';
-            info.value = 'Maecenas nec venenatis sem, non tempor massa. Nulla quis dui lacus. Pellentesque in lectus urna. Maecenas a risus tempus neque vulputate varius. Phasellus id maximus magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer interdum in nunc sit amet interdum. Pellentesque ac sem nunc. Cras at mauris vel nisl sollicitudin venenatis. Maecenas libero arcu, lobortis ac diam.';
-        } else {
-            role.value = '';
-            period.value = '';
-            info.value = 'Cras commodo commodo nisi vitae euismod. Cras vitae pharetra tortor. Nulla vel massa congue, ultrices elit ut, facilisis nunc. In ut mollis augue. Nullam a tellus metus. Aenean nisl orci, luctus sit amet tincidunt at, auctor eu augue. Phasellus vulputate elit ligula, porttitor luctus metus dignissim quis. Vestibulum accumsan convallis arcu, eget commodo ex tincidunt at. Fusce molestie porta metus.';
-        }
     });
 
     onUnmounted(() => {

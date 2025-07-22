@@ -43,7 +43,7 @@
                         class="w-full md:max-w-[85vw] lg:max-w-[75vw] xl:max-w-[65vw] 2xl:max-w-[60vw] transition-transform duration-300" />
                 </ClientOnly>
                 <div :class="[
-                    'w-5/6 lg:w-11/12 -mt-5 sm:-mt-10 md:-mt-20 lg:-mt-100 lg:mb-10',
+                    'w-5/6 lg:w-11/12 -mt-5 sm:-mt-10 md:-mt-20 lg:-mt-100 lg:mb-10 2xl:mb-15',
                     'text-sm sm:text-base lg:text-lg xl:text-xl 2xl:text-2xl',
                 ]">
                     <p v-for="pair in [
@@ -53,16 +53,12 @@
                     ]" :key="pair.label"
                         :class="['text-justify transition-opacity duration-500', { 'opacity-0': !selectedJob }]">
                         <span class="font-primary text-highlight">{{ pair.label }}</span>
-                        <transition 
-                            mode="out-in" 
-                            enter-from-class="opacity-0" 
-                            enter-active-class="duration-200 ease-in"
-                            enter-to-class="opacity-100" 
-                            leave-from-class="opacity-100"
-                            leave-active-class="duration-200 ease-in" 
-                            leave-to-class="opacity-0"
-                        >
-                            <span :key="pair.value" :class="['font-text ml-2', { 'whitespace-break-spaces' : !selectedJob }]">{{ pair.value }}</span>
+                        <transition mode="out-in" enter-from-class="opacity-0" enter-active-class="duration-200 ease-in"
+                            enter-to-class="opacity-100" leave-from-class="opacity-100"
+                            leave-active-class="duration-200 ease-in" leave-to-class="opacity-0">
+                            <span :key="pair.value"
+                                :class="['font-text ml-2', { 'whitespace-break-spaces': !selectedJob }]">{{ pair.value
+                                }}</span>
                         </transition>
                     </p>
                 </div>
@@ -82,6 +78,9 @@
             </div>
         </div>
     </div>
+    <div ref="projects" class="h-screen w-full bg-secondary text-primary transition-colors duration-500">
+
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -95,7 +94,6 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 import vertexShader from '~/assets/shaders/vertex.glsl?raw';
 import fragmentShader from '~/assets/shaders/fragment.glsl?raw';
 import jobs from '~/content/jobs.json';
-
 
 // COLOR MODE --------------------------------------------------
 const colorMode = useColorMode();
@@ -216,18 +214,19 @@ onMounted(() => {
 
     // ANIMATIONS -------------------------------------------------
     // sphere general rotation ----------
-    gsap.to(sphere.rotation, {
-        y: 20 * Math.PI,
-        ease: 'none',
+    gsap.timeline({
         scrollTrigger: {
             trigger: document.body,
             start: 'top top',
             end: 'bottom bottom',
             scrub: true,
         }
+    }).to(sphere.rotation, {
+        y: 30 * Math.PI,
+        ease: 'none',
     }); // ------------------------------
 
-    // torus n°1 (hero) ----------
+    // torus n°1 (hero, torus) ----------
     gsap.timeline({
         scrollTrigger: {
             trigger: hero.value,
@@ -235,12 +234,10 @@ onMounted(() => {
             end: 'bottom top',
             scrub: true,
         }
-    })
-        .to(torus1.position, { y: 6 })
-        .to(torus1.rotation, { y: Math.PI / 4 }, "<");
-    // ----------------------------
+    }).to(torus1.position, { y: 6 }).to(torus1.rotation, { y: Math.PI / 4 }, "<");
+    // ----------------------------------
 
-    // sphere movement n°1 (hero) ----------
+    // sphere movement n°1 (hero, sphere @ torus) ----------
     const sphereHeroTL = gsap.timeline({
         scrollTrigger: {
             trigger: hero.value,
@@ -252,38 +249,40 @@ onMounted(() => {
         .to(sphere.position, { y: -1, z: -2, ease: 'power1.out', duration: 0.25 });
     if (lg.value) {
         sphereHeroTL
-            .to(sphere.position, { z: -1, duration: 0.75 })
+            .to(sphere.position, { z: -0.5, duration: 0.75 })
             .to(sphere.position, { x: -2, y: 0, duration: 0.5 }, "<");
     } else {
         sphereHeroTL
             .to(sphere.scale, { x: 0, y: 0, z: 0, duration: 0.2 }).to({}, { duration: 0.5 });
-    }; // ----------------------------------
+    }; // --------------------------------------------------
 
     // about text (about) ----------
     const split = new SplitText(aboutText.value, { type: "words" });
-    gsap.from(split.words, {
-        opacity: 0.1,
-        stagger: 3,
-        duration: 2,
-        ease: "none",
+    gsap.timeline({
         scrollTrigger: {
             trigger: about.value,
             start: 'top 60%',
             end: 'bottom 60%',
             scrub: true
-        },
+        }
+    }).from(split.words, {
+        opacity: 0.1,
+        stagger: 3,
+        duration: 2,
+        ease: "none",
     });
-    gsap.to(aboutText.value, {
-        opacity: 0,
+    gsap.timeline({
         scrollTrigger: {
             trigger: about.value,
             start: 'bottom 60%',
             end: 'bottom 30%',
             scrub: true,
         }
+    }).to(aboutText.value, {
+        opacity: 0,
     }); // -------------------------
 
-    // torus n°2 (experience) ----------
+    // torus n°2 (experience, torus) ----------
     gsap.timeline({
         scrollTrigger: {
             trigger: experience.value,
@@ -294,9 +293,9 @@ onMounted(() => {
     })
         .to(torus2.position, { y: 6 })
         .to(torus2.rotation, { y: - Math.PI / 5 }, "<");
-    // ----------------------------
+    // ----------------------------------------
 
-    // sphere movement n°2 (experience, torus) ----------
+    // sphere movement n°2 (experience, sphere @ torus) ----------
     ScrollTrigger.create({
         trigger: experience.value,
         start: "top bottom",
@@ -307,7 +306,7 @@ onMounted(() => {
             sphereMaterial.uniforms.uTorusTransition.value = 1;
         }
     });
-    const sphereExperienceTimeline = gsap.timeline({
+    const sphereExperienceTL = gsap.timeline({
         scrollTrigger: {
             trigger: experience.value,
             start: 'top 70%',
@@ -316,53 +315,57 @@ onMounted(() => {
         }
     });
     if (lg.value) {
-        sphereExperienceTimeline
+        sphereExperienceTL
             .to(sphere.position, { z: -2, x: 0 });
     } else {
-        sphereExperienceTimeline
+        sphereExperienceTL
             .to(sphere.scale, { x: 1, y: 1, z: 1, ease: "none" })
             .to(sphere.position, { y: 0 }, "<");
-    }; // -----------------------------------------------
+    }; // --------------------------------------------------------
 
     // sphere movement n°3 (experience - scale out) ----------
-    gsap.to(sphere.scale, {
-        x: 8,
-        y: 8,
-        z: 8,
-        ease: "none",
+    gsap.timeline({
         scrollTrigger: {
             trigger: experience.value,
             start: 'top 25%',
             end: '+=75%',
             scrub: true,
         }
+    }).to(sphere.scale, {
+        x: 8,
+        y: 8,
+        z: 8,
+        ease: "none",
     });
-    gsap.to(experienceContent.value, {
-        opacity: 1,
+    gsap.timeline({
         scrollTrigger: {
             trigger: experience.value,
             start: 'top 25%',
             end: 'top 20%',
             scrub: true
         }
+    }).to(experienceContent.value, {
+        opacity: 1,
     });
-    gsap.to(sphereMaterial.uniforms.uDisplacementStrength, {
-        value: 0,
+    gsap.timeline({
         scrollTrigger: {
             trigger: experience.value,
             start: 'top 35%',
             end: 'top 25%',
             scrub: true,
         }
-    });
-    gsap.to(sphereMaterial.uniforms.uBrightness, {
+    }).to(sphereMaterial.uniforms.uDisplacementStrength, {
         value: 0,
+    });
+    gsap.timeline({
         scrollTrigger: {
             trigger: experience.value,
             start: 'top 35%',
             end: 'top 10%',
             scrub: true,
         }
+    }).to(sphereMaterial.uniforms.uBrightness, {
+        value: 0,
     }); // ---------------------------------------------------
 
     // scrolling through jobs (experience, selectedJob) ----------
@@ -373,7 +376,6 @@ onMounted(() => {
         ScrollTrigger.create({
             trigger: experience.value,
             start: () => `top+=${base + idx * sectionHeight} top`,
-            end: () => `top+=${base + (idx + 1) * sectionHeight} top`,
             onEnter: () => selectedJob.value = jobs[key as keyof typeof jobs],
             onLeaveBack: () => selectedJob.value = idx > 0 ? jobs[jobKeys[idx - 1] as keyof typeof jobs] : null,
         });
@@ -381,12 +383,57 @@ onMounted(() => {
             ScrollTrigger.create({
                 trigger: experience.value,
                 start: () => `top+=${base + (idx + 1) * sectionHeight} top`,
-                end: () => `top+=${base + (idx + 2) * sectionHeight} top`,
                 onEnter: () => selectedJob.value = null,
                 onLeaveBack: () => selectedJob.value = jobs[jobKeys[idx] as keyof typeof jobs],
             });
         }
     }); // -------------------------------------------------------
+
+    // sphere movement n°4 (experience - scale in) ----------
+    gsap.timeline({
+        scrollTrigger: {
+            trigger: experience.value,
+            start: `top+=${base + (jobKeys.length * sectionHeight)} top`,
+            end: "+=75%",
+            scrub: true,
+        }
+    }).to(sphere.scale, {
+        x: 1,
+        y: 1,
+        z: 1,
+        ease: "none"
+    });
+    gsap.timeline({
+        scrollTrigger: {
+            trigger: experience.value,
+            start: 'bottom 80%',
+            end: 'bottom 75%',
+            scrub: true,
+        }
+    }).to(experienceContent.value, {
+        opacity: 0,
+    });
+
+    gsap.timeline({
+        scrollTrigger: {
+            trigger: experience.value,
+            start: 'bottom 75%',
+            end: 'bottom 65%',
+            scrub: true,
+        }
+    }).to(sphereMaterial.uniforms.uDisplacementStrength, {
+        value: 0.1,
+    });
+    gsap.timeline({
+        scrollTrigger: {
+            trigger: experience.value,
+            start: 'bottom 80%',
+            end: 'bottom 60%',
+            scrub: true,
+        }
+    }).to(sphereMaterial.uniforms.uBrightness, {
+        value: 0.05,
+    }); // ---------------------------------------------------
 
 
     // COLOR MODE -------------------------------------------------

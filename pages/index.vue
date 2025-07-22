@@ -23,10 +23,10 @@
                 'w-4/5 font-text text-center',
                 'text-3xl sm:text-5xl md:text-6xl xl:text-7xl 2xl:text-8xl',
             ]">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-                industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap
-                into electronic typesetting, remaining essentially unchanged.
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry<span class="text-highlight">.</span> Lorem Ipsum has been the
+                industry<span class="text-highlight">'</span>s standard dummy text ever since the 1500s<span class="text-highlight">,</span> when an unknown printer took a galley of type and
+                scrambled it to make a type specimen book<span class="text-highlight">.</span> It has survived not only five centuries<span class="text-highlight">,</span> but also the leap
+                into electronic typesetting<span class="text-highlight">,</span> remaining essentially unchanged<span class="text-highlight">.</span>
             </p>
         </div>
     </div>
@@ -78,9 +78,7 @@
             </div>
         </div>
     </div>
-    <div ref="projects" class="h-screen w-full bg-secondary text-primary transition-colors duration-500">
-
-    </div>
+    <div ref="projects" class="h-screen w-full bg-secondary text-primary transition-colors duration-500"></div>
 </template>
 
 <script setup lang="ts">
@@ -124,6 +122,7 @@ const aboutText = ref(null);
 const experience = ref(null);
 const experienceFrame = ref(null);
 const experienceContent = ref(null);
+const projects = ref(null);
 
 // UTILS --------------------------------------------------
 const getCSSColor = (variable: string) => getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
@@ -163,6 +162,18 @@ onMounted(() => {
     });
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(sphere);
+    const sphere2 = sphere.clone();
+    sphere2.material = sphereMaterial;
+    sphere2.visible = false;
+    scene.add(sphere2);
+    const sphere3 = sphere.clone();
+    sphere3.material = sphereMaterial;
+    sphere3.visible = false;
+    scene.add(sphere3);
+    const sphere4 = sphere.clone();
+    sphere4.material = sphereMaterial;
+    sphere4.visible = false;
+    scene.add(sphere4);
 
     // TORUS n°1 & n°2 --------------------------------------------------
     const torusGeometry = new THREE.TorusGeometry(1.5, 0.05, 10, 50);
@@ -177,15 +188,35 @@ onMounted(() => {
     torus2.position.set(0, -6, -2);
     torus2.rotation.set(Math.PI / 2, Math.PI / 5, 0);
     scene.add(torus2);
+    const torus3 = new THREE.Mesh(torusGeometry, torusMaterial);
+    torus3.position.set(0, -6, -2);
+    torus3.rotation.set(Math.PI / 2, Math.PI / 4, 0);
+    scene.add(torus3);
 
     // ANIMATION LOOP --------------------------------------------------
     const clock = new THREE.Clock();
     const animate = () => {
         // update sphere
         sphereMaterial.uniforms.uTime.value = clock.getElapsedTime();
-        sphereMaterial.uniforms.uTorusPosition.value.copy(sphereMaterial.uniforms.uTorusTransition.value === 1 ? torus1.position : torus2.position);
-        sphereMaterial.uniforms.uTorusRotation.value.copy(sphereMaterial.uniforms.uTorusTransition.value === 1 ? torus1.rotation : torus2.rotation);
+        const transition = sphereMaterial.uniforms.uTorusTransition.value;
+        if (transition === 1) {
+            sphereMaterial.uniforms.uTorusPosition.value.copy(torus1.position);
+            sphereMaterial.uniforms.uTorusRotation.value.copy(torus1.rotation);
+        } else if (transition === 2) {
+            sphereMaterial.uniforms.uTorusPosition.value.copy(torus2.position);
+            sphereMaterial.uniforms.uTorusRotation.value.copy(torus2.rotation);
+        } else if (transition === 3) {
+            sphereMaterial.uniforms.uTorusPosition.value.copy(torus3.position);
+            sphereMaterial.uniforms.uTorusRotation.value.copy(torus3.rotation);
+        }
         renderer.render(scene, camera);
+
+        sphere2.rotation.copy(sphere.rotation);
+        sphere2.scale.copy(sphere.scale);
+        sphere3.rotation.copy(sphere.rotation);
+        sphere3.scale.copy(sphere.scale);
+        sphere4.rotation.copy(sphere.rotation);
+        sphere4.scale.copy(sphere.scale);
 
         // update clip-mask
         const fov = camera.fov * (Math.PI / 180);
@@ -234,26 +265,44 @@ onMounted(() => {
             end: 'bottom top',
             scrub: true,
         }
-    }).to(torus1.position, { y: 6 }).to(torus1.rotation, { y: Math.PI / 4 }, "<");
+    }).to(torus1.position, {
+        y: 6
+    }).to(torus1.rotation, {
+        y: Math.PI / 4
+    }, "<");
     // ----------------------------------
 
     // sphere movement n°1 (hero, sphere @ torus) ----------
     const sphereHeroTL = gsap.timeline({
         scrollTrigger: {
             trigger: hero.value,
+            endTrigger: about.value,
             start: 'top top',
-            end: 'bottom top',
+            end: 'top+=10% top',
             scrub: true,
         }
-    })
-        .to(sphere.position, { y: -1, z: -2, ease: 'power1.out', duration: 0.25 });
+    }).to(sphere.position, {
+        y: -1,
+        z: -2,
+        ease: 'power1.out',
+        duration: 0.25
+    });
     if (lg.value) {
-        sphereHeroTL
-            .to(sphere.position, { z: -0.5, duration: 0.75 })
-            .to(sphere.position, { x: -2, y: 0, duration: 0.5 }, "<");
+        sphereHeroTL.to(sphere.position, {
+            z: -1,
+            duration: 0.75
+        }).to(sphere.position, {
+            x: -2,
+            y: 1,
+            duration: 0.5
+        }, "<");
     } else {
-        sphereHeroTL
-            .to(sphere.scale, { x: 0, y: 0, z: 0, duration: 0.2 }).to({}, { duration: 0.5 });
+        sphereHeroTL.to(sphere.scale, {
+            x: 0,
+            y: 0,
+            z: 0,
+            duration: 0.2
+        }).to({}, { duration: 0.5 });
     }; // --------------------------------------------------
 
     // about text (about) ----------
@@ -282,20 +331,43 @@ onMounted(() => {
         opacity: 0,
     }); // -------------------------
 
+    // sphere movement n°2 (about, sphere) ----------
+    if (lg.value) {
+        gsap.timeline({
+            scrollTrigger: {
+                trigger: about.value,
+                endTrigger: experience.value,
+                start: 'top top',
+                end: 'top 30%',
+                scrub: true,
+            }
+        }).to(sphere.position, {
+            y: -1,
+            duration: 0.8,
+            ease: "none"
+        }).to(sphere.position, {
+            y: 0,
+            duration: 0.2,
+            ease: "none"
+        });
+    } // --------------------------------------------
+
     // torus n°2 (experience, torus) ----------
     gsap.timeline({
         scrollTrigger: {
             trigger: experience.value,
-            start: 'top 50%',
+            start: 'top 60%',
             end: 'top top',
             scrub: true,
         }
-    })
-        .to(torus2.position, { y: 6 })
-        .to(torus2.rotation, { y: - Math.PI / 5 }, "<");
+    }).to(torus2.position, {
+        y: 6
+    }).to(torus2.rotation, {
+        y: - Math.PI / 5
+    }, "<");
     // ----------------------------------------
 
-    // sphere movement n°2 (experience, sphere @ torus) ----------
+    // sphere movement n°3 (experience, sphere @ torus) ----------
     ScrollTrigger.create({
         trigger: experience.value,
         start: "top bottom",
@@ -310,20 +382,27 @@ onMounted(() => {
         scrollTrigger: {
             trigger: experience.value,
             start: 'top 70%',
-            end: 'top 25%',
+            end: 'top 35%',
             scrub: true,
         }
     });
     if (lg.value) {
-        sphereExperienceTL
-            .to(sphere.position, { z: -2, x: 0 });
+        sphereExperienceTL.to(sphere.position, {
+            z: -2,
+            x: 0
+        });
     } else {
-        sphereExperienceTL
-            .to(sphere.scale, { x: 1, y: 1, z: 1, ease: "none" })
-            .to(sphere.position, { y: 0 }, "<");
+        sphereExperienceTL.to(sphere.scale, {
+            x: 1,
+            y: 1,
+            z: 1,
+            ease: "none"
+        }).to(sphere.position, {
+            y: 0
+        }, "<");
     }; // --------------------------------------------------------
 
-    // sphere movement n°3 (experience - scale out) ----------
+    // sphere movement n°4 (experience - scale out) ----------
     gsap.timeline({
         scrollTrigger: {
             trigger: experience.value,
@@ -389,7 +468,7 @@ onMounted(() => {
         }
     }); // -------------------------------------------------------
 
-    // sphere movement n°4 (experience - scale in) ----------
+    // sphere movement n°5 (experience - scale in) ----------
     gsap.timeline({
         scrollTrigger: {
             trigger: experience.value,
@@ -434,6 +513,83 @@ onMounted(() => {
     }).to(sphereMaterial.uniforms.uBrightness, {
         value: 0.05,
     }); // ---------------------------------------------------
+
+    // torus n°3 (projects, torus) ----------
+    gsap.timeline({
+        scrollTrigger: {
+            trigger: experience.value,
+            start: 'bottom 75%',
+            end: 'bottom top',
+            scrub: true,
+        }
+    }).to(torus3.position, {
+        y: 6
+    }).to(torus3.rotation, {
+        y: -Math.PI / 4
+    }, "<");
+    // ----------------------------------
+
+    // sphere movement n°6 (projects, sphere @ torus)
+    ScrollTrigger.create({
+        trigger: experience.value,
+        start: "bottom bottom",
+        onEnter: () => {
+            sphereMaterial.uniforms.uTorusTransition.value = 3;
+        },
+        onLeaveBack: () => {
+            sphereMaterial.uniforms.uTorusTransition.value = 2;
+        }
+    });
+
+    gsap.timeline({
+        scrollTrigger: {
+            trigger: projects.value,
+            start: 'top 40%',
+            end: 'top top',
+            scrub: true,
+        }
+    }).to(sphereMaterial.uniforms.uDisplacementStrength, {
+        value: 0,
+        duration: 0.1
+    }).to(sphere.position, {
+        x: md.value ? 1.5 : 0,
+        y: md.value ? 1.5 : 3
+    }).to(sphere2.position, {
+        x: md.value ? -1.5 : 0,
+        y: md.value ? 1.5 : 1
+    }, "<").to(sphere3.position, {
+        x: md.value ? 1.5 : 0,
+        y: md.value ? -1.5 : -1
+    }, "<").to(sphere4.position, {
+        x: md.value ? -1.5 : 0,
+        y: md.value ? -1.5 : -3
+    }, "<").to(sphere.scale, {
+        x: md.value ? 0.8 : 0.6 ,
+        y: md.value ? 0.8 : 0.6,
+        z: md.value ? 0.8: 0.6
+    }, "<").to(sphereMaterial.uniforms.uDisplacementStrength, {
+        value: 0.09,
+    }, "<+=30%").to(sphereMaterial.uniforms.uDisplacementFrequency, {
+        value: 0.5
+    }, "<");
+
+    ScrollTrigger.create({
+        trigger: projects.value,
+        start: "top 40%",
+        onEnter: () => {
+            sphere2.position.copy(sphere.position);
+            sphere2.visible = true;
+            sphere3.position.copy(sphere.position);
+            sphere3.visible = true;
+            sphere4.position.copy(sphere.position);
+            sphere4.visible = true;
+        },
+        onLeaveBack: () => {
+            sphere2.visible = false;
+            sphere3.visible = false;
+            sphere4.visible = false;
+        }
+    })
 
 
     // COLOR MODE -------------------------------------------------

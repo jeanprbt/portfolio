@@ -1,6 +1,6 @@
 <template>
     <canvas ref="canvas" class="fixed z-2"></canvas>
-    <div ref="hero" class="h-screen w-full bg-secondary text-primary transition-colors duration-500">
+    <div ref="hero" class="h-lvh md:h-screen w-full bg-secondary text-primary transition-colors duration-500">
         <ClientOnly>
             <button @click="toggleDarkMode()"
                 class="fixed top-10 left-10 text-primary hover:opacity-80 transition-opacity z-10">
@@ -23,17 +23,22 @@
                 'w-4/5 font-text text-center',
                 'text-3xl sm:text-5xl md:text-6xl xl:text-7xl 2xl:text-8xl',
             ]">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry<span class="text-highlight">.</span> Lorem Ipsum has been the
-                industry<span class="text-highlight">'</span>s standard dummy text ever since the 1500s<span class="text-highlight">,</span> when an unknown printer took a galley of type and
-                scrambled it to make a type specimen book<span class="text-highlight">.</span> It has survived not only five centuries<span class="text-highlight">,</span> but also the leap
-                into electronic typesetting<span class="text-highlight">,</span> remaining essentially unchanged<span class="text-highlight">.</span>
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry<span
+                    class="text-highlight">.</span> Lorem Ipsum has been the
+                industry<span class="text-highlight">'</span>s standard dummy text ever since the 1500s<span
+                    class="text-highlight">,</span> when an unknown printer took a galley of type and
+                scrambled it to make a type specimen book<span class="text-highlight">.</span> It has survived not only
+                five centuries<span class="text-highlight">,</span> but also the leap
+                into electronic typesetting<span class="text-highlight">,</span> remaining essentially unchanged<span
+                    class="text-highlight">.</span>
             </p>
         </div>
     </div>
-    <div ref="experience" class="h-[400vh] w-full bg-secondary text-primary transition-colors duration-500">
+    <div ref="experience"
+        class="h-[350vh] lg:h-[400vh] w-full bg-secondary text-primary transition-colors duration-500">
         <div ref="experienceFrame" :style="`clip-path: circle(${sphereRadiusPixels}px at 50% 50%)`" :class="[
-            'fixed h-screen w-full z-3',
-            'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
+            'fixed h-svh md:h-screen w-full z-3',
+            'top-0 left-1/2 transform -translate-x-1/2',
             { 'pointer-events-none': !hoverJobs }
         ]">
             <div ref="experienceContent"
@@ -193,6 +198,7 @@ onMounted(() => {
     torus3.rotation.set(Math.PI / 2, Math.PI / 4, 0);
     scene.add(torus3);
 
+
     // ANIMATION LOOP --------------------------------------------------
     const clock = new THREE.Clock();
     const animate = () => {
@@ -217,13 +223,13 @@ onMounted(() => {
         sphere3.scale.copy(sphere.scale);
         sphere4.rotation.copy(sphere.rotation);
         sphere4.scale.copy(sphere.scale);
-
         // update clip-mask
         const fov = camera.fov * (Math.PI / 180);
         const distance = Math.abs(camera.position.z - sphere.position.z);
         const visibleHeight = 2 * Math.tan(fov / 2) * distance;
         const pixelsPerUnit = window.innerHeight / visibleHeight;
         sphereRadiusPixels.value = sphere.scale.x * pixelsPerUnit;
+        if (!lg.value) sphereRadiusPixels.value -= 6;
     };
     renderer.setAnimationLoop(animate);
 
@@ -356,7 +362,7 @@ onMounted(() => {
     gsap.timeline({
         scrollTrigger: {
             trigger: experience.value,
-            start: 'top 60%',
+            start: lg.value ? 'top 60%' : 'top 40%',
             end: 'top top',
             scrub: true,
         }
@@ -378,11 +384,11 @@ onMounted(() => {
             sphereMaterial.uniforms.uTorusTransition.value = 1;
         }
     });
-    const sphereExperienceTL = gsap.timeline({
+    let sphereExperienceTL = gsap.timeline({
         scrollTrigger: {
             trigger: experience.value,
-            start: 'top 70%',
-            end: 'top 35%',
+            start: lg.value ? 'top 70%' : 'top 60%',
+            end: lg.value ? 'top 35%' : 'top 25%',
             scrub: true,
         }
     });
@@ -403,6 +409,7 @@ onMounted(() => {
     }; // --------------------------------------------------------
 
     // sphere movement n°4 (experience - scale out) ----------
+    let scale = lg.value ? 8 : 5;
     gsap.timeline({
         scrollTrigger: {
             trigger: experience.value,
@@ -411,9 +418,9 @@ onMounted(() => {
             scrub: true,
         }
     }).to(sphere.scale, {
-        x: 8,
-        y: 8,
-        z: 8,
+        x: scale,
+        y: scale,
+        z: scale,
         ease: "none",
     });
     gsap.timeline({
@@ -448,7 +455,7 @@ onMounted(() => {
     }); // ---------------------------------------------------
 
     // scrolling through jobs (experience, selectedJob) ----------
-    const base = window.innerHeight / 2;
+    const base = lg.value ? window.innerHeight / 2 : window.innerHeight / 4;
     const sectionHeight = window.innerHeight / 2;
     const jobKeys = ['kth', 'finplify', 'epfl', 'cern'];
     jobKeys.forEach((key, idx) => {
@@ -473,7 +480,7 @@ onMounted(() => {
         scrollTrigger: {
             trigger: experience.value,
             start: `top+=${base + (jobKeys.length * sectionHeight)} top`,
-            end: "+=75%",
+            end: lg.value ? "+=75%" : "bottom 75%",
             scrub: true,
         }
     }).to(sphere.scale, {
@@ -564,9 +571,9 @@ onMounted(() => {
         x: md.value ? -1.5 : 0,
         y: md.value ? -1.5 : -3
     }, "<").to(sphere.scale, {
-        x: md.value ? 0.8 : 0.6 ,
+        x: md.value ? 0.8 : 0.6,
         y: md.value ? 0.8 : 0.6,
-        z: md.value ? 0.8: 0.6
+        z: md.value ? 0.8 : 0.6
     }, "<").to(sphereMaterial.uniforms.uDisplacementStrength, {
         value: 0.09,
     }, "<+=30%").to(sphereMaterial.uniforms.uDisplacementFrequency, {

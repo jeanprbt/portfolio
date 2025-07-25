@@ -1,12 +1,7 @@
 <template>
     <canvas ref="canvas" class="fixed z-2"></canvas>
+    <ClientOnly><DarkModeToggle @toggle="toggleDarkMode" :is-dark="isDark"/></ClientOnly>
     <div ref="hero" class="h-lvh md:h-screen w-full bg-secondary text-primary transition-colors duration-500">
-        <ClientOnly>
-            <button @click="toggleDarkMode()"
-                class="fixed top-10 left-10 text-primary hover:opacity-80 transition-opacity z-10">
-                <Icon :name="isDark ? 'i-heroicons-moon' : 'i-heroicons-sun'" size="1.5em" />
-            </button>
-        </ClientOnly>
         <h1 :class="[
             'absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-1',
             'font-primary text-center',

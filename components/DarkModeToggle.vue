@@ -1,0 +1,16 @@
+<template>
+    <button @click="emit('toggle')"
+        class="fixed top-10 left-10 text-primary hover:opacity-80 transition-opacity z-10">
+        <Icon :name="props.isDark ? 'i-heroicons-moon' : 'i-heroicons-sun'" size="1.5em" />
+    </button>
+</template>
+
+<script setup lang="ts">
+const emit = defineEmits(['toggle']);
+const props = defineProps({
+    isDark: {
+        type: Boolean,
+        required: true
+    }
+});
+</script>

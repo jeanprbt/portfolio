@@ -598,13 +598,13 @@ onMounted(() => {
         }
     })
 
-
     // COLOR MODE -------------------------------------------------
     watch(isDark, (newValue) => {
         sphereMaterial.uniforms.uDarkMode.value = newValue;
         torusMaterial.color.set(getCSSColor('--color-primary'));
     });
     watch(colorMode, (newValue) => {
+        isDark.value = newValue.value === 'dark';
         sphereMaterial.uniforms.uDarkMode.value = newValue.value === 'dark';
         torusMaterial.color.set(getCSSColor('--color-primary'));
     });

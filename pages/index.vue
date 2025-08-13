@@ -1,11 +1,13 @@
 <template>
     <canvas ref="canvas" class="fixed z-2"></canvas>
-    <ClientOnly><DarkModeToggle @toggle="toggleDarkMode" :is-dark="isDark"/></ClientOnly>
+    <ClientOnly>
+        <DarkModeToggle @toggle="toggleDarkMode" :is-dark="isDark" />
+    </ClientOnly>
     <div ref="hero" class="h-lvh md:h-screen w-full bg-secondary text-primary transition-colors duration-500">
         <h1 :class="[
             'absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-1',
             'font-primary text-center',
-            'text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl',
+            'text-6xl md:text-[4.25rem] lg:text-7xl xl:text-8xl 2xl:text-9xl',
         ]">
             Hi<span class="text-highlight">,</span> I<span class="text-highlight">'</span>m <span
                 class="font-secondary italic">Jean</span><span class="text-highlight">.</span>
@@ -83,6 +85,8 @@
 
 <script setup lang="ts">
 import * as THREE from 'three';
+import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -152,7 +156,6 @@ onMounted(() => {
             uDisplacementFrequency: { value: 1.0 },
             uDisplacementStrength: { value: 0.1 },
             uTorusPosition: { value: new THREE.Vector3() },
-            uTorusRotation: { value: new THREE.Vector3() },
             uTorusTransition: { value: 1.0 },
             uDarkMode: { value: false },
             uBrightness: { value: 0.05 },
@@ -175,24 +178,114 @@ onMounted(() => {
     sphere4.visible = false;
     scene.add(sphere4);
 
-    // TORUS n°1 & n°2 --------------------------------------------------
-    const torusGeometry = new THREE.TorusGeometry(1.5, 0.05, 10, 50);
+    // TORUSES --------------------------------------------------
+    const fontLoader = new FontLoader();
     const torusMaterial = new THREE.MeshBasicMaterial({
         color: getCSSColor('--color-primary')
-    })
-    const torus1 = new THREE.Mesh(torusGeometry, torusMaterial);
-    torus1.position.set(0, -6, -2);
-    torus1.rotation.set(Math.PI / 2, -Math.PI / 5, 0);
-    scene.add(torus1);
-    const torus2 = new THREE.Mesh(torusGeometry, torusMaterial);
-    torus2.position.set(0, -6, -2);
-    torus2.rotation.set(Math.PI / 2, Math.PI / 5, 0);
-    scene.add(torus2);
-    const torus3 = new THREE.Mesh(torusGeometry, torusMaterial);
-    torus3.position.set(0, -6, -2);
-    torus3.rotation.set(Math.PI / 2, Math.PI / 4, 0);
-    scene.add(torus3);
+    });
+    let torus1: THREE.Mesh;
+    let torus2: THREE.Mesh;
+    let torus3: THREE.Mesh;
+    let torus1Geometry: TextGeometry;
+    let torus2Geometry: TextGeometry;
+    let torus3Geometry: TextGeometry;
+    fontLoader.load('/font.json', (font: Font) => {
+        const positionOnCylinder = (geometry: TextGeometry, cylinderRadius: number) => {
+            const positions = geometry.attributes.position;
+            for (let i = 0; i < positions.count; i++) {
+                const x = positions.getX(i);
+                const y = positions.getY(i);
+                const z = positions.getZ(i);
 
+                const angle = -(x / cylinderRadius) * Math.PI * 2;
+                const newX = cylinderRadius * Math.cos(angle);
+                const newZ = cylinderRadius * Math.sin(angle);
+
+                positions.setX(i, newX);
+                positions.setY(i, y);
+                positions.setZ(i, newZ + z);
+            }
+            positions.needsUpdate = true;
+        };
+
+        // TORUS n°1 "ABOUT"
+        const torus1Radius = 2;
+        torus1Geometry = new TextGeometry('ABOUT', {
+            font: font,
+            size: 0.25,
+            depth: 0.1,
+        }).scale(1, 2, 1);
+        positionOnCylinder(torus1Geometry, torus1Radius);
+        torus1 = new THREE.Mesh(torus1Geometry, torusMaterial);
+        torus1.position.set(0, -8, -2);
+        torus1.rotation.set(0, 2.25 * Math.PI, 0);
+        scene.add(torus1);
+
+        gsap.timeline({
+            scrollTrigger: {
+                trigger: hero.value,
+                start: 'top top',
+                end: 'bottom top',
+                scrub: true,
+            }
+        }).to(torus1.position, {
+            y: 8
+        }).to(torus1.rotation, {
+            y: -0.5 * Math.PI
+        }, "<");
+
+        // TORUS n°2 "EXPERIENCE"
+        const torus2Radius = 2.25;
+        torus2Geometry = new TextGeometry('EXPERIENCE', {
+            font: font,
+            size: 0.2,
+            depth: 0.1
+        }).scale(1, 3, 1);
+        positionOnCylinder(torus2Geometry, torus2Radius);
+        torus2 = new THREE.Mesh(torus2Geometry, torusMaterial);
+        torus2.position.set(0, -8, -2);
+        torus2.rotation.set(0, 2.5 * Math.PI, 0);
+        scene.add(torus2);
+
+        gsap.timeline({
+            scrollTrigger: {
+                trigger: experience.value,
+                start: lg.value ? 'top 60%' : 'top 40%',
+                end: 'top top',
+                scrub: true,
+            }
+        }).to(torus2.position, {
+            y: 8
+        }).to(torus2.rotation, {
+            y: -0.75 * Math.PI
+        }, "<");
+
+        // TORUS n°3 "PROJECTS"
+        const torus3Radius = 2.1;
+        torus3Geometry = new TextGeometry('PROJECTS', {
+            font: font,
+            size: 0.25,
+            depth: 0.1
+        }).scale(1, 2.5, 1);
+        positionOnCylinder(torus3Geometry, torus3Radius);
+        torus3 = new THREE.Mesh(torus3Geometry, torusMaterial);
+        torus3.position.set(0, -8, -2);
+        torus3.rotation.set(0, 2.25 * Math.PI, 0);
+        scene.add(torus3);
+
+        gsap.timeline({
+            scrollTrigger: {
+                trigger: experience.value,
+                start: 'bottom 75%',
+                end: 'bottom top',
+                scrub: true,
+            }
+        }).to(torus3.position, {
+            y: 8
+        }).to(torus3.rotation, {
+            y: -0.5 * Math.PI
+        }, "<");
+    });
 
     // ANIMATION LOOP --------------------------------------------------
     const clock = new THREE.Clock();
@@ -200,24 +293,21 @@ onMounted(() => {
         // update sphere
         sphereMaterial.uniforms.uTime.value = clock.getElapsedTime();
         const transition = sphereMaterial.uniforms.uTorusTransition.value;
-        if (transition === 1) {
-            sphereMaterial.uniforms.uTorusPosition.value.copy(torus1.position);
-            sphereMaterial.uniforms.uTorusRotation.value.copy(torus1.rotation);
-        } else if (transition === 2) {
-            sphereMaterial.uniforms.uTorusPosition.value.copy(torus2.position);
-            sphereMaterial.uniforms.uTorusRotation.value.copy(torus2.rotation);
-        } else if (transition === 3) {
-            sphereMaterial.uniforms.uTorusPosition.value.copy(torus3.position);
-            sphereMaterial.uniforms.uTorusRotation.value.copy(torus3.rotation);
+        if (torus1) {
+            if (transition === 1) sphereMaterial.uniforms.uTorusPosition.value.copy(torus1.position);
+            else if (transition === 2) sphereMaterial.uniforms.uTorusPosition.value.copy(torus2.position);
+            else if (transition === 3) sphereMaterial.uniforms.uTorusPosition.value.copy(torus3.position);
         }
         renderer.render(scene, camera);
 
+        // update projects spheres
         sphere2.rotation.copy(sphere.rotation);
         sphere2.scale.copy(sphere.scale);
         sphere3.rotation.copy(sphere.rotation);
         sphere3.scale.copy(sphere.scale);
         sphere4.rotation.copy(sphere.rotation);
         sphere4.scale.copy(sphere.scale);
+
         // update clip-mask
         const fov = camera.fov * (Math.PI / 180);
         const distance = Math.abs(camera.position.z - sphere.position.z);
@@ -257,21 +347,6 @@ onMounted(() => {
         y: 30 * Math.PI,
         ease: 'none',
     }); // ------------------------------
-
-    // torus n°1 (hero, torus) ----------
-    gsap.timeline({
-        scrollTrigger: {
-            trigger: hero.value,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true,
-        }
-    }).to(torus1.position, {
-        y: 6
-    }).to(torus1.rotation, {
-        y: Math.PI / 4
-    }, "<");
-    // ----------------------------------
 
     // sphere movement n°1 (hero, sphere @ torus) ----------
     const sphereHeroTL = gsap.timeline({
@@ -352,21 +427,6 @@ onMounted(() => {
             ease: "none"
         });
     } // --------------------------------------------
-
-    // torus n°2 (experience, torus) ----------
-    gsap.timeline({
-        scrollTrigger: {
-            trigger: experience.value,
-            start: lg.value ? 'top 60%' : 'top 40%',
-            end: 'top top',
-            scrub: true,
-        }
-    }).to(torus2.position, {
-        y: 6
-    }).to(torus2.rotation, {
-        y: - Math.PI / 5
-    }, "<");
-    // ----------------------------------------
 
     // sphere movement n°3 (experience, sphere @ torus) ----------
     ScrollTrigger.create({
@@ -516,21 +576,6 @@ onMounted(() => {
         value: 0.05,
     }); // ---------------------------------------------------
 
-    // torus n°3 (projects, torus) ----------
-    gsap.timeline({
-        scrollTrigger: {
-            trigger: experience.value,
-            start: 'bottom 75%',
-            end: 'bottom top',
-            scrub: true,
-        }
-    }).to(torus3.position, {
-        y: 6
-    }).to(torus3.rotation, {
-        y: -Math.PI / 4
-    }, "<");
-    // ----------------------------------
-
     // sphere movement n°6 (projects, sphere @ torus)
     ScrollTrigger.create({
         trigger: experience.value,
@@ -608,7 +653,9 @@ onMounted(() => {
         renderer.dispose();
         sphereGeometry.dispose();
         sphereMaterial.dispose();
-        torusGeometry.dispose();
+        torus1Geometry.dispose();
+        torus2Geometry.dispose();
+        torus3Geometry.dispose();
         torusMaterial.dispose();
         window.removeEventListener('resize', onResize);
     });

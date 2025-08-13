@@ -5,7 +5,6 @@ uniform float uDistortionStrength;
 uniform float uDisplacementFrequency;
 uniform float uDisplacementStrength;
 uniform vec3 uTorusPosition;
-uniform vec3 uTorusRotation;
 uniform float uTorusTransition;
 varying float vPerlinStrength;
 varying float vInvert;
@@ -160,14 +159,12 @@ void main() {
     vec3 newPosition = position;
     newPosition += normal * perlinStrength;
 
-    // Compute intersection with torus
+    // Compute intersection with torus (always horizontal, up = vec3(0,1,0))
     vec4 worldPosition = modelMatrix * vec4(newPosition, 1.0);
     vec3 torusAxis = uTorusPosition;
-    float c = cos(uTorusRotation.y);
-    float s = sin(uTorusRotation.y);
-    vec3 torusUp = normalize(vec3(-s, c, 0.0)); // y-rotation only
+    vec3 torusUp = vec3(0.0, 1.0, 0.0); // always horizontal
     float d = dot(worldPosition.xyz - torusAxis, torusUp);
-    float smoothing = 0.1;
+    float smoothing = 0.6;
     vInvert = smoothstep(-smoothing, smoothing, (uTorusTransition == 2.0) ? -d : d);
 
     // Compute the final position in view space

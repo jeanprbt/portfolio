@@ -6,14 +6,9 @@ import vertexShader from '~/assets/shaders/vertex.glsl?raw';
 import fragmentShader from '~/assets/shaders/fragment.glsl?raw';
 
 export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
+
+    const isLoaded = ref(false);
     const sphereRadiusPixels = ref(0);
-    const windowWidth = ref(0);
-    const md = computed(() => windowWidth.value >= 768);
-    const lg = computed(() => windowWidth.value >= 1024);
-
-    const mediumScreenCamera = 3;
-    const smallScreenCamera = 3.5;
-
     const sphere = shallowRef<THREE.Mesh | null>(null);
     const cloneSpheres = shallowRef<THREE.Mesh[]>([]);
     const sphereMaterial = shallowRef<THREE.ShaderMaterial | null>(null);
@@ -27,6 +22,12 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
     let sphereGeometry: THREE.SphereGeometry;
     let torusGeometries: TextGeometry[] = [];
     let onResize: () => void;
+
+    const windowWidth = ref(0);
+    const md = computed(() => windowWidth.value >= 768);
+    const lg = computed(() => windowWidth.value >= 1024);
+    const mediumScreenCamera = 3;
+    const smallScreenCamera = 3.5;
 
     const initScene = () => {
         // 1. Scene
@@ -120,7 +121,11 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
                 toruses.value = [...toruses.value, torus];
                 torusGeometries.push(geometry);
             });
-        })
+
+            requestAnimationFrame(() => {
+                isLoaded.value = true;
+            });
+        });
 
         // 7. Animation loop
         const clock = new THREE.Clock();
@@ -184,6 +189,7 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
     });
 
     return {
+        isLoaded,
         sphereMaterial,
         sphere,
         cloneSpheres,

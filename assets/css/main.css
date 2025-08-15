@@ -23,3 +23,7 @@
     --color-primary: #ffffff;
     --color-secondary: #000000;
 }
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

@@ -1,4 +1,13 @@
 <template>
+    <div :class="[
+        'fixed inset-0 z-4 flex items-center justify-center',
+        'bg-secondary text-primary',
+        'transition-opacity duration-500 ease-in-out',
+        isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+    ]" aria-live="polite" aria-busy="true">
+        <div class="w-12 h-12 border-[3px] border-current border-t-transparent rounded-full animate-spin [animation-duration:0.8s]"
+            role="status" aria-label="Loading"></div>
+    </div>
     <canvas ref="canvas" class="fixed z-2"></canvas>
     <ClientOnly>
         <DarkModeToggle @toggle="toggleDarkMode" :is-dark="isDark" />
@@ -93,7 +102,7 @@ const experience = ref(null);
 const experienceContent = ref(null);
 const projects = ref(null);
 
-const { sphereMaterial, sphere, cloneSpheres, sphereRadiusPixels, torusTextMaterial, toruses } = useThreeScene(canvas);
+const { isLoaded, sphereMaterial, sphere, cloneSpheres, sphereRadiusPixels, torusTextMaterial, toruses } = useThreeScene(canvas);
 const { isDark, toggleDarkMode } = useDarkMode(sphereMaterial, torusTextMaterial);
 const _ = useHeroAnimations(hero, sphere, toruses);
 const __ = useAboutAnimations(about, aboutText, sphere);

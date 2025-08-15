@@ -21,26 +21,18 @@
 <script setup lang="ts">
 import dots from '~/assets/json/dots.json';
 
-const props = defineProps({
-    md: {
-        type: Boolean,
-        required: true
-    },
-    city: {
-        type: String,
-        required: false
-    }
-});
-
+const props = defineProps(['city']);
 const dotSize = ref(0);
-const updateSize = () => {
-    const coef = props.md ? 0.01 : 0.015;
-    dotSize.value = window.innerWidth * coef;
-};
+let onResize = () => {};
 
 onMounted(() => {
-    updateSize();
-    window.addEventListener('resize', updateSize);
+    onResize = () => {
+        const coef = window.innerWidth >= 768 ? 0.01 : 0.015; 
+        dotSize.value = window.innerWidth * coef;
+    };
+    window.addEventListener('resize', onResize);
+    onResize();
 });
-onUnmounted(() => window.removeEventListener('resize', updateSize));
+
+onUnmounted(() => window.removeEventListener('resize', onResize));
 </script>

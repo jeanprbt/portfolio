@@ -7,10 +7,5 @@
 
 <script setup lang="ts">
 const emit = defineEmits(['toggle']);
-const props = defineProps({
-    isDark: {
-        type: Boolean,
-        required: true
-    }
-});
+const props = defineProps(['isDark']);
 </script>

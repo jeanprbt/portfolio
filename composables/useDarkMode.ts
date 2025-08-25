@@ -1,6 +1,6 @@
 import type { ShallowRef } from "vue";
 
-export const useDarkMode = (sphereMaterial: ShallowRef, torusTextMaterial: ShallowRef) => {
+export const useDarkMode = (sphere: ShallowRef, toruses: ShallowRef) => {
     const colorMode = useColorMode();
     const isDark = ref(colorMode.value === "dark" ? true : false);
     const toggleDarkMode = () => isDark.value = !isDark.value;
@@ -8,13 +8,13 @@ export const useDarkMode = (sphereMaterial: ShallowRef, torusTextMaterial: Shall
     onMounted(() => {
         watch(isDark, (newValue) => {
             document.documentElement.classList.toggle('dark', newValue);
-            sphereMaterial.value!.uniforms.uDarkMode.value = newValue;
-            torusTextMaterial.value!.color.set(getCSSColor('--color-primary'));
+            sphere.value!.material.uniforms.uDarkMode.value = newValue;
+            toruses.value!.forEach((t: any) => t.material[0].color.set(getCSSColor('--color-primary')));
         });
         watch(colorMode, (newValue) => {
             isDark.value = newValue.value === 'dark';
-            sphereMaterial.value!.uniforms.uDarkMode.value = newValue.value === 'dark';
-            torusTextMaterial.value!.color.set(getCSSColor('--color-primary'));
+            sphere.value!.material.uniforms.uDarkMode.value = newValue.value === 'dark';
+            toruses.value!.forEach((t: any) => t.material[0].color.set(getCSSColor('--color-primary')));
         });
     });
 

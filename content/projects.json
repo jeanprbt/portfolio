@@ -1,0 +1,54 @@
+{
+    "javelo": {
+        "id": "javelo",
+        "label": "JaVelo",
+        "period": "06/2025 - 08/2025",
+        "links": [
+            {
+                "link": "https://github.com/jeanprbt/javelo",
+                "icon": "mdi:github"
+            }
+        ],
+        "info": "Maecenas nec venenatis sem, non tempor massa. Nulla quis dui lacus. Pellentesque in lectus urna. Maecenas a risus tempus neque vulputate varius. Phasellus id maximus magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer interdum in nunc sit amet interdum. Pellentesque ac sem nunc. Cras at mauris vel venenatis. Maecenas libero arcu, lobortis ac diam."
+    },
+    "dataringz": {
+        "id": "dataringz",
+        "label": "DataRingz",
+        "period": "06/2024 - 08/2024",
+        "links": [
+            {
+                "link": "https://github.com/jeanprbt/dataringz",
+                "icon": "mdi:github"
+            },
+            {
+                "link": "https://www.youtube.com/watch?v=g1Jm5Clbjf8",
+                "icon": "mdi:youtube"
+            },
+            {
+                "link": "https://dataringz.martinctl.dev",
+                "icon": "solar:global-outline"
+            }
+        ],
+        "info": "Fusce sagittis quam id nisl porta interdum. Integer ac leo volutpat metus pretium commodo vitae eget neque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae dignissim nisi, ac pellentesque lorem. Aenean ac volutpat turpis. Vestibulum mattis pellentesque fringilla. Etiam iaculis nunc eu justo varius pretium. Phasellus vulputate sollicitudin elit at venenatis."
+    },
+    "solarseg": {
+        "id": "solarseg",
+        "label": "SolarSeg",
+        "period": "02/2025 - 05/2025",
+        "links": [
+            {
+                "link": "https://github.com/jeanprbt/swiss-solar-panel-segmentation",
+                "icon": "mdi:github"
+            },
+            {
+                "link": "https://huggingface.co/spaces/jeanprbt/swiss-solar-panels-segmentation",
+                "icon": "simple-icons:huggingface"
+            },
+            {
+                "link": "/pdf/solarseg.pdf",
+                "icon": "mdi:book"
+            }
+        ],
+        "info": "Cras commodo commodo nisi vitae euismod. Cras vitae pharetra tortor. Nulla vel massa congue, ultrices elit ut, facilisis nunc. In ut mollis augue. Nullam a tellus metus. Aenean nisl orci, luctus sit amet tincidunt at, auctor eu augue. Phasellus vulputate elit ligula, porttitor luctus metus dignissim quis. Vestibulum accumsan convallis arcu, eget commodo ex tincidunt at."
+    }
+}

@@ -67,8 +67,9 @@
                             enter-to-class="opacity-100" leave-from-class="opacity-100"
                             leave-active-class="duration-200 ease-in" leave-to-class="opacity-0">
                             <span :key="pair.value"
-                                :class="['font-text ml-2', { 'whitespace-break-spaces': !selectedJob }]">{{ pair.value
-                                }}</span>
+                                :class="['font-text ml-2', { 'whitespace-break-spaces': !selectedJob }]">
+                                {{ pair.value }}
+                            </span>
                         </transition>
                     </p>
                 </div>
@@ -88,11 +89,71 @@
             </div>
         </div>
     </div>
-    <div ref="projects" class="h-screen w-full bg-secondary text-primary transition-colors duration-500"></div>
+    <div ref="projects" class="h-[400vh] w-full bg-secondary text-primary transition-colors duration-500">
+        <div ref="projectsContent" :class="[
+            'fixed h-svh md:h-screen w-full z-3',
+            'top-0 left-1/2 transform -translate-x-1/2',
+            'flex flex-col gap-4 justify-between md:justify-start opacity-0',
+        ]">
+            <div class="flex flex-col gap-4 md:gap-0 md:flex-row md:ml-10 mt-20 md:mt-0 h-2/5 md:h-3/5">
+                <div :class="[
+                    'font-primary text-center lg:text-left',
+                    'text-[6vw] lg:text-[20vh] lg:leading-none',
+                    'flex flex-row lg:flex-col gap-2 sm:gap-4 md:gap-6 lg:gap-0',
+                ]">
+                    <div v-for="proj in projs" :key="proj.id" :class="[
+                        'transition-opacity duration-500 w-full',
+                        { 'opacity-5 dark:opacity-10': (selectedProject === null) || selectedProject?.id !== proj.id },
+                    ]">
+                        {{ proj.label }}
+                    </div>
+                </div>
+                <transition mode="out-in" enter-from-class="opacity-0" enter-active-class="duration-200 ease-in"
+                    enter-to-class="opacity-100" leave-from-class="opacity-100"
+                    leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
+                    <img v-if="selectedProject" :src="`/img/${selectedProject.id}_${isDark ? 'dark' : 'light'}.png`"
+                        class="md:h-full" />
+                </transition>
+            </div>
+            <div class="md:mx-10 flex flex-col md:flex-row justify-between">
+                <div class="md:w-2/5 text-sm sm:text-base lg:text-lg xl:text-xl 2xl:text-2xl">
+                    <p v-for="pair in [
+                        { label: 'PERIOD', value: selectedProject ? selectedProject.period : '' },
+                        { label: 'INFO', value: selectedProject ? selectedProject.info : ' '.repeat(380) }
+                    ]" :key="pair.label"
+                        :class="['text-justify transition-opacity duration-200', { 'opacity-0': !selectedProject }]">
+                        <span class="font-primary text-highlight">{{ pair.label }}</span>
+                        <transition mode="out-in" enter-from-class="opacity-0" enter-active-class="duration-200 ease-in"
+                            enter-to-class="opacity-100">
+                            <span :key="pair.value"
+                                :class="['font-text ml-2', { 'whitespace-break-spaces': !selectedProject }]">
+                                {{ pair.value }}
+                            </span>
+                        </transition>
+                    </p>
+                </div>
+                <transition mode="out-in" enter-from-class="opacity-0" enter-active-class="duration-200 ease-in"
+                    enter-to-class="opacity-100" leave-from-class="opacity-100"
+                    leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
+                    <div v-if="selectedProject"
+                        class="w-2/5 flex flex-col items-center justify-center gap-8 text-primary">
+                        <h1 class="font-primary text-highlight text-sm sm:text-base lg:text-lg xl:text-xl 2xl:text-2xl">LINKS</h1>
+                        <div class="w-2/3 flex items-center justify-around gap-4 text-primary">
+                            <a v-for="link in selectedProject.links" :href="link.link"
+                                class="hover:opacity-50 transition-opacity" target="_blank" rel="noopener noreferrer">
+                                <Icon :name="link.icon" size="3em" />
+                            </a>
+                        </div>
+                    </div>
+                </transition>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import jobs from '~/content/jobs.json';
+import projs from '~/content/projects.json';
 
 const canvas = ref(null);
 const hero = ref(null);
@@ -101,11 +162,12 @@ const aboutText = ref(null);
 const experience = ref(null);
 const experienceContent = ref(null);
 const projects = ref(null);
+const projectsContent = ref(null);
 
-const { isLoaded, sphereMaterial, sphere, cloneSpheres, sphereRadiusPixels, torusTextMaterial, toruses } = useThreeScene(canvas);
-const { isDark, toggleDarkMode } = useDarkMode(sphereMaterial, torusTextMaterial);
+const { isLoaded, sphere, sphereGroup, cloneSpheres, sphereRadiusPixels, toruses } = useThreeScene(canvas);
+const { isDark, toggleDarkMode } = useDarkMode(sphere, toruses);
 const _ = useHeroAnimations(hero, sphere, toruses);
 const __ = useAboutAnimations(about, aboutText, sphere);
-const { selectedJob } = useExperienceAnimations(experience, experienceContent, sphere, sphereMaterial, toruses);
-const ___ = useProjectsAnimations(projects, sphere, sphereMaterial, cloneSpheres);
+const { selectedJob } = useExperienceAnimations(experience, experienceContent, sphere, toruses);
+const { selectedProject } = useProjectsAnimations(projects, projectsContent, sphere, cloneSpheres, sphereGroup);
 </script>

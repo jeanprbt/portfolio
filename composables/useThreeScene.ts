@@ -8,19 +8,15 @@ import fragmentShader from '~/assets/shaders/fragment.glsl?raw';
 export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
 
     const isLoaded = ref(false);
-    const sphereRadiusPixels = ref(0);
     const sphere = shallowRef<THREE.Mesh | null>(null);
+    const sphereGroup = shallowRef<THREE.Group | null>(null);
     const cloneSpheres = shallowRef<THREE.Mesh[]>([]);
-    const sphereMaterial = shallowRef<THREE.ShaderMaterial | null>(null);
+    const sphereRadiusPixels = ref(0);
     const toruses = shallowRef<THREE.Mesh[]>([]);
-    const torusTextMaterial = shallowRef<THREE.MeshBasicMaterial | null>(null);
-    const torusDotMaterial = shallowRef<THREE.MeshBasicMaterial | null>(null);
 
     let scene: THREE.Scene;
     let camera: THREE.PerspectiveCamera;
     let renderer: THREE.WebGLRenderer;
-    let sphereGeometry: THREE.SphereGeometry;
-    let torusGeometries: TextGeometry[] = [];
     let onResize: () => void;
 
     const windowWidth = ref(0);
@@ -47,8 +43,8 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
         renderer.setPixelRatio(window.devicePixelRatio);
 
         // 4. Main sphere
-        sphereGeometry = new THREE.SphereGeometry(1, 512, 512);
-        sphereMaterial.value = new THREE.ShaderMaterial({
+        const sphereGeometry = new THREE.SphereGeometry(1, 512, 512);
+        const sphereMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 uTime: { value: 0 },
                 uTimeFrequency: { value: 0.5 },
@@ -60,27 +56,42 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
                 uTorusTransition: { value: 1.0 },
                 uDarkMode: { value: false },
                 uBrightness: { value: 0.05 },
+                uOpacity: { value: 1.0 }
             },
             vertexShader: vertexShader,
             fragmentShader: fragmentShader,
         });
-        sphere.value = new THREE.Mesh(sphereGeometry, sphereMaterial.value);
+        sphereMaterial.transparent = true;
+        sphere.value = new THREE.Mesh(sphereGeometry, sphereMaterial);
         scene.add(sphere.value);
 
         // 5. Clone spheres
-        for (let i = 0; i < 3; i++) {
+        sphereGroup.value = new THREE.Group();
+        scene.add(sphereGroup.value);
+        sphereGroup.value.add(sphere.value);
+
+        for (let i = 0; i < 2; i++) {
             const cloneSphere = sphere.value.clone();
-            cloneSphere.material = sphereMaterial.value;
+
+            const sphereMaterial = (sphere.value.material as THREE.ShaderMaterial);
+            const cloneSphereMaterial = sphereMaterial.clone();
+            cloneSphereMaterial.uniforms.uTime = sphereMaterial.uniforms.uTime;
+            cloneSphereMaterial.uniforms.uTorusPosition = sphereMaterial.uniforms.uTorusPosition;
+            cloneSphereMaterial.uniforms.uTorusTransition = sphereMaterial.uniforms.uTorusTransition;
+            cloneSphereMaterial.uniforms.uDarkMode = sphereMaterial.uniforms.uDarkMode;
+            cloneSphere.material = cloneSphereMaterial;
+            
             cloneSphere.visible = false;
             scene.add(cloneSphere);
             cloneSpheres.value.push(cloneSphere);
+            sphereGroup.value.add(cloneSphere);
         }
 
         // 6. Text toruses
-        torusDotMaterial.value = new THREE.MeshBasicMaterial({
+        const torusDotMaterial = new THREE.MeshBasicMaterial({
             color: getCSSColor('--color-highlight')
         });
-        torusTextMaterial.value = new THREE.MeshBasicMaterial({
+        const torusTextMaterial = new THREE.MeshBasicMaterial({
             color: getCSSColor('--color-primary')
         });
         const fontLoader = new FontLoader();
@@ -114,12 +125,11 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
                 createDotGroup(geometry, params.text, font);
                 positionOnCylinder(geometry, params.radius);
 
-                const torus = new THREE.Mesh(geometry, [torusTextMaterial.value!, torusDotMaterial.value!]);
+                const torus = new THREE.Mesh(geometry, [torusTextMaterial, torusDotMaterial]);
                 torus.position.set(0, -8, -2);
                 torus.rotation.set(0, params.rotation, 0);
                 scene.add(torus);
                 toruses.value = [...toruses.value, torus];
-                torusGeometries.push(geometry);
             });
 
             requestAnimationFrame(() => {
@@ -131,12 +141,12 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
         const clock = new THREE.Clock();
         const animate = () => {
             // update sphere
-            sphereMaterial.value!.uniforms.uTime.value = clock.getElapsedTime();
-            const transition = sphereMaterial.value!.uniforms.uTorusTransition.value;
+            sphereMaterial.uniforms.uTime.value = clock.getElapsedTime();
+            const transition = sphereMaterial.uniforms.uTorusTransition.value;
             if (toruses.value.length > 0) {
-                if (transition === 1) sphereMaterial.value!.uniforms.uTorusPosition.value.copy(toruses.value[0].position);
-                else if (transition === 2) sphereMaterial.value!.uniforms.uTorusPosition.value.copy(toruses.value[1].position);
-                else if (transition === 3) sphereMaterial.value!.uniforms.uTorusPosition.value.copy(toruses.value[2].position);
+                if (transition === 1) sphereMaterial.uniforms.uTorusPosition.value.copy(toruses.value[0].position);
+                else if (transition === 2) sphereMaterial.uniforms.uTorusPosition.value.copy(toruses.value[1].position);
+                else if (transition === 3) sphereMaterial.uniforms.uTorusPosition.value.copy(toruses.value[2].position);
             }
             renderer.render(scene, camera);
 
@@ -179,22 +189,26 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
     })
 
     onUnmounted(() => {
-        renderer.dispose();
-        sphereGeometry.dispose();
-        sphereMaterial.value!.dispose();
-        torusGeometries.forEach(geometry => geometry.dispose());
-        torusTextMaterial.value!.dispose();
-        torusDotMaterial.value!.dispose();
+        renderer.dispose();    
+        (sphere.value!.geometry).dispose();
+        (sphere.value!.material as THREE.ShaderMaterial).dispose();
+        toruses.value!.forEach(t => t.geometry.dispose());
+        toruses.value!.forEach(t => {
+            if (Array.isArray(t.material)) {
+                t.material.forEach(m => m.dispose());
+            } else {
+                t.material.dispose();
+            }
+        });
         window.removeEventListener('resize', onResize);
     });
 
     return {
         isLoaded,
-        sphereMaterial,
         sphere,
+        sphereGroup,
         cloneSpheres,
         sphereRadiusPixels,
-        torusTextMaterial,
         toruses
     }
 };

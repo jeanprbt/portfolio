@@ -9,7 +9,6 @@ export const useExperienceAnimations = (
     experience: Ref,
     experienceContent: Ref,
     sphere: ShallowRef,
-    sphereMaterial: ShallowRef,
     toruses: ShallowRef
 ) => {
 
@@ -74,10 +73,10 @@ export const useExperienceAnimations = (
             trigger: experience.value,
             start: "top bottom",
             onEnter: () => {
-                sphereMaterial.value!.uniforms.uTorusTransition.value = 2;
+                sphere.value!.material.uniforms.uTorusTransition.value = 2;
             },
             onLeaveBack: () => {
-                sphereMaterial.value!.uniforms.uTorusTransition.value = 1;
+                sphere.value!.material.uniforms.uTorusTransition.value = 1;
             }
         });
         let sphereExperienceTL = gsap.timeline({
@@ -136,7 +135,7 @@ export const useExperienceAnimations = (
                 end: 'top 25%',
                 scrub: true,
             }
-        }).to(sphereMaterial.value!.uniforms.uDisplacementStrength, {
+        }).to(sphere.value!.material.uniforms.uDisplacementStrength, {
             value: 0,
         });
         gsap.timeline({
@@ -146,14 +145,14 @@ export const useExperienceAnimations = (
                 end: 'top 10%',
                 scrub: true,
             }
-        }).to(sphereMaterial.value!.uniforms.uBrightness, {
+        }).to(sphere.value!.material.uniforms.uBrightness, {
             value: 0,
         });
 
         // JOBS
         const base = lg.value ? window.innerHeight / 2 : window.innerHeight / 4;
         const sectionHeight = window.innerHeight / 2;
-        const jobKeys = ['kth', 'finplify', 'epfl', 'cern'];
+        const jobKeys = Object.keys(jobs);
         jobKeys.forEach((key, idx) => {
             ScrollTrigger.create({
                 trigger: experience.value,
@@ -168,7 +167,7 @@ export const useExperienceAnimations = (
                     onEnter: () => selectedJob.value = null,
                     onLeaveBack: () => selectedJob.value = jobs[jobKeys[idx] as keyof typeof jobs],
                 });
-            }
+            };
         });
 
         // SPHERE - SCALE IN
@@ -202,7 +201,7 @@ export const useExperienceAnimations = (
                 end: 'bottom 65%',
                 scrub: true,
             }
-        }).to(sphereMaterial.value!.uniforms.uDisplacementStrength, {
+        }).to(sphere.value!.material.uniforms.uDisplacementStrength, {
             value: 0.1,
         });
         gsap.timeline({
@@ -212,7 +211,7 @@ export const useExperienceAnimations = (
                 end: 'bottom 60%',
                 scrub: true,
             }
-        }).to(sphereMaterial.value!.uniforms.uBrightness, {
+        }).to(sphere.value!.material.uniforms.uBrightness, {
             value: 0.05,
         });
     });

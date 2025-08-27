@@ -30,7 +30,13 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
         scene = new THREE.Scene();
 
         // 2. Camera
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const parent = canvas.value!.parentElement;
+        camera = new THREE.PerspectiveCamera(
+            75,
+            parent!.clientWidth / parent!.clientHeight,
+            0.1,
+            1000
+        );
         camera.position.z = 5;
 
         // 3. Renderer
@@ -39,7 +45,7 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
             alpha: true,
             antialias: true
         });
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(parent!.clientWidth, parent!.clientHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
 
         // 4. Main sphere
@@ -80,7 +86,7 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
             cloneSphereMaterial.uniforms.uTorusTransition = sphereMaterial.uniforms.uTorusTransition;
             cloneSphereMaterial.uniforms.uDarkMode = sphereMaterial.uniforms.uDarkMode;
             cloneSphere.material = cloneSphereMaterial;
-            
+
             cloneSphere.visible = false;
             scene.add(cloneSphere);
             cloneSpheres.value.push(cloneSphere);
@@ -170,12 +176,11 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
         let lastWidth = window.innerWidth;
         onResize = () => {
             windowWidth.value = window.innerWidth;
-            if (md.value) camera.position.z = mediumScreenCamera;
-            else camera.position.z = smallScreenCamera;
+            camera.position.z = md.value ? mediumScreenCamera : smallScreenCamera;
             if (window.innerWidth != lastWidth) {
-                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.aspect = parent!.clientWidth / parent!.clientHeight;
                 camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.setSize(parent!.clientWidth, parent!.clientHeight);
                 lastWidth = window.innerWidth;
             }
         };
@@ -189,7 +194,7 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
     })
 
     onUnmounted(() => {
-        renderer.dispose();    
+        renderer.dispose();
         (sphere.value!.geometry).dispose();
         (sphere.value!.material as THREE.ShaderMaterial).dispose();
         toruses.value!.forEach(t => t.geometry.dispose());

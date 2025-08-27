@@ -8,7 +8,9 @@
         <div class="w-12 h-12 border-[3px] border-current border-t-transparent rounded-full animate-spin [animation-duration:0.8s]"
             role="status" aria-label="Loading"></div>
     </div>
-    <canvas ref="canvas" class="fixed z-2"></canvas>
+    <div class="fixed inset-0 z-2 w-full h-lvh">
+        <canvas ref="canvas" class="w-full h-full block"></canvas>
+    </div>
     <ClientOnly>
         <DarkModeToggle @toggle="toggleDarkMode" :is-dark="isDark" />
     </ClientOnly>

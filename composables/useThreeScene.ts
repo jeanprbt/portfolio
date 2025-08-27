@@ -22,8 +22,9 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
     const windowWidth = ref(0);
     const md = computed(() => windowWidth.value >= 768);
     const lg = computed(() => windowWidth.value >= 1024);
-    const mediumScreenCamera = 3;
-    const smallScreenCamera = 3.5;
+    const largeScreenScamera = 3;
+    const mediumScreenCamera = 3.2;
+    const smallScreenCamera = 3.4;
 
     const initScene = () => {
         // 1. Scene
@@ -176,7 +177,7 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
         let lastWidth = window.innerWidth;
         onResize = () => {
             windowWidth.value = window.innerWidth;
-            camera.position.z = md.value ? mediumScreenCamera : smallScreenCamera;
+            camera.position.z = lg.value ? largeScreenScamera : md.value ? mediumScreenCamera : smallScreenCamera;
             if (window.innerWidth != lastWidth) {
                 camera.aspect = parent!.clientWidth / parent!.clientHeight;
                 camera.updateProjectionMatrix();

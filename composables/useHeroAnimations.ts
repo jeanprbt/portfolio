@@ -7,6 +7,7 @@ export const useHeroAnimations = (hero: Ref, sphere: ShallowRef, toruses: Shallo
 
     const windowWidth = ref(0);
     const lg = computed(() => windowWidth.value >= 1024);
+    const sm = computed(() => windowWidth.value >= 640);
 
     onMounted(() => {
         // WINDOW SIZE
@@ -27,7 +28,7 @@ export const useHeroAnimations = (hero: Ref, sphere: ShallowRef, toruses: Shallo
                     scrollTrigger: {
                         trigger: hero.value,
                         start: 'top top',
-                        end: 'bottom top',
+                        end: sm.value ? 'bottom top' : 'bottom 20%',
                         scrub: true,
                     }
                 }).to(toruses.value[0].position, {
@@ -52,21 +53,20 @@ export const useHeroAnimations = (hero: Ref, sphere: ShallowRef, toruses: Shallo
         });
 
         // SPHERE - TORUS
-        const sphereHeroTL = gsap.timeline({
-            scrollTrigger: {
-                trigger: hero.value,
-                start: 'top top',
-                end: 'bottom+=10% top',
-                scrub: true,
-            }
-        }).to(sphere.value!.position, {
-            y: -1,
-            z: -2,
-            ease: 'power1.out',
-            duration: 0.25
-        });
         if (lg.value) {
-            sphereHeroTL.to(sphere.value!.position, {
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: hero.value,
+                    start: 'top top',
+                    end: 'bottom+=10% top',
+                    scrub: true,
+                }
+            }).to(sphere.value!.position, {
+                y: -1,
+                z: -2,
+                ease: 'power1.out',
+                duration: 0.25
+            }).to(sphere.value!.position, {
                 z: -1,
                 duration: 0.75
             }).to(sphere.value!.position, {
@@ -75,7 +75,19 @@ export const useHeroAnimations = (hero: Ref, sphere: ShallowRef, toruses: Shallo
                 duration: 0.5
             }, "<");
         } else {
-            sphereHeroTL.to(sphere.value!.scale, {
+            gsap.timeline({
+                scrollTrigger: {
+                    trigger: hero.value,
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true,
+                }
+            }).to(sphere.value!.position, {
+                y: -1,
+                z: -2,
+                ease: 'power1.out',
+                duration: 0.2
+            }).to(sphere.value!.scale, {
                 x: 0,
                 y: 0,
                 z: 0,

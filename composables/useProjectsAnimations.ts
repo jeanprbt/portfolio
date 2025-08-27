@@ -14,7 +14,9 @@ export const useProjectsAnimations = (
 ) => {
 
     const windowWidth = ref(0);
+    const sm = computed(() => windowWidth.value >= 640);
     const md = computed(() => windowWidth.value >= 768);
+    const lg = computed(() => windowWidth.value >= 1024);
 
     type Project = {
         id: string;
@@ -50,7 +52,9 @@ export const useProjectsAnimations = (
         });
 
         // CLONE SPHERES APPEAR
-        const radius = md.value ? 1.5 : 0.8;
+        let radius = lg.value ? 1.5 : md.value ? 1.2 : sm.value ? 1 : 0.8;
+        let scale = lg.value ? 0.25 : md.value ? 0.22 : sm.value ? 0.2 : 0.18;
+        let position = lg.value ? 0 : md.value ? -0.7 : -1;
         const allSpheres = [sphere.value, ...cloneSpheres.value];
         gsap.timeline({
             scrollTrigger: {
@@ -72,13 +76,13 @@ export const useProjectsAnimations = (
             x: Math.cos(5 * Math.PI / 6) * radius,
             z: Math.sin(5 * Math.PI / 6) * radius
         }, "<").to(sphere.value!.scale, {
-            x: md.value ? 0.25 : 0.18,
-            y: md.value ? 0.25 : 0.18,
-            z: md.value ? 0.25 : 0.18
+            x: scale,
+            y: scale,
+            z: scale
         }, "<").to(sphereGroup.value!.rotation, {
             x: Math.PI / 8
         }, "<").to(sphereGroup.value!.position, {
-            y: md.value ? 0 : 0.2
+            y: position
         }, "<").to(allSpheres.map((cs: any) => cs.material.uniforms.uDisplacementStrength), {
             value: 0.1,
         }, "<+=30%").to(projectsContent.value!, {

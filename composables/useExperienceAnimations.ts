@@ -82,7 +82,7 @@ export const useExperienceAnimations = (
         let sphereExperienceTL = gsap.timeline({
             scrollTrigger: {
                 trigger: experience.value,
-                start: lg.value ? 'top 70%' : 'top 60%',
+                start: lg.value ? 'top 70%' : 'top 55%',
                 end: lg.value ? 'top 35%' : 'top 25%',
                 scrub: true,
             }

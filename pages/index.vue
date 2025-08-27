@@ -45,18 +45,18 @@
     <div ref="experience"
         class="h-[350vh] lg:h-[400vh] w-full bg-secondary text-primary transition-colors duration-500">
         <div :style="`clip-path: circle(${sphereRadiusPixels}px at 50% 50%)`" :class="[
-            'fixed h-svh md:h-screen w-full z-3',
+            'fixed h-lvh md:h-screen w-full z-3',
             'top-0 left-1/2 transform -translate-x-1/2',
         ]">
             <div ref="experienceContent"
-                class="h-full flex flex-col justify-center lg:justify-between items-center opacity-0">
+                class="h-svh md:h-full flex flex-col justify-center lg:justify-between items-center opacity-0">
                 <ClientOnly>
                     <DottedMap :city="selectedJob?.city || 'none'"
                         class="w-full md:max-w-[85vw] lg:max-w-[75vw] xl:max-w-[65vw] 2xl:max-w-[60vw] transition-transform duration-300" />
                 </ClientOnly>
                 <div :class="[
                     'w-5/6 lg:w-11/12 -mt-5 sm:-mt-10 md:-mt-20 lg:-mt-100 lg:mb-10 2xl:mb-15',
-                    'text-sm sm:text-base lg:text-lg xl:text-xl 2xl:text-2xl',
+                    'text-sm sm:text-base lg:text-lg xl:text-xl',
                 ]">
                     <p v-for="pair in [
                         { label: 'ROLE', value: selectedJob ? selectedJob.role : '' },
@@ -95,16 +95,16 @@
         <div ref="projectsContent" :class="[
             'fixed h-svh md:h-screen w-full z-3',
             'top-0 left-1/2 transform -translate-x-1/2',
-            'flex flex-col gap-4 justify-between md:justify-start opacity-0',
+            'flex flex-col justify-start gap-10 sm:gap-20 md:gap-15 lg:gap-5 xl:gap-0 opacity-0',
         ]">
-            <div class="flex flex-col gap-4 md:gap-0 md:flex-row md:ml-10 mt-20 md:mt-0 h-2/5 md:h-3/5">
+            <div class="h-1/3 md:h-5/12 xl:h-3/5 flex flex-col xl:flex-row xl:ml-10 mt-15 xl:mt-0">
                 <div :class="[
-                    'font-primary text-center lg:text-left',
-                    'text-[6vw] lg:text-[20vh] lg:leading-none',
-                    'flex flex-row lg:flex-col gap-2 sm:gap-4 md:gap-6 lg:gap-0',
+                    'font-primary text-center xl:text-left',
+                    'text-[6vw] xl:text-[20vh] xl:leading-none',
+                    'flex flex-row xl:flex-col justify-center gap-2 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-0',
                 ]">
                     <div v-for="proj in projs" :key="proj.id" :class="[
-                        'transition-opacity duration-500 w-full',
+                        'transition-opacity duration-500',
                         { 'opacity-5 dark:opacity-10': (selectedProject === null) || selectedProject?.id !== proj.id },
                     ]">
                         {{ proj.label }}
@@ -113,12 +113,12 @@
                 <transition mode="out-in" enter-from-class="opacity-0" enter-active-class="duration-200 ease-in"
                     enter-to-class="opacity-100" leave-from-class="opacity-100"
                     leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
-                    <img v-if="selectedProject" :src="`/img/${selectedProject.id}_${isDark ? 'dark' : 'light'}.png`"
-                        class="md:h-full" />
+                    <img :src="selectedProject ? `/img/${selectedProject.id}_${isDark ? 'dark' : 'light'}.png` : `/img/blank_${isDark ? 'dark' : 'light'}.png`"
+                        :class="['h-full object-contain transition-opacity duration-500', { 'opacity-0': !selectedProject }]" />
                 </transition>
             </div>
-            <div class="md:mx-10 flex flex-col md:flex-row justify-between">
-                <div class="md:w-2/5 text-sm sm:text-base lg:text-lg xl:text-xl 2xl:text-2xl">
+            <div class="h-2/3 md:h-7/12 xl:h-2/5 flex flex-col lg:flex-row justify-start lg:justify-between items-center gap-2 lg:ml-10">
+                <div class="w-5/6 lg:w-[35%] xl:w-[38%] 2xl:w-2/5 mb-0 xl:mb-5 text-sm sm:text-base xl:text-lg 2xl:text-xl">
                     <p v-for="pair in [
                         { label: 'PERIOD', value: selectedProject ? selectedProject.period : '' },
                         { label: 'INFO', value: selectedProject ? selectedProject.info : ' '.repeat(380) }
@@ -138,12 +138,15 @@
                     enter-to-class="opacity-100" leave-from-class="opacity-100"
                     leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
                     <div v-if="selectedProject"
-                        class="w-2/5 flex flex-col items-center justify-center gap-8 text-primary">
-                        <h1 class="font-primary text-highlight text-sm sm:text-base lg:text-lg xl:text-xl 2xl:text-2xl">LINKS</h1>
-                        <div class="w-2/3 flex items-center justify-around gap-4 text-primary">
+                        class="w-5/6 lg:w-2/5 flex flex-col items-left lg:items-center justify-center gap-2 lg:gap-8 text-primary relative">
+                        <h1
+                            class="font-primary text-highlight text-sm sm:text-base xl:text-lg 2xl:text-xl">
+                            LINKS
+                        </h1>
+                        <div class="lg:w-2/3 flex justify-start lg:justify-around items-center gap-2 sm:gap-4 text-primary">
                             <a v-for="link in selectedProject.links" :href="link.link"
-                                class="hover:opacity-50 transition-opacity" target="_blank" rel="noopener noreferrer">
-                                <Icon :name="link.icon" size="3em" />
+                                class="hover:opacity-50 transition-opacity duration-300" target="_blank" rel="noopener noreferrer">
+                                <Icon :name="link.icon" class="text-3xl sm:text-4xl md:text-5xl" />
                             </a>
                         </div>
                     </div>

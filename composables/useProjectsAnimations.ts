@@ -52,6 +52,20 @@ export const useProjectsAnimations = (
         });
 
         // CLONE SPHERES APPEAR
+        ScrollTrigger.create({
+            trigger: projects.value,
+            start: "top 50%",
+            onEnter: () => {
+                cloneSpheres.value.forEach((cloneSphere: any) => {
+                    cloneSphere.position.copy(sphere.value!.position);
+                    cloneSphere.visible = true;
+                })
+            },
+            onLeaveBack: () => {
+                cloneSpheres.value.forEach((cloneSphere: any) => cloneSphere.visible = false);
+            }
+        });
+
         let radius = lg.value ? 1.5 : md.value ? 1.2 : sm.value ? 1 : 0.8;
         let scale = lg.value ? 0.25 : md.value ? 0.22 : sm.value ? 0.2 : 0.18;
         let position = lg.value ? 0 : md.value ? -0.7 : -1;
@@ -88,20 +102,6 @@ export const useProjectsAnimations = (
         }, "<+=30%").to(projectsContent.value!, {
             opacity: 1,
         }, "<");
-        ScrollTrigger.create({
-            trigger: projects.value,
-            start: "top 50%",
-            onEnter: () => {
-                cloneSpheres.value.forEach((cloneSphere: any) => {
-                    cloneSphere.position.copy(sphere.value!.position);
-                    cloneSphere.visible = true;
-                })
-            },
-            onLeaveBack: () => {
-                cloneSpheres.value.forEach((cloneSphere: any) => cloneSphere.visible = false);
-            }
-        });
-
 
         // CLONE SPHERES REVEAL
         const sectionHeight = window.innerHeight;
@@ -123,7 +123,7 @@ export const useProjectsAnimations = (
                             min: 0.3,
                             max: 0.7
                         },
-                    }
+                    },
                 }
             })
             if (idx > 0) {
@@ -153,6 +153,66 @@ export const useProjectsAnimations = (
                     prevTime = tl.time();
                 }
             });
+        });
+
+        // CLONE SPHERES BACK TO ONE
+        gsap.timeline({
+            scrollTrigger: {
+                trigger: projects.value,
+                start: `top+=${3 * sectionHeight} top`,
+                end: 'bottom 50%',
+                scrub: true,
+            }
+        }).to(allSpheres.toSpliced(2, 1).map((cs: any) => cs.material.uniforms.uOpacity), {
+            value: 1,
+            ease: "power3.out",
+            duration: 0.1,
+            onStart: () => selectedProject.value = null,
+            onReverseComplete: () => { selectedProject.value = projs[projKeys[2] as keyof typeof projs]; },
+        }).to(sphereGroup.value!.rotation, {
+            y: -2 * Math.PI,
+            ease: "none"
+        });
+
+        gsap.timeline({
+            scrollTrigger: {
+                trigger: projects.value,
+                start: 'bottom 50%',
+                end: 'bottom top',
+                scrub: true,
+            }
+        }).to(allSpheres.map((cs: any) => cs.material.uniforms.uDisplacementStrength), {
+            value: 0,
+            duration: 0.2
+        }).to(projectsContent.value!, {
+            opacity: 0,
+        }, "<").to(sphereGroup.value!.position, {
+            y: 0
+        }, "<").to(sphereGroup.value!.rotation, {
+            x: 0
+        }, "<").to(sphere.value!.scale, {
+            x: 1,
+            y: 1,
+            z: 1
+        }, "<").to(allSpheres.map((cs: any) => cs.position), {
+            x: 0,
+            z: -2
+        }, "<").to(allSpheres.map((cs: any) => cs.material.uniforms.uDisplacementStrength), {
+            value: 0.1,
+            duration: 0.2
+        });
+
+        ScrollTrigger.create({
+            trigger: projects.value,
+            start: "bottom top",
+            onEnter: () => {
+                cloneSpheres.value.forEach((cloneSphere: any) => {
+                    cloneSphere.visible = false;
+                })
+            },
+            onLeaveBack: () => {
+                cloneSpheres.value.forEach((cloneSphere: any) => cloneSphere.visible = true);
+            }
         });
     });
 

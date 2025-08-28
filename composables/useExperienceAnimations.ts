@@ -37,9 +37,9 @@ export const useExperienceAnimations = (
         window.addEventListener('resize', onResize);
         onResize();
 
-        // TORUSES
+       // TORUSES
         watch(toruses, (newVal) => {
-            if (newVal.length === 3) {
+            if (newVal.length === 4) {
                 gsap.timeline({
                     scrollTrigger: {
                         trigger: experience.value,

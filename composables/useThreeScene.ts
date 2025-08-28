@@ -121,6 +121,11 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
                     radius: lg.value ? 2.1 : md.value ? 1.8 : 1.5,
                     rotation: 2.25 * Math.PI
                 },
+                {
+                    text: "CONTACT.",
+                    radius: lg.value ? 2.1 : md.value ? 1.8 : 1.5,
+                    rotation: 2.2 * Math.PI
+                }
             ]
             torusParams.forEach((params) => {
                 const geometry = new TextGeometry(params.text, {
@@ -154,6 +159,7 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
                 if (transition === 1) sphereMaterial.uniforms.uTorusPosition.value.copy(toruses.value[0].position);
                 else if (transition === 2) sphereMaterial.uniforms.uTorusPosition.value.copy(toruses.value[1].position);
                 else if (transition === 3) sphereMaterial.uniforms.uTorusPosition.value.copy(toruses.value[2].position);
+                else if (transition === 4) sphereMaterial.uniforms.uTorusPosition.value.copy(toruses.value[3].position);
             }
             renderer.render(scene, camera);
 

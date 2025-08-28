@@ -23,7 +23,7 @@ export const useHeroAnimations = (hero: Ref, sphere: ShallowRef, toruses: Shallo
 
         // TORUS
         watch(toruses, (newVal) => {
-            if (newVal.length === 3) {
+            if (newVal.length === 4) {
                 gsap.timeline({
                     scrollTrigger: {
                         trigger: hero.value,

@@ -165,7 +165,7 @@ void main() {
     vec3 torusUp = vec3(0.0, 1.0, 0.0); // always horizontal
     float d = dot(worldPosition.xyz - torusAxis, torusUp);
     float smoothing = 0.6;
-    vInvert = smoothstep(-smoothing, smoothing, (uTorusTransition == 2.0) ? -d : d);
+    vInvert = smoothstep(-smoothing, smoothing, (mod(uTorusTransition, 2.0) == 0.0) ? -d : d);
 
     // Compute the final position in view space
     vec4 viewPosition = viewMatrix * worldPosition;

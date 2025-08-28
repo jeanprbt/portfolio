@@ -97,7 +97,7 @@
             'top-0 left-1/2 transform -translate-x-1/2',
             'flex flex-col justify-start gap-10 sm:gap-20 md:gap-15 lg:gap-5 xl:gap-0 opacity-0',
         ]">
-            <div class="h-1/3 md:h-5/12 xl:h-3/5 flex flex-col xl:flex-row xl:ml-10 mt-16 xl:mt-0">
+            <div class="h-1/3 md:h-5/12 xl:h-3/5 flex flex-col justify-between xl:flex-row xl:ml-10 mt-16 xl:mt-0">
                 <div :class="[
                     'font-primary text-center xl:text-left',
                     'text-[6vw] xl:text-[20vh] xl:leading-none',
@@ -154,7 +154,7 @@
             </div>
         </div>
     </div>
-    <div ref="contact" class="h-screen w-full bg-secondary text-primary transition-colors duration-500knp"></div>
+    <div ref="contact" class="h-[200vh] w-full bg-secondary text-primary transition-colors duration-500"></div>
 </template>
 
 <script setup lang="ts">
@@ -169,11 +169,13 @@ const experience = ref(null);
 const experienceContent = ref(null);
 const projects = ref(null);
 const projectsContent = ref(null);
+const contact = ref(null);
 
-const { isLoaded, sphere, sphereGroup, cloneSpheres, sphereRadiusPixels, toruses } = useThreeScene(canvas);
+const { isLoaded, sphere, sphereGroup, cloneSpheres, sphereRadiusPixels, toruses, contacts } = useThreeScene(canvas);
 const { isDark, toggleDarkMode } = useDarkMode(sphere, toruses);
 const _ = useHeroAnimations(hero, sphere, toruses);
 const __ = useAboutAnimations(about, aboutText, sphere);
 const { selectedJob } = useExperienceAnimations(experience, experienceContent, sphere, toruses);
 const { selectedProject } = useProjectsAnimations(projects, projectsContent, sphere, cloneSpheres, sphereGroup);
+const ___ = useContactAnimations(contact, sphere, toruses, contacts);
 </script>

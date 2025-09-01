@@ -1,8 +1,8 @@
 <template>
     <div :class="[
-        'fixed inset-0 z-4 flex items-center justify-center',
+        'fixed inset-0 z-100 flex items-center justify-center',
         'bg-secondary text-primary',
-        'transition-opacity duration-500 ease-in-out',
+        'transition-opacity duration-1000 ease-in-out',
         isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
     ]" aria-live="polite" aria-busy="true">
         <div class="w-12 h-12 border-[3px] border-current border-t-transparent rounded-full animate-spin [animation-duration:0.8s]"
@@ -11,6 +11,7 @@
     <div class="fixed inset-0 z-2 w-full h-lvh">
         <canvas ref="canvas" class="w-full h-full block"></canvas>
     </div>
+    <SideMenu :is-dark="isDark" :about="about" :experience="experience" :projects="projects" :contact="contact" />
     <ClientOnly>
         <DarkModeToggle @toggle="toggleDarkMode" :is-dark="isDark" />
     </ClientOnly>
@@ -23,6 +24,7 @@
             Hi<span class="text-highlight">,</span> I<span class="text-highlight">'</span>m <span
                 class="font-secondary italic">Jean</span><span class="text-highlight">.</span>
         </h1>
+        <ScrollingIndicator />
     </div>
     <div ref="about" class="h-auto w-full flex bg-secondary text-primary transition-colors duration-500">
         <div class="w-2/5 hidden lg:block"></div>
@@ -35,10 +37,11 @@
                     class="text-highlight">.</span> Lorem Ipsum has been the
                 industry<span class="text-highlight">'</span>s standard dummy text ever since the 1500s<span
                     class="text-highlight">,</span> when an unknown printer took a galley of type and
-                scrambled it to make a type specimen book<span class="text-highlight">.</span> It has survived not only
+                scrambled it to make a type specimen book<span class="text-highlight">.</span> It has survived not
+                only
                 five centuries<span class="text-highlight">,</span> but also the leap
-                into electronic typesetting<span class="text-highlight">,</span> remaining essentially unchanged<span
-                    class="text-highlight">.</span>
+                into electronic typesetting<span class="text-highlight">,</span> remaining essentially
+                unchanged<span class="text-highlight">.</span>
             </p>
         </div>
     </div>
@@ -114,11 +117,14 @@
                     enter-to-class="opacity-100" leave-from-class="opacity-100"
                     leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
                     <img :src="selectedProject ? `/img/${selectedProject.id}_${isDark ? 'dark' : 'light'}.png` : `/img/blank_${isDark ? 'dark' : 'light'}.png`"
-                        :class="['h-full object-contain transition-opacity duration-500', { 'opacity-0': !selectedProject }]" />
+                        :class="['h-full object-contain transition-opacity duration-500', { 'opacity-0': !selectedProject }]"
+                        alt="project overview" />
                 </transition>
             </div>
-            <div class="h-2/3 md:h-7/12 xl:h-2/5 flex flex-col lg:flex-row justify-start lg:justify-between items-center gap-2 lg:ml-10">
-                <div class="w-5/6 lg:w-[35%] xl:w-[38%] 2xl:w-2/5 mb-0 xl:mb-5 text-sm sm:text-base xl:text-lg 2xl:text-xl">
+            <div
+                class="h-2/3 md:h-7/12 xl:h-2/5 flex flex-col lg:flex-row justify-start lg:justify-between items-center gap-2 lg:ml-10">
+                <div
+                    class="w-5/6 lg:w-[35%] xl:w-[38%] 2xl:w-2/5 mb-0 xl:mb-5 text-sm sm:text-base xl:text-lg 2xl:text-xl">
                     <p v-for="pair in [
                         { label: 'PERIOD', value: selectedProject ? selectedProject.period : '' },
                         { label: 'INFO', value: selectedProject ? selectedProject.info : ' '.repeat(380) }
@@ -139,13 +145,14 @@
                     leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
                     <div v-if="selectedProject"
                         class="w-5/6 lg:w-2/5 flex flex-col items-left lg:items-center justify-center gap-2 lg:gap-8 text-primary relative">
-                        <h1
-                            class="font-primary text-highlight text-sm sm:text-base xl:text-lg 2xl:text-xl">
+                        <h1 class="font-primary text-highlight text-sm sm:text-base xl:text-lg 2xl:text-xl">
                             LINKS
                         </h1>
-                        <div class="lg:w-2/3 flex justify-start lg:justify-around items-center gap-2 sm:gap-4 text-primary">
+                        <div
+                            class="lg:w-2/3 flex justify-start lg:justify-around items-center gap-2 sm:gap-4 text-primary">
                             <a v-for="link in selectedProject.links" :href="link.link"
-                                class="hover:opacity-50 transition-opacity duration-300" target="_blank" rel="noopener noreferrer">
+                                class="hover:opacity-50 transition-opacity duration-300" target="_blank"
+                                rel="noopener noreferrer">
                                 <Icon :name="link.icon" class="text-3xl sm:text-4xl md:text-5xl" />
                             </a>
                         </div>
@@ -171,11 +178,11 @@ const projects = ref(null);
 const projectsContent = ref(null);
 const contact = ref(null);
 
-const { isLoaded, sphere, sphereGroup, cloneSpheres, sphereRadiusPixels, toruses, contacts } = useThreeScene(canvas);
+const { isLoaded, sphere, sphereGroup, cloneSpheres, sphereRadiusPixels, toruses } = useThreeScene(canvas);
 const { isDark, toggleDarkMode } = useDarkMode(sphere, toruses);
 const _ = useHeroAnimations(hero, sphere, toruses);
 const __ = useAboutAnimations(about, aboutText, sphere);
 const { selectedJob } = useExperienceAnimations(experience, experienceContent, sphere, toruses);
 const { selectedProject } = useProjectsAnimations(projects, projectsContent, sphere, cloneSpheres, sphereGroup);
-const ___ = useContactAnimations(contact, sphere, toruses, contacts);
+const ___ = useContactAnimations(contact, sphere, toruses);
 </script>

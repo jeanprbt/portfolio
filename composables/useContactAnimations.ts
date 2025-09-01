@@ -3,14 +3,11 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
-export const useContactAnimations = (contact: Ref, sphere: ShallowRef, toruses: ShallowRef, contacts: ShallowRef) => {
+export const useContactAnimations = (contact: Ref, sphere: ShallowRef, toruses: ShallowRef) => {
 
     const windowWidth = ref(0);
-    const lg = computed(() => windowWidth.value >= 1024);
-    const sm = computed(() => windowWidth.value >= 640);
-
+    
     onMounted(() => {
-        // WINDOW SIZE
         let lastWidth = window.innerWidth;
         const onResize = () => {
             windowWidth.value = window.innerWidth;

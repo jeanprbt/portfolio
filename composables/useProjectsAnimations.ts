@@ -187,7 +187,8 @@ export const useProjectsAnimations = (
         }).to(projectsContent.value!, {
             opacity: 0,
         }, "<").to(sphereGroup.value!.position, {
-            y: 0
+            y: 0,
+            ease: "none"
         }, "<").to(sphereGroup.value!.rotation, {
             x: 0
         }, "<").to(sphere.value!.scale, {
@@ -196,7 +197,8 @@ export const useProjectsAnimations = (
             z: 1
         }, "<").to(allSpheres.map((cs: any) => cs.position), {
             x: 0,
-            z: -2
+            z: -2,
+            ease: "none"
         }, "<").to(allSpheres.map((cs: any) => cs.material.uniforms.uDisplacementStrength), {
             value: 0.1,
             duration: 0.2

@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
+import { gsap } from 'gsap';
+
 import vertexShader from '~/assets/shaders/vertex.glsl?raw';
 import fragmentShader from '~/assets/shaders/fragment.glsl?raw';
 
@@ -146,6 +148,11 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
 
             requestAnimationFrame(() => {
                 isLoaded.value = true;
+                gsap.fromTo(
+                    sphere.value!.scale,
+                    { x: 0.1, y: 0.1, z: 0.1 },
+                    { x: 1, y: 1, z: 1, duration: 1.2, ease: "power3.out" }
+                );
             });
         });
 

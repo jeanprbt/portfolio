@@ -13,14 +13,14 @@
         leave-active-class="transition-transform duration-500 ease-in" leave-to-class="translate-x-full"
         @before-leave="unlockScroll" @after-enter="lockScroll">
         <aside v-show="aside" :class="[
-            'fixed top-0 right-0 h-full w-full z-5',
+            'fixed top-0 right-0 h-svh md:h-full w-full z-5',
             'border-l-10 border-highlight',
         ]">
             <div :class="[
                 'w-full h-full bg-secondary xl:pb-10 xl:pr-10 z-5',
                 'transition-colors duration-500',
                 'flex flex-col justify-center xl:justify-end items-center xl:items-end',
-                'font-primary text-center xl:text-right',
+                'font-primary text-right',
                 'text-[12vw] xl:text-[18vh] leading-none',
             ]">
                 <transition-group name="text-reveal" tag="div" enter-from-class="translate-y-10 opacity-0"
@@ -34,7 +34,7 @@
                         { label: 'PROJECTS', section: props.projects, offset: 8 },
                         { label: 'CONTACT', section: props.contact, offset: -2 }
                     ]" :key="pair.label" :style="{ transitionDelay: `${(idx + 1) * (xl ? 60 : 40) + 400}ms` }"
-                        @transitionend="opacities[idx] = true" class="mb-10 xl:mb-0">
+                        @transitionend="opacities[idx] = true" class="mb-5 xl:mb-0">
                         <p @click="() => handleScroll(pair.section, pair.offset)"
                             :class="[{ 'opacity-5 dark:opacity-15': opacities[idx] && xl }, 'text-primary hover:opacity-100 transition-opacity duration-400']">
                             {{ pair.label }}<span class="text-highlight">.</span>

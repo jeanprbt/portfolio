@@ -7,9 +7,10 @@ import { gsap } from 'gsap';
 import vertexShader from '~/assets/shaders/vertex.glsl?raw';
 import fragmentShader from '~/assets/shaders/fragment.glsl?raw';
 
-export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
+export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>, introPlayed: Ref<boolean>) => {
 
     const isLoaded = ref(false);
+
     const sphere = shallowRef<THREE.Mesh | null>(null);
     const sphereGroup = shallowRef<THREE.Group | null>(null);
     const cloneSpheres = shallowRef<THREE.Mesh[]>([]);
@@ -105,6 +106,7 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
         });
         const fontLoader = new FontLoader();
         fontLoader.load('/font.json', (font: Font) => {
+            console.log("loaded")
             const torusFontSize = lg.value ? 0.2 : md.value ? 0.15 : 0.1;
             const torusFontDepth = 0.03;
             const torusParams = [
@@ -147,12 +149,15 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>) => {
             });
 
             requestAnimationFrame(() => {
+                console.log("requested")
                 isLoaded.value = true;
-                gsap.fromTo(
-                    sphere.value!.scale,
-                    { x: 0.1, y: 0.1, z: 0.1 },
-                    { x: 1, y: 1, z: 1, duration: 1.2, ease: "power3.out" }
-                );
+                watch(introPlayed, (newVal) => {
+                    if (newVal) gsap.fromTo(
+                        sphere.value!.scale,
+                        { x: 0.1, y: 0.1, z: 0.1 },
+                        { x: 1, y: 1, z: 1, duration: 1.2, ease: "power3.out" }
+                    );
+                });
             });
         });
 

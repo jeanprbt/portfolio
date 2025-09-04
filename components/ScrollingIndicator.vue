@@ -12,10 +12,11 @@
 const show = ref(false);
 let timeout: ReturnType<typeof setTimeout> | null = null;
 
+
 onMounted(() => {
     timeout = setTimeout(() => {
         show.value = true;
-    }, 2000);
+    }, 3000);
 
     const handleScroll = () => {
         show.value = false;
@@ -23,6 +24,9 @@ onMounted(() => {
         window.removeEventListener('scroll', handleScroll);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
 });
 
 onUnmounted(() => {

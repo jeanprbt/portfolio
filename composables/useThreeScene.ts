@@ -27,7 +27,7 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>, introPlayed
     const lg = computed(() => windowWidth.value >= 1024);
     const largeScreenScamera = 3;
     const mediumScreenCamera = 3.2;
-    const smallScreenCamera = 3.4;
+    const smallScreenCamera = 4;
 
     const initScene = () => {
         // 1. Scene
@@ -106,7 +106,6 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>, introPlayed
         });
         const fontLoader = new FontLoader();
         fontLoader.load('/font.json', (font: Font) => {
-            console.log("loaded")
             const torusFontSize = lg.value ? 0.2 : md.value ? 0.15 : 0.1;
             const torusFontDepth = 0.03;
             const torusParams = [
@@ -149,7 +148,6 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>, introPlayed
             });
 
             requestAnimationFrame(() => {
-                console.log("requested")
                 isLoaded.value = true;
                 watch(introPlayed, (newVal) => {
                     if (newVal) gsap.fromTo(

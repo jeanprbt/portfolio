@@ -1,14 +1,5 @@
 <template>
-    <div :class="[
-        'fixed inset-0 z-100 flex items-center justify-center',
-        'bg-secondary text-primary',
-        'transition-opacity duration-300 ease-in-out',
-        introPlayed && isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
-    ]">
-        <div class="absolute top-1/2 left-0 h-2 w-full bg-highlight origin-left
-         [transform:scaleX(0)]
-         [animation:draw-line_2s_forwards]"></div>
-    </div>
+    <LoadingScreen :is-loaded="isLoaded" @introPlayed="introPlayed = true" />
     <ScrollBar />
     <div class="fixed inset-0 z-2 w-full h-lvh">
         <canvas ref="canvas" class="w-full h-full block"></canvas>
@@ -29,7 +20,7 @@
                     class="font-secondary italic">Jean</span><span class="text-highlight">.</span>
             </h1>
         </transition>
-        <ScrollingIndicator />
+        <ScrollHint />
     </div>
     <div ref="about" class="h-auto w-full flex bg-secondary text-primary transition-colors duration-500">
         <div class="w-2/5 hidden lg:block"></div>
@@ -185,12 +176,6 @@ const projectsContent = ref(null);
 const contact = ref(null);
 
 const introPlayed = ref(false);
-onMounted(() => {
-    setTimeout(() => {
-        introPlayed.value = true;
-    }, 2000);
-});
-
 
 const { isLoaded, sphere, sphereGroup, cloneSpheres, sphereRadiusPixels, toruses } = useThreeScene(canvas, introPlayed);
 const { isDark, toggleDarkMode } = useDarkMode(sphere, toruses);

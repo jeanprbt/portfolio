@@ -68,7 +68,7 @@ export const useProjectsAnimations = (
 
         let radius = lg.value ? 1.5 : md.value ? 1.2 : sm.value ? 1 : 0.8;
         let scale = lg.value ? 0.25 : md.value ? 0.22 : sm.value ? 0.2 : 0.18;
-        let position = lg.value ? 0 : md.value ? -0.7 : -1;
+        let position = lg.value ? 0 : md.value ? -0.7 : sm.value ? -1 : -1.25;
         const allSpheres = [sphere.value, ...cloneSpheres.value];
         gsap.timeline({
             scrollTrigger: {

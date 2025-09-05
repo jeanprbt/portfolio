@@ -3,7 +3,8 @@
         enter-to-class="opacity-100" leave-active-class="transition-opacity duration-300" leave-from-class="opacity-100"
         leave-to-class="opacity-0">
         <div v-if="show" class="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center">
-            <Icon name="i-heroicons-chevron-down" size="2em" class="size-3 text-primary rounded-full animate-bounce" />
+            <Icon name="i-heroicons-chevron-down-16-solid" :size="lg ? '3em' : '2em'"
+                class="size-3 text-highlight rounded-full animate-bounce" />
         </div>
     </transition>
 </template>
@@ -11,12 +12,23 @@
 <script setup lang="ts">
 const show = ref(false);
 let timeout: ReturnType<typeof setTimeout> | null = null;
-
+const windowWidth = ref(0);
+const lg = computed(() => windowWidth.value >= 1024);
 
 onMounted(() => {
+    let lastWidth = window.innerWidth;
+    const onResize = () => {
+        windowWidth.value = window.innerWidth;
+        if (window.innerWidth != lastWidth) {
+            lastWidth = window.innerWidth;
+        }
+    };
+    window.addEventListener('resize', onResize);
+    onResize();
+
     timeout = setTimeout(() => {
         show.value = true;
-    }, 3000);
+    }, 4000);
 
     const handleScroll = () => {
         show.value = false;
@@ -24,13 +36,9 @@ onMounted(() => {
         window.removeEventListener('scroll', handleScroll);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+
     if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
-    }
-});
-
-onUnmounted(() => {
-    if (timeout) clearTimeout(timeout);
-    window.removeEventListener('scroll', () => { });
+    };
 });
 </script>

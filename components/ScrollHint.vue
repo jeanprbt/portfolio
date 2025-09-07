@@ -3,7 +3,7 @@
         enter-to-class="opacity-100" leave-active-class="transition-opacity duration-300" leave-from-class="opacity-100"
         leave-to-class="opacity-0">
         <div v-if="show" class="absolute bottom-20 left-1/2 -translate-x-1/2 flex flex-col items-center">
-            <Icon name="i-heroicons-chevron-down-16-solid" :size="lg ? '3em' : '2em'"
+            <Icon name="i-heroicons-chevron-down-16-solid" :size="lg ? '3em' : md ? '2.5em' : '2em'"
                 class="size-3 text-highlight rounded-full animate-bounce" />
         </div>
     </transition>
@@ -13,6 +13,7 @@
 const show = ref(false);
 let timeout: ReturnType<typeof setTimeout> | null = null;
 const windowWidth = ref(0);
+const md = computed(() => windowWidth.value >= 768);
 const lg = computed(() => windowWidth.value >= 1024);
 
 onMounted(() => {

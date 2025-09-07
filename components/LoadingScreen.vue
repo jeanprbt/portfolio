@@ -34,12 +34,12 @@ watch(() => props.isLoaded, (loaded) => {
     if (loaded && avatar.value) {
         avatar.value.addEventListener('animationiteration', () => {
             loadingComplete.value = true;
+            setTimeout(() => {
+                introPlayed.value = true;
+                emit('introPlayed');
+            }, 1000);
         }, { once: true });
     }
-    setTimeout(() => {
-        introPlayed.value = true;
-        emit('introPlayed');
-    }, 1200);
 });
 
 </script>

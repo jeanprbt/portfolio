@@ -1,5 +1,5 @@
 <template>
-    <div v-if="lg" class="fixed right-0 top-1/2 z-50 h-full w-2 bg-secondary transform -translate-y-1/2">
+    <div v-if="lg" class="fixed right-0 top-1/2 z-50 h-full w-2 bg-secondary transition-colors duration-500 transform -translate-y-1/2">
         <div class="bg-highlight w-full" :style="{ height: `${scrollPercent}%` }"></div>
     </div>
 </template>

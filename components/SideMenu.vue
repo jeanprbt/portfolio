@@ -32,7 +32,7 @@
                         { label: 'ABOUT', section: props.about, offset: 6 },
                         { label: 'EXPERIENCE', section: props.experience, offset: -2 },
                         { label: 'PROJECTS', section: props.projects, offset: 8 },
-                        { label: 'CONTACT', section: props.contact, offset: -2 }
+                        { label: 'CONTACT', section: props.contact, offset: -1 }
                     ]" :key="pair.label" :style="{ transitionDelay: `${(idx + 1) * (xl ? 60 : 40) + 400}ms` }"
                         @transitionend="opacities[idx] = true" class="mb-5 xl:mb-0">
                         <p @click="() => handleScroll(pair.section, pair.offset)"

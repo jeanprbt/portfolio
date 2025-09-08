@@ -112,8 +112,7 @@
                 <transition mode="out-in" enter-from-class="opacity-0" enter-active-class="duration-200 ease-in"
                     enter-to-class="opacity-100" leave-from-class="opacity-100"
                     leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
-                    <NuxtImg preload
-                        :src="selectedProject ? `/img/${selectedProject.id}_${isDark ? 'dark' : 'light'}.png` : `/img/blank_${isDark ? 'dark' : 'light'}.png`"
+                    <img v-if="selectedProject" :src="`/img/${selectedProject.id}_${isDark ? 'dark' : 'light'}.png`"
                         :class="['h-full object-contain transition-opacity duration-500', { 'opacity-0': !selectedProject }]"
                         alt="project overview" />
                 </transition>
@@ -158,12 +157,54 @@
             </div>
         </div>
     </div>
-    <div ref="contact" class="h-[200vh] w-full bg-secondary text-primary transition-colors duration-500"></div>
+    <div ref="contact" class="h-[400vh] w-full bg-secondary text-primary transition-colors duration-500">
+        <div ref="contactContent" :class="[
+            'fixed h-svh md:h-screen w-full',
+            'inset-0 transform opacity-0',
+            'flex justify-between px-10 gap-10 xl:gap-20 2xl:gap-40',
+            selectedContact ? 'z-4' : 'z-2'
+        ]">
+            <ClientOnly>
+                <img src="~/assets/me.png" alt="profile picture" :class="[
+                    'w-full rounded-xl object-cover shadow-xl overflow-hidden my-20'
+                ]" />
+            </ClientOnly>
+            <div class="flex flex-col gap-5">
+                <div :class="[
+                    'font-primary text-right',
+                    'text-[20vh] leading-none',
+                    'flex flex-col gap-0',
+                    'mt-10 xl:mt-0'
+                ]">
+                    <div v-for="ctct in contacts" :key="ctct.id" :class="[
+                        'transition-opacity duration-500',
+                        { 'opacity-5 dark:opacity-10': (selectedContact === null) || selectedContact?.id !== ctct.id },
+                    ]">
+                        {{ ctct.label }}
+                    </div>
+                </div>
+                <div class="h-full mb-10 flex justify-end items-center font-text text-primary text-4xl">
+                    <transition mode="out-in" enter-from-class="opacity-0" enter-active-class="duration-200 ease-in"
+                        enter-to-class="opacity-100" leave-from-class="opacity-100"
+                        leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
+                        <div v-if="selectedContact" :key="selectedContact ? selectedContact!.link : ''">
+                            <a :href="selectedContact?.link" target="_blank" rel="noopener noreferrer"
+                                class="flex items-center gap-2 hover:opacity-50 transition-opacity duration-500 border-2 border-highlight p-4 rounded-xl">
+                                <Icon :name="selectedContact ? selectedContact!.icon : ''" class="text-highlight" />
+                                <p>{{ selectedContact?.username }}</p>
+                            </a>
+                        </div>
+                    </transition>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import jobs from '~/content/jobs.json';
 import projs from '~/content/projects.json';
+import contacts from '~/content/contact.json';
 
 const canvas = ref(null);
 const hero = ref(null);
@@ -174,6 +215,7 @@ const experienceContent = ref(null);
 const projects = ref(null);
 const projectsContent = ref(null);
 const contact = ref(null);
+const contactContent = ref(null);
 
 const introPlayed = ref(false);
 
@@ -183,5 +225,5 @@ const _ = useHeroAnimations(hero, sphere, toruses);
 const __ = useAboutAnimations(about, aboutText, sphere);
 const { selectedJob } = useExperienceAnimations(experience, experienceContent, sphere, toruses);
 const { selectedProject } = useProjectsAnimations(projects, projectsContent, sphere, cloneSpheres, sphereGroup);
-const ___ = useContactAnimations(contact, sphere, toruses);
+const { selectedContact } = useContactAnimations(contact, contactContent, sphere, toruses);
 </script>

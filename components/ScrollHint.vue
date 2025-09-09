@@ -10,8 +10,7 @@
 </template>
 
 <script setup lang="ts">
-const show = ref(false);
-let timeout: ReturnType<typeof setTimeout> | null = null;
+const show = ref(true);
 const windowWidth = ref(0);
 const md = computed(() => windowWidth.value >= 768);
 const lg = computed(() => windowWidth.value >= 1024);
@@ -27,13 +26,8 @@ onMounted(() => {
     window.addEventListener('resize', onResize);
     onResize();
 
-    timeout = setTimeout(() => {
-        show.value = true;
-    }, 4000);
-
     const handleScroll = () => {
         show.value = false;
-        if (timeout) clearTimeout(timeout);
         window.removeEventListener('scroll', handleScroll);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });

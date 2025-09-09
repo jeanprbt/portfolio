@@ -17,7 +17,8 @@
                 'text-6xl md:text-[4.25rem] lg:text-7xl xl:text-8xl 2xl:text-9xl',
             ]">
                 Hi<span class="text-highlight">,</span> I<span class="text-highlight">'</span>m <span
-                    class="font-secondary italic">Jean</span><span class="text-highlight">.</span>
+                    class="font-secondary italic">Jean</span><span
+                    class="text-highlight">.</span>
             </h1>
         </transition>
         <ScrollHint />
@@ -25,19 +26,10 @@
     <div ref="about" class="h-auto w-full flex bg-secondary text-primary transition-colors duration-500">
         <div class="w-2/5 hidden lg:block"></div>
         <div class="w-full lg:w-3/5 flex flex-col gap-4 items-center justify-center">
-            <p ref="aboutText" :class="[
+            <p v-html="aboutHTML" ref="aboutText" :class="[
                 'w-4/5 font-text text-center',
-                'text-3xl sm:text-5xl md:text-6xl xl:text-7xl 2xl:text-8xl',
+                'text-3xl sm:text-5xl md:text-6xl xl:text-7xl',
             ]">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry<span
-                    class="text-highlight">.</span> Lorem Ipsum has been the
-                industry<span class="text-highlight">'</span>s standard dummy text ever since the 1500s<span
-                    class="text-highlight">,</span> when an unknown printer took a galley of type and
-                scrambled it to make a type specimen book<span class="text-highlight">.</span> It has survived not
-                only
-                five centuries<span class="text-highlight">,</span> but also the leap
-                into electronic typesetting<span class="text-highlight">,</span> remaining essentially
-                unchanged<span class="text-highlight">.</span>
             </p>
         </div>
     </div>
@@ -174,7 +166,7 @@
                     'font-primary text-center lg:text-right',
                     'text-[8vw] lg:text-[20vh] lg:leading-none',
                     'grid grid-cols-2 grid-rows-2 lg:flex lg:flex-col gap-5 md:gap-2 lg:gap-0',
-                    'mt-30 sm:mt-20 md:mt-10 lg:mt-10 xl:mt-0' 
+                    'mt-30 sm:mt-20 md:mt-10 lg:mt-10 xl:mt-0'
                 ]">
                     <div v-for="ctct in contacts" :key="ctct.id" :class="[
                         'transition-opacity duration-500',
@@ -183,14 +175,16 @@
                         {{ ctct.label }}
                     </div>
                 </div>
-                <div class="h-full lg:mb-10 flex justify-end items-center font-text text-primary text-xl sm:text-2xl xl:text-4xl">
+                <div
+                    class="h-full lg:mb-10 flex justify-end items-center font-text text-primary text-xl sm:text-2xl xl:text-4xl">
                     <transition mode="out-in" enter-from-class="opacity-0" enter-active-class="duration-200 ease-in"
                         enter-to-class="opacity-100" leave-from-class="opacity-100"
                         leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
                         <div :key="selectedContact ? selectedContact!.link : ''">
                             <a :href="selectedContact?.link" target="_blank" rel="noopener noreferrer"
-                                :class="['flex items-center gap-2 hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-4 rounded-xl', { 'opacity-0' : !selectedContact }]">
-                                <Icon :name="selectedContact ? selectedContact!.icon : 'mdi:github'" class="text-highlight" />
+                                :class="['flex items-center gap-2 hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-4 rounded-xl', { 'opacity-0': !selectedContact }]">
+                                <Icon :name="selectedContact ? selectedContact!.icon : 'mdi:github'"
+                                    class="text-highlight" />
                                 <p>{{ selectedContact?.username || 0 }}</p>
                             </a>
                         </div>
@@ -207,9 +201,23 @@
 </template>
 
 <script setup lang="ts">
+import ab from '~/content/about.json';
 import jobs from '~/content/jobs.json';
 import projs from '~/content/projects.json';
 import contacts from '~/content/contact.json';
+
+onMounted(() => window.scrollTo(0, 0));
+useHead({
+    title: 'Jean Perbet | Portfolio',
+    meta: [
+        { name: 'description', content: 'Jean Perbet - Portfolio, experience, projects, and contact information.' },
+        { name: 'keywords', content: 'Jean Perbet, portfolio, developer, projects, experience, contact' },
+        { property: 'og:title', content: 'Jean Perbet | Portfolio' },
+        { property: 'og:description', content: 'Discover Jean Perbet\'s work, experience, and projects.' },
+        { property: 'og:type', content: 'website' }
+    ]
+});
+
 
 const canvas = ref(null);
 const hero = ref(null);
@@ -223,6 +231,7 @@ const contact = ref(null);
 const contactContent = ref(null);
 
 const introPlayed = ref(false);
+const aboutHTML = computed(() => ab.text.replace(/([.,:;!?)'])/g, '<span class="text-highlight">$1</span>'));
 
 const { isLoaded, sphere, sphereGroup, cloneSpheres, sphereRadiusPixels, toruses } = useThreeScene(canvas, introPlayed);
 const { isDark, toggleDarkMode } = useDarkMode(sphere, toruses);

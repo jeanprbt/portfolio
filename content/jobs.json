@@ -5,7 +5,7 @@
         "role": "Student Assistant",
         "period": "02/2024 - 05/2024",
         "city": "Stockholm",
-        "info": "Proin nec suscipit justo, eget tristique mauris. Fusce interdum dolor nisi, vel elementum nunc accumsan vel. Curabitur laoreet et elit a porttitor. Morbi a commodo massa. Nullam quam ligula, pulvinar id scelerisque in, bibendum sed sapien. In aliquet fermentum lectus eu bibendum. Ut sit amet libero sit amet diam volutpat vulputate eget rhoncus sem. Curabitur dictum at velit eu mollis."
+        "info": "As a student assistant in the Ethical Hacking course, I was in charge of maintaining the team’s ad-hoc simulation tool to create virtual networks with security flaws to host a capture-the-flag. My work focused on improving and extending a test battery that monitored the status of multiple Ansible instances through pytest. In addition, I fixed various bugs in shell scripts."
     },
     "finplify": {
         "id": "finplify",
@@ -13,7 +13,7 @@
         "role": "Data Science Intern",
         "period": "06/2024 - 08/2024",
         "city": "Geneva",
-        "info": "Fusce sagittis quam id nisl porta interdum. Integer ac leo volutpat metus pretium commodo vitae eget neque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae dignissim nisi, ac pellentesque lorem. Aenean ac volutpat turpis. Vestibulum mattis pellentesque fringilla. Etiam iaculis nunc eu justo varius pretium. Phasellus vulputate sollicitudin elit at venenatis."
+        "info": "My internship was split into two projects. First, I fine-tuned two small-scale LLMs to query a financial API from natural language inputs using sentence classification and named entity recognition, leveraging HuggingFace libraries. Then, I built a multi-agent pipeline with Autogen to process API responses and generate detailed reports with visual charts, using cost-efficient LLMs."
     },
     "epfl": {
         "id": "epfl",
@@ -21,7 +21,7 @@
         "role": "Machine Learning Assistant",
         "period": "02/2025 - 05/2025",
         "city": "Lausanne",
-        "info": "Cras commodo commodo nisi vitae euismod. Cras vitae pharetra tortor. Nulla vel massa congue, ultrices elit ut, facilisis nunc. In ut mollis augue. Nullam a tellus metus. Aenean nisl orci, luctus sit amet tincidunt at, auctor eu augue. Phasellus vulputate elit ligula, porttitor luctus metus dignissim quis. Vestibulum accumsan convallis arcu, eget commodo ex tincidunt at."
+        "info": "I joined the Lab of the Physics of Biological Systems to focus on data analysis and modeling for an ongoing thesis. The goal was to predict future worm behavior from their brain activity measurements, and to this extent I trained several ML models on time series forecasting, including linear/logistic regression, random forests, gradient boosting, and deep neural networks."
     },
     "cern": {
         "id": "cern",
@@ -29,6 +29,6 @@
         "role": "DataOps Intern",
         "period": "06/2025 - 08/2025",
         "city": "Geneva",
-        "info": "Maecenas nec venenatis sem, non tempor massa. Nulla quis dui lacus. Pellentesque in lectus urna. Maecenas a risus tempus neque vulputate varius. Phasellus id maximus magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer interdum in nunc sit amet interdum. Pellentesque ac sem nunc. Cras at mauris vel venenatis. Maecenas libero arcu, lobortis ac diam."
+        "info": "During the summer, I integrated the Data & Analytics team to set up a benchmarking suite for the OpenSearch clusters they provide to various CERN teams and experiments for large-scale plain text search. This aimed at evaluating the impact of transitioning to Kubernetes as the underlying cluster management tool, and I measured no performance loss provided a suitable storage speed."
     }
 }

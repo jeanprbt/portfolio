@@ -11,6 +11,8 @@
     --color-primary: #000000;
     --color-secondary: #ffffff;
     --color-highlight: #3b82f6;
+
+    --shadow-9xl: 0 10px 25px rgba(0, 0, 0, 0.6);
 }
 
 ::-webkit-scrollbar {

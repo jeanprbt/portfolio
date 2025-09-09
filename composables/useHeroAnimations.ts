@@ -48,7 +48,7 @@ export const useHeroAnimations = (hero: Ref, sphere: ShallowRef, toruses: Shallo
                 scrub: true,
             }
         }).to(sphere.value!.rotation, {
-            y: 30 * Math.PI,
+            y: 40 * Math.PI,
             ease: 'none',
         });
 

@@ -64,21 +64,32 @@ export const useContactAnimations = (
         });
 
         // SPHERE FADE OUT
-        gsap.timeline({
+        let tl = gsap.timeline({
             scrollTrigger: {
                 trigger: contact.value,
                 start: 'top top',
                 end: 'top+=30% top',
                 scrub: true
             }
+        }).to(sphere.value!.position, {
+            y: 1,
         }).to(sphere.value!.scale, {
             x: 0,
             y: 0,
             z: 0
-        }).to(contactContent.value!, {
-            opacity: 1,
-            ease: "power3.out"
         }, "<+=10%");
+        
+        if (lg) {
+            tl.to(contactContent.value!, {
+                opacity: 1,
+                ease: "power3.out"
+            }, "<+=10%");
+        } else {
+            tl.to(contactContent.value!, {
+                opacity: 1,
+                ease: "power3.out",
+            });
+        };
 
         // CONTACTS
         const base = window.innerHeight;
@@ -94,5 +105,5 @@ export const useContactAnimations = (
         });
     });
 
-    return { selectedContact };
+    return { selectedContact, lg };
 };

@@ -113,7 +113,7 @@
                     enter-to-class="opacity-100" leave-from-class="opacity-100"
                     leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
                     <img v-if="selectedProject" :src="`/img/${selectedProject.id}_${isDark ? 'dark' : 'light'}.png`"
-                        :class="['h-full object-contain transition-opacity duration-500', { 'opacity-0': !selectedProject }]"
+                        :class="['h-full object-contain transition-opacity duration-200', { 'opacity-0': !selectedProject }]"
                         alt="project overview" />
                 </transition>
             </div>
@@ -161,20 +161,20 @@
         <div ref="contactContent" :class="[
             'fixed h-svh md:h-screen w-full',
             'inset-0 transform opacity-0',
-            'flex justify-between px-10 gap-10 xl:gap-20 2xl:gap-40',
+            'flex flex-col lg:flex-row justify-between px-10 pb-15 lg:pb-0 gap-0 lg:gap-5 xl:gap-20 2xl:gap-40',
             selectedContact ? 'z-4' : 'z-2'
         ]">
             <ClientOnly>
-                <img src="~/assets/me.png" alt="profile picture" :class="[
-                    'w-full rounded-xl object-cover shadow-xl overflow-hidden my-20'
+                <img v-if="lg" src="~/assets/me.png" alt="profile picture" :class="[
+                    'w-full rounded-xl object-cover overflow-hidden my-20 shadow-9xl dark:border-[0.15px] border-white'
                 ]" />
             </ClientOnly>
-            <div class="flex flex-col gap-5">
+            <div class="flex flex-col gap-15 sm:gap-10 lg:gap-5 items-center lg:items-end">
                 <div :class="[
-                    'font-primary text-right',
-                    'text-[20vh] leading-none',
-                    'flex flex-col gap-0',
-                    'mt-10 xl:mt-0'
+                    'font-primary text-center lg:text-right',
+                    'text-[8vw] lg:text-[20vh] lg:leading-none',
+                    'grid grid-cols-2 grid-rows-2 lg:flex lg:flex-col gap-5 md:gap-2 lg:gap-0',
+                    'mt-30 sm:mt-20 md:mt-10 lg:mt-10 xl:mt-0' 
                 ]">
                     <div v-for="ctct in contacts" :key="ctct.id" :class="[
                         'transition-opacity duration-500',
@@ -183,13 +183,13 @@
                         {{ ctct.label }}
                     </div>
                 </div>
-                <div class="h-full mb-10 flex justify-end items-center font-text text-primary text-4xl">
+                <div class="h-full lg:mb-10 flex justify-end items-center font-text text-primary text-xl sm:text-2xl xl:text-4xl">
                     <transition mode="out-in" enter-from-class="opacity-0" enter-active-class="duration-200 ease-in"
                         enter-to-class="opacity-100" leave-from-class="opacity-100"
                         leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
                         <div v-if="selectedContact" :key="selectedContact ? selectedContact!.link : ''">
                             <a :href="selectedContact?.link" target="_blank" rel="noopener noreferrer"
-                                class="flex items-center gap-2 hover:opacity-50 transition-opacity duration-500 border-2 border-highlight p-4 rounded-xl">
+                                class="flex items-center gap-2 hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-4 rounded-xl">
                                 <Icon :name="selectedContact ? selectedContact!.icon : ''" class="text-highlight" />
                                 <p>{{ selectedContact?.username }}</p>
                             </a>
@@ -197,6 +197,11 @@
                     </transition>
                 </div>
             </div>
+            <ClientOnly>
+                <img v-if="!lg" src="~/assets/me.png" alt="profile picture" :class="[
+                    'h-1/4 sm:h-1/3 mb:h-1/2 sm:mx-10 md:mx-20 rounded-xl object-cover overflow-hidden mb-30 sm:mb-20 md:mb-10 shadow-9xl dark:border-[0.15px] border-white object-[15%_35%]'
+                ]" />
+            </ClientOnly>
         </div>
     </div>
 </template>
@@ -225,5 +230,5 @@ const _ = useHeroAnimations(hero, sphere, toruses);
 const __ = useAboutAnimations(about, aboutText, sphere);
 const { selectedJob } = useExperienceAnimations(experience, experienceContent, sphere, toruses);
 const { selectedProject } = useProjectsAnimations(projects, projectsContent, sphere, cloneSpheres, sphereGroup);
-const { selectedContact } = useContactAnimations(contact, contactContent, sphere, toruses);
+const { selectedContact, lg } = useContactAnimations(contact, contactContent, sphere, toruses);
 </script>

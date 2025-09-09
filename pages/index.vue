@@ -161,7 +161,7 @@
         <div ref="contactContent" :class="[
             'fixed h-svh md:h-screen w-full',
             'inset-0 transform opacity-0',
-            'flex flex-col lg:flex-row justify-between px-10 pb-15 lg:pb-0 gap-0 lg:gap-5 xl:gap-20 2xl:gap-40',
+            'flex flex-col lg:flex-row px-10 gap-20 lg:gap-5 xl:gap-20 2xl:gap-40',
             selectedContact ? 'z-4' : 'z-2'
         ]">
             <ClientOnly>
@@ -187,11 +187,11 @@
                     <transition mode="out-in" enter-from-class="opacity-0" enter-active-class="duration-200 ease-in"
                         enter-to-class="opacity-100" leave-from-class="opacity-100"
                         leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
-                        <div v-if="selectedContact" :key="selectedContact ? selectedContact!.link : ''">
+                        <div :key="selectedContact ? selectedContact!.link : ''">
                             <a :href="selectedContact?.link" target="_blank" rel="noopener noreferrer"
-                                class="flex items-center gap-2 hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-4 rounded-xl">
-                                <Icon :name="selectedContact ? selectedContact!.icon : ''" class="text-highlight" />
-                                <p>{{ selectedContact?.username }}</p>
+                                :class="['flex items-center gap-2 hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-4 rounded-xl', { 'opacity-0' : !selectedContact }]">
+                                <Icon :name="selectedContact ? selectedContact!.icon : 'mdi:github'" class="text-highlight" />
+                                <p>{{ selectedContact?.username || 0 }}</p>
                             </a>
                         </div>
                     </transition>
@@ -199,7 +199,7 @@
             </div>
             <ClientOnly>
                 <img v-if="!lg" src="~/assets/me.png" alt="profile picture" :class="[
-                    'h-1/4 sm:h-1/3 mb:h-1/2 sm:mx-10 md:mx-20 rounded-xl object-cover overflow-hidden mb-30 sm:mb-20 md:mb-10 shadow-9xl dark:border-[0.15px] border-white object-[15%_35%]'
+                    'h-1/4 sm:h-1/3 mb:h-1/2 sm:mx-10 md:mx-20 rounded-xl object-cover overflow-hidden sm:mb-20 md:mb-10 shadow-9xl dark:border-[0.15px] border-white object-[15%_35%]'
                 ]" />
             </ClientOnly>
         </div>

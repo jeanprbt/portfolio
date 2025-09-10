@@ -5,7 +5,8 @@
         "role": "Student Assistant",
         "period": "02/2024 - 05/2024",
         "city": "Stockholm",
-        "info": "As a student assistant in the Ethical Hacking course, I was in charge of maintaining the team’s ad-hoc simulation tool to create virtual networks with security flaws to host a capture-the-flag. My work focused on improving and extending a test battery that monitored the status of multiple Ansible instances through pytest. In addition, I fixed various bugs in shell scripts."
+        "info": "As a student assistant in the Ethical Hacking course, I was in charge of maintaining the team’s ad-hoc simulation tool to create virtual networks with security flaws to host a capture-the-flag. My work focused on improving and extending a test battery that monitored the status of multiple Ansible instances through pytest. In addition, I fixed various bugs in shell scripts.",
+        "icons": ["simple-icons:python", "simple-icons:pytest", "simple-icons:ansible", "simple-icons:gnubash", "simple-icons:huggingface"]
     },
     "finplify": {
         "id": "finplify",
@@ -13,7 +14,7 @@
         "role": "Data Science Intern",
         "period": "06/2024 - 08/2024",
         "city": "Geneva",
-        "info": "My internship was split into two projects. First, I fine-tuned two small-scale LLMs to query a financial API from natural language inputs using sentence classification and named entity recognition, leveraging HuggingFace libraries. Then, I built a multi-agent pipeline with Autogen to process API responses and generate detailed reports with visual charts, using cost-efficient LLMs."
+        "info": "My internship was split into two projects. First, I fine-tuned two small-scale LLMs to query a financial API from natural language inputs using sentence classification and named entity recognition, leveraging HuggingFace libraries. Then, I built a multi-agent pipeline with LangChain to process API responses and generate detailed reports with visual charts, using cost-efficient LLMs. "
     },
     "epfl": {
         "id": "epfl",

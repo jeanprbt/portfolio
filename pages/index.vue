@@ -16,9 +16,9 @@
                 'font-primary text-center',
                 'text-6xl md:text-[4.25rem] lg:text-7xl xl:text-8xl 2xl:text-9xl',
             ]">
-                Hi<span class="text-highlight">,</span> I<span class="text-highlight">'</span>m <span
+                Hi<span class="text-highlight">,</span> I'm <span
                     class="font-secondary italic">Jean</span><span
-                    class="text-highlight">.</span>
+                    class="text-highlight">. </span>
             </h1>
         </transition>
         <ScrollHint />
@@ -231,7 +231,11 @@ const contact = ref(null);
 const contactContent = ref(null);
 
 const introPlayed = ref(false);
-const aboutHTML = computed(() => ab.text.replace(/([.,:;!?)'])/g, '<span class="text-highlight">$1</span>'));
+const aboutHTML = computed(() => 
+    ab.text
+    .replace(/(:\))/g, '<span class="text-highlight">:)</span>')
+    .replace(/([.,:;!?])(?=\s|$)/g, '<span class="text-highlight">$1</span>')
+);
 
 const { isLoaded, sphere, sphereGroup, cloneSpheres, sphereRadiusPixels, toruses } = useThreeScene(canvas, introPlayed);
 const { isDark, toggleDarkMode } = useDarkMode(sphere, toruses);

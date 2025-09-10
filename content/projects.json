@@ -2,19 +2,19 @@
     "javelo": {
         "id": "javelo",
         "label": "JaVelo",
-        "period": "06/2025 - 08/2025",
+        "period": "02/2023 - 06/2023",
         "links": [
             {
                 "link": "https://github.com/jeanprbt/javelo",
                 "icon": "mdi:github"
             }
         ],
-        "info": "Maecenas nec venenatis sem, non tempor massa. Nulla quis dui lacus. Pellentesque in lectus urna. Maecenas a risus tempus neque vulputate varius. Phasellus id maximus magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Integer interdum in nunc sit amet interdum. Pellentesque ac sem nunc. Cras at mauris vel venenatis. Maecenas libero arcu, lobortis ac diam."
+        "info": "Early in my studies, I built a cycling route planner for Switzerland in Java, using JavaFX for the GUI, to enhance my object-oriented programming skills. It enables users to select multiple points to connect, computes the optimal path with a custom cost function and the A* algorithm, and displays the elevation profile. You can even export it to GPX, download it from the repo!"
     },
     "dataringz": {
         "id": "dataringz",
         "label": "DataRingz",
-        "period": "06/2024 - 08/2024",
+        "period": "03/2025 - 05/2025",
         "links": [
             {
                 "link": "https://github.com/jeanprbt/dataringz",
@@ -29,7 +29,7 @@
                 "icon": "basil:chrome-solid"
             }
         ],
-        "info": "Fusce sagittis quam id nisl porta interdum. Integer ac leo volutpat metus pretium commodo vitae eget neque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae dignissim nisi, ac pellentesque lorem. Aenean ac volutpat turpis. Vestibulum mattis pellentesque fringilla. Etiam iaculis nunc eu justo varius pretium. Phasellus vulputate sollicitudin elit at venenatis."
+        "info": "With two friends, I built an interactive map visualizing Paris 2024 Olympics results, obtained through a Kaggle dataset. Starting from central Paris, users can explore venues, sports played there, the specific trials, corresponding athletes and their countries, switch to 'Globe Mode' to browse by country, or use the search bar to get insights about pretty much everything."
     },
     "solarseg": {
         "id": "solarseg",
@@ -49,6 +49,6 @@
                 "icon": "mdi:book"
             }
         ],
-        "info": "Cras commodo commodo nisi vitae euismod. Cras vitae pharetra tortor. Nulla vel massa congue, ultrices elit ut, facilisis nunc. In ut mollis augue. Nullam a tellus metus. Aenean nisl orci, luctus sit amet tincidunt at, auctor eu augue. Phasellus vulputate elit ligula, porttitor luctus metus dignissim quis. Vestibulum accumsan convallis arcu, eget commodo ex tincidunt at."
+        "info": "Again, with two frieds, we partnered with the Swiss Data Science Center to train CNNs to automatically segment photovoltaic installations from aerial images of Switzerland. We compared two architectures, namey U-Net and DeeplabV3+, trained over a corpus of nearly 700 images pre-processed for our needs, reaching a 0.81 F1-score on our best model. Feel free to try HF demo!"
     }
 }

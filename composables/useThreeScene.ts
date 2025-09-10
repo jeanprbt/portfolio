@@ -53,7 +53,7 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>, introPlayed
         renderer.setPixelRatio(window.devicePixelRatio);
 
         // 4. Main sphere
-        const sphereGeometry = new THREE.SphereGeometry(1, 512, 512);
+        const sphereGeometry = new THREE.SphereGeometry(1, 128, 128);
         const sphereMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 uTime: { value: 0 },

@@ -6,10 +6,13 @@
         "links": [
             {
                 "link": "https://github.com/jeanprbt/javelo",
-                "icon": "mdi:github"
+                "svg": "/svg/github.svg"
             }
         ],
-        "info": "Early in my studies, I built a cycling route planner for Switzerland in Java, using JavaFX for the GUI, to enhance my object-oriented programming skills. It enables users to select multiple points to connect, computes the optimal path with a custom cost function and the A* algorithm, and displays the elevation profile. You can even export it to GPX, download it from the repo!"
+        "info": "Early in my studies, I built a cycling route planner for Switzerland in Java, using JavaFX for the GUI, to enhance my object-oriented programming skills. It enables users to select multiple points to connect, computes the optimal path with a custom cost function and the A* algorithm, and displays the elevation profile. You can even export it to GPX, download it from the repo!",
+        "svgs": [
+            "/svg/java.svg"
+        ]
     },
     "dataringz": {
         "id": "dataringz",
@@ -18,18 +21,23 @@
         "links": [
             {
                 "link": "https://github.com/jeanprbt/dataringz",
-                "icon": "mdi:github"
+                "svg": "/svg/github.svg"
             },
             {
                 "link": "https://www.youtube.com/watch?v=g1Jm5Clbjf8",
-                "icon": "mdi:youtube"
+                "svg": "/svg/youtube.svg"
             },
             {
                 "link": "https://dataringz.martinctl.dev",
-                "icon": "basil:chrome-solid"
+                "svg": "/svg/safari.svg"
             }
         ],
-        "info": "With two friends, I built an interactive map visualizing Paris 2024 Olympics results, obtained through a Kaggle dataset. Starting from central Paris, users can explore venues, sports played there, the specific trials, corresponding athletes and their countries, switch to 'Globe Mode' to browse by country, or use the search bar to get insights about pretty much everything."
+        "info": "With two friends, I built an interactive map visualizing Paris 2024 Olympics results, obtained through a Kaggle dataset. Starting from central Paris, users can explore venues, sports played there, the specific trials, corresponding athletes and their countries, switch to 'Globe Mode' to browse by country, or use the search bar to get insights about pretty much everything.",
+        "svgs": [
+            "/svg/typescript.svg",
+            "/svg/nuxt.svg",
+            "/svg/kaggle.svg"
+        ]
     },
     "solarseg": {
         "id": "solarseg",
@@ -38,17 +46,21 @@
         "links": [
             {
                 "link": "https://github.com/jeanprbt/swiss-solar-panel-segmentation",
-                "icon": "mdi:github"
+                "svg": "/svg/github.svg"
             },
             {
                 "link": "https://huggingface.co/spaces/jeanprbt/swiss-solar-panels-segmentation",
-                "icon": "simple-icons:huggingface"
+                "svg": "/svg/huggingface.svg"
             },
             {
                 "link": "/pdf/solarseg.pdf",
-                "icon": "mdi:book"
+                "svg": "/svg/arxiv.svg"
             }
         ],
-        "info": "Again, with two frieds, we partnered with the Swiss Data Science Center to train CNNs to automatically segment photovoltaic installations from aerial images of Switzerland. We compared two architectures, namey U-Net and DeeplabV3+, trained over a corpus of nearly 700 images pre-processed for our needs, reaching a 0.81 F1-score on our best model. Feel free to try HF demo!"
+        "info": "Again, with two frieds, we partnered with the Swiss Data Science Center to train CNNs to automatically segment photovoltaic installations from aerial images of Switzerland. We compared two architectures, namey U-Net and DeeplabV3+, trained over a corpus of nearly 700 images pre-processed for our needs, reaching a 0.81 F1-score on our best model. Feel free to try HF demo!",
+        "svgs": [
+            "/svg/python.svg",
+            "/svg/pytorch.svg"
+        ]
     }
 }

@@ -69,13 +69,11 @@ export const useContactAnimations = (
                 end: 'top+=30% top',
                 scrub: true
             }
-        }).to(sphere.value!.position, {
-            y: 1,
         }).to(sphere.value!.scale, {
             x: 0,
             y: 0,
             z: 0
-        }, "<+=10%");
+        });
 
         if (lg) {
             tl.to(contactContent.value!, {

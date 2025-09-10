@@ -16,8 +16,7 @@
                 'font-primary text-center',
                 'text-6xl md:text-[4.25rem] lg:text-7xl xl:text-8xl 2xl:text-9xl',
             ]">
-                Hi<span class="text-highlight">,</span> I'm <span
-                    class="font-secondary italic">Jean</span><span
+                Hi<span class="text-highlight">,</span> I'm <span class="font-secondary italic">Jean</span><span
                     class="text-highlight">. </span>
             </h1>
         </transition>
@@ -62,6 +61,10 @@
                             <span :key="pair.value"
                                 :class="['font-text ml-2', { 'whitespace-break-spaces': !selectedJob }]">
                                 {{ pair.value }}
+                                <span v-if="pair.label === 'INFO' && selectedJob?.svgs" class="gap-2">
+                                    <img v-for="svg in selectedJob.svgs" :key="svg" :src="svg"
+                                        class="mr-3 inline-block h-5 lg:h-6 w-5 lg:w-6 align-middle" alt="icon" />
+                                </span>
                             </span>
                         </transition>
                     </p>
@@ -124,6 +127,10 @@
                             <span :key="pair.value"
                                 :class="['font-text ml-2', { 'whitespace-break-spaces': !selectedProject }]">
                                 {{ pair.value }}
+                                 <span v-if="pair.label === 'INFO' && selectedProject?.svgs" class="gap-2">
+                                    <img v-for="svg in selectedProject.svgs" :key="svg" :src="svg"
+                                        class="mr-3 inline-block h-5 lg:h-6 w-5 lg:w-6 align-middle" alt="icon" />
+                                </span>
                             </span>
                         </transition>
                     </p>
@@ -139,9 +146,9 @@
                         <div
                             class="lg:w-2/3 flex justify-start lg:justify-around items-center gap-2 sm:gap-4 text-primary text-xl sm:text-2xl xl:text-4xl">
                             <a v-for="link in selectedProject.links" :href="link.link"
-                                class="flex items-center hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-1 lg:p-4 rounded-xl" target="_blank"
-                                rel="noopener noreferrer">
-                                <Icon :name="link.icon" />
+                                class="flex items-center hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-1 lg:p-4 rounded-xl"
+                                target="_blank" rel="noopener noreferrer">
+                                <img :src="link.svg" class="h-5 lg:h-6 w-5 lg:w-6" alt="icon" />
                             </a>
                         </div>
                     </div>
@@ -183,8 +190,8 @@
                         leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
                         <div :key="selectedContact ? selectedContact!.link : ''">
                             <a :href="selectedContact?.link" target="_blank" rel="noopener noreferrer"
-                                :class="['flex items-center gap-2 hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-2 md:p-4 p-4 rounded-xl', { 'opacity-0': !selectedContact }]">
-                                <Icon :name="selectedContact ? selectedContact!.icon : 'mdi:github'"/>
+                                :class="['flex items-center gap-2 hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-2 md:p-4 rounded-xl', { 'opacity-0': !selectedContact }]">
+                                <Icon :name="selectedContact ? selectedContact!.icon : 'mdi:github'" class="text-highlight text-2xl sm:text-3xl xl:text-4xl" />
                                 <p>{{ selectedContact?.username || 0 }}</p>
                             </a>
                         </div>
@@ -234,10 +241,10 @@ const contactImage1 = ref(null);
 const contactImage2 = ref(null);
 
 const introPlayed = ref(false);
-const aboutHTML = computed(() => 
+const aboutHTML = computed(() =>
     ab.text
-    .replace(/(:\))/g, '<span class="text-highlight">:)</span>')
-    .replace(/([.,:;!?])(?=\s|$)/g, '<span class="text-highlight">$1</span>')
+        .replace(/(:\))/g, '<span class="text-highlight">:)</span>')
+        .replace(/([.,:;!?])(?=\s|$)/g, '<span class="text-highlight">$1</span>')
 );
 
 const { isLoaded, sphere, sphereGroup, cloneSpheres, sphereRadiusPixels, toruses } = useThreeScene(canvas, introPlayed);

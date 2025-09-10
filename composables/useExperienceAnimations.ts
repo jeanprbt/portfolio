@@ -72,12 +72,8 @@ export const useExperienceAnimations = (
         ScrollTrigger.create({
             trigger: experience.value,
             start: "top bottom",
-            onEnter: () => {
-                sphere.value!.material.uniforms.uTorusTransition.value = 2;
-            },
-            onLeaveBack: () => {
-                sphere.value!.material.uniforms.uTorusTransition.value = 1;
-            }
+            onEnter: () => sphere.value!.material.uniforms.uTorusTransition.value = 2,
+            onLeaveBack: () => sphere.value!.material.uniforms.uTorusTransition.value = 1
         });
         let sphereExperienceTL = gsap.timeline({
             scrollTrigger: {

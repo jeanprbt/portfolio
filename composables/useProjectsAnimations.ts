@@ -43,27 +43,20 @@ export const useProjectsAnimations = (
         ScrollTrigger.create({
             trigger: projects.value,
             start: "top bottom",
-            onEnter: () => {
-                sphere.value!.material.uniforms.uTorusTransition.value = 3;
-            },
-            onLeaveBack: () => {
-                sphere.value!.material.uniforms.uTorusTransition.value = 2;
-            }
+            onEnter: () => sphere.value!.material.uniforms.uTorusTransition.value = 3,
+            onLeaveBack: () => sphere.value!.material.uniforms.uTorusTransition.value = 2
         });
 
         // CLONE SPHERES APPEAR
         ScrollTrigger.create({
             trigger: projects.value,
             start: "top 50%",
-            onEnter: () => {
+            onEnter: () => 
                 cloneSpheres.value.forEach((cloneSphere: any) => {
                     cloneSphere.position.copy(sphere.value!.position);
                     cloneSphere.visible = true;
-                })
-            },
-            onLeaveBack: () => {
-                cloneSpheres.value.forEach((cloneSphere: any) => cloneSphere.visible = false);
-            }
+                }),
+            onLeaveBack: () => cloneSpheres.value.forEach((cloneSphere: any) => cloneSphere.visible = false)
         });
 
         let radius = lg.value ? 1.5 : md.value ? 1.2 : sm.value ? 1 : 0.8;
@@ -207,14 +200,8 @@ export const useProjectsAnimations = (
         ScrollTrigger.create({
             trigger: projects.value,
             start: "bottom top",
-            onEnter: () => {
-                cloneSpheres.value.forEach((cloneSphere: any) => {
-                    cloneSphere.visible = false;
-                })
-            },
-            onLeaveBack: () => {
-                cloneSpheres.value.forEach((cloneSphere: any) => cloneSphere.visible = true);
-            }
+            onEnter: () => cloneSpheres.value.forEach((cloneSphere: any) => cloneSphere.visible = false),
+            onLeaveBack: () => cloneSpheres.value.forEach((cloneSphere: any) => cloneSphere.visible = true)
         });
     });
 

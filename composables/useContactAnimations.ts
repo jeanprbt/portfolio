@@ -8,6 +8,8 @@ import contacts from '~/content/contact.json';
 export const useContactAnimations = (
     contact: Ref,
     contactContent: Ref,
+    contactImage1: Ref,
+    contactImage2: Ref,
     sphere: ShallowRef,
     toruses: ShallowRef
 ) => {
@@ -55,12 +57,8 @@ export const useContactAnimations = (
         ScrollTrigger.create({
             trigger: contact.value,
             start: "top bottom",
-            onEnter: () => {
-                sphere.value!.material.uniforms.uTorusTransition.value = 4;
-            },
-            onLeaveBack: () => {
-                sphere.value!.material.uniforms.uTorusTransition.value = 3;
-            }
+            onEnter: () => sphere.value!.material.uniforms.uTorusTransition.value = 4,
+            onLeaveBack: () => sphere.value!.material.uniforms.uTorusTransition.value = 3
         });
 
         // SPHERE FADE OUT
@@ -78,7 +76,7 @@ export const useContactAnimations = (
             y: 0,
             z: 0
         }, "<+=10%");
-        
+
         if (lg) {
             tl.to(contactContent.value!, {
                 opacity: 1,
@@ -91,6 +89,20 @@ export const useContactAnimations = (
             });
         };
 
+        // IMAGE REVEAL
+        ScrollTrigger.create({
+            trigger: contact.value,
+            start: 'top+=20% top',
+            onEnter: () => {
+                if (contactImage1.value) contactImage1.value!.style.opacity = 1;
+                if (contactImage2.value) contactImage2.value!.style.opacity = 1;
+            },
+            onLeaveBack: () => {
+                if (contactImage1.value) contactImage1.value!.style.opacity = 0;
+                if (contactImage2.value) contactImage2.value!.style.opacity = 0;
+            }
+        });
+
         // CONTACTS
         const base = window.innerHeight;
         const sectionHeight = window.innerHeight / 2;
@@ -100,7 +112,7 @@ export const useContactAnimations = (
                 trigger: contact.value,
                 start: () => `top+=${base + idx * sectionHeight} top`,
                 onEnter: () => selectedContact.value = contacts[key as keyof typeof contacts],
-                onLeaveBack: () =>  selectedContact.value = idx > 0 ? contacts[contactKeys[idx - 1] as keyof typeof contacts] : null,
+                onLeaveBack: () => selectedContact.value = idx > 0 ? contacts[contactKeys[idx - 1] as keyof typeof contacts] : null,
             });
         });
     });

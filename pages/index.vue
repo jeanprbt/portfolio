@@ -137,11 +137,11 @@
                             LINKS
                         </h1>
                         <div
-                            class="lg:w-2/3 flex justify-start lg:justify-around items-center gap-2 sm:gap-4 text-primary">
+                            class="lg:w-2/3 flex justify-start lg:justify-around items-center gap-2 sm:gap-4 text-primary text-xl sm:text-2xl xl:text-4xl">
                             <a v-for="link in selectedProject.links" :href="link.link"
-                                class="hover:opacity-50 transition-opacity duration-300" target="_blank"
+                                class="flex items-center hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-1 lg:p-4 rounded-xl" target="_blank"
                                 rel="noopener noreferrer">
-                                <Icon :name="link.icon" class="text-3xl sm:text-4xl md:text-5xl" />
+                                <Icon :name="link.icon" />
                             </a>
                         </div>
                     </div>
@@ -157,8 +157,9 @@
             selectedContact ? 'z-4' : 'z-2'
         ]">
             <ClientOnly>
-                <img v-if="lg" src="~/assets/me.png" alt="profile picture" :class="[
-                    'w-full rounded-xl object-cover overflow-hidden my-20 shadow-9xl dark:border-[0.15px] border-white'
+                <img v-if="lg" ref="contactImage1" src="~/assets/me.png" alt="profile picture" :class="[
+                    'w-full rounded-xl my-20 object-cover overflow-hidden shadow-9xl dark:border-[0.15px] border-white',
+                    'opacity-0 transition-opacity duration-300'
                 ]" />
             </ClientOnly>
             <div class="flex flex-col gap-15 sm:gap-10 lg:gap-5 items-center lg:items-end">
@@ -182,9 +183,8 @@
                         leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
                         <div :key="selectedContact ? selectedContact!.link : ''">
                             <a :href="selectedContact?.link" target="_blank" rel="noopener noreferrer"
-                                :class="['flex items-center gap-2 hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-4 rounded-xl', { 'opacity-0': !selectedContact }]">
-                                <Icon :name="selectedContact ? selectedContact!.icon : 'mdi:github'"
-                                    class="text-highlight" />
+                                :class="['flex items-center gap-2 hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-2 md:p-4 p-4 rounded-xl', { 'opacity-0': !selectedContact }]">
+                                <Icon :name="selectedContact ? selectedContact!.icon : 'mdi:github'"/>
                                 <p>{{ selectedContact?.username || 0 }}</p>
                             </a>
                         </div>
@@ -192,8 +192,10 @@
                 </div>
             </div>
             <ClientOnly>
-                <img v-if="!lg" src="~/assets/me.png" alt="profile picture" :class="[
-                    'h-1/4 sm:h-1/3 mb:h-1/2 sm:mx-10 md:mx-20 rounded-xl object-cover overflow-hidden sm:mb-20 md:mb-10 shadow-9xl dark:border-[0.15px] border-white object-[15%_35%]'
+                <img v-if="!lg" ref="contactImage2" src="~/assets/me.png" alt="profile picture" :class="[
+                    'h-1/4 sm:h-1/3 mb:h-1/2 sm:mx-10 md:mx-20 sm:mb-20 md:mb-10',
+                    'opacity-0 transition-opacity duration-300',
+                    'rounded-xl object-cover overflow-hidden shadow-9xl dark:border-[0.15px] border-white object-[15%_35%]'
                 ]" />
             </ClientOnly>
         </div>
@@ -218,7 +220,6 @@ useHead({
     ]
 });
 
-
 const canvas = ref(null);
 const hero = ref(null);
 const about = ref(null);
@@ -229,6 +230,8 @@ const projects = ref(null);
 const projectsContent = ref(null);
 const contact = ref(null);
 const contactContent = ref(null);
+const contactImage1 = ref(null);
+const contactImage2 = ref(null);
 
 const introPlayed = ref(false);
 const aboutHTML = computed(() => 
@@ -243,5 +246,5 @@ const _ = useHeroAnimations(hero, sphere, toruses);
 const __ = useAboutAnimations(about, aboutText, sphere);
 const { selectedJob } = useExperienceAnimations(experience, experienceContent, sphere, toruses);
 const { selectedProject } = useProjectsAnimations(projects, projectsContent, sphere, cloneSpheres, sphereGroup);
-const { selectedContact, lg } = useContactAnimations(contact, contactContent, sphere, toruses);
+const { selectedContact, lg } = useContactAnimations(contact, contactContent, contactImage1, contactImage2, sphere, toruses);
 </script>

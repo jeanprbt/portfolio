@@ -26,7 +26,7 @@ export const useThreeScene = (canvas: Ref<HTMLCanvasElement | null>, introPlayed
     const md = computed(() => windowWidth.value >= 768);
     const lg = computed(() => windowWidth.value >= 1024);
     const largeScreenScamera = 3;
-    const mediumScreenCamera = 3.2;
+    const mediumScreenCamera = 3.5;
     const smallScreenCamera = 4;
 
     const initScene = () => {

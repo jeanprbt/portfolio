@@ -24,6 +24,7 @@ export const useProjectsAnimations = (
         period: string;
         links: any;
         info: string;
+        svgs: string[];
     };
     const selectedProject = ref<Project | null>(null);
 
@@ -88,8 +89,6 @@ export const useProjectsAnimations = (
             z: scale
         }, "<").to(sphereGroup.value!.rotation, {
             x: Math.PI / 8
-        }, "<").to(sphereGroup.value!.position, {
-            y: position
         }, "<").to(allSpheres.map((cs: any) => cs.material.uniforms.uDisplacementStrength), {
             value: 0.1,
         }, "<+=30%").to(projectsContent.value!, {
@@ -120,7 +119,7 @@ export const useProjectsAnimations = (
                 }
             })
             if (idx > 0) {
-                tl.to(allSpheres.toSpliced(idx - 1, 1).map((cs: any) => cs.material.uniforms.uOpacity), {
+                tl.to(allSpheres.map((cs: any) => cs.material.uniforms.uOpacity), {
                     value: 1,
                     ease: "power3.out",
                     duration: 0.1,
@@ -131,7 +130,7 @@ export const useProjectsAnimations = (
             tl.to(sphereGroup.value!.rotation, {
                 y: -(1 + 2 * idx) * Math.PI / 3,
                 ease: "none"
-            }).to(allSpheres.filter(s => s !== sphere).map((cs: any) => cs.material.uniforms.uOpacity), {
+            }).to(allSpheres.map((cs: any) => cs.material.uniforms.uOpacity), {
                 value: 0,
                 ease: "power3.in",
                 duration: 0.1,
@@ -156,7 +155,7 @@ export const useProjectsAnimations = (
                 end: 'bottom 50%',
                 scrub: true,
             }
-        }).to(allSpheres.toSpliced(2, 1).map((cs: any) => cs.material.uniforms.uOpacity), {
+        }).to(allSpheres.map((cs: any) => cs.material.uniforms.uOpacity), {
             value: 1,
             ease: "power3.out",
             duration: 0.1,

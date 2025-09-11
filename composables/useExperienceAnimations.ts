@@ -22,6 +22,7 @@ export const useExperienceAnimations = (
         period: string;
         city: string;
         info: string;
+        svgs: string[];
     };
     const selectedJob = ref<Job | null>(null);
 

@@ -89,7 +89,7 @@
         <div ref="projectsContent" :class="[
             'fixed h-svh md:h-screen w-full z-3',
             'top-0 left-1/2 transform -translate-x-1/2',
-            'flex flex-col justify-start gap-10 sm:gap-20 md:gap-15 lg:gap-5 xl:gap-0 opacity-0',
+            'flex flex-col justify-start gap-10 sm:gap-20 lg:gap-5 xl:gap-0 opacity-0',
         ]">
             <div class="h-1/3 md:h-5/12 xl:h-3/5 flex flex-col justify-between xl:flex-row xl:ml-10 mt-16 xl:mt-0">
                 <div :class="[
@@ -115,7 +115,7 @@
             <div
                 class="h-2/3 md:h-7/12 xl:h-2/5 flex flex-col lg:flex-row justify-start lg:justify-between items-center gap-2 lg:ml-10">
                 <div
-                    class="w-5/6 lg:w-[35%] xl:w-[38%] 2xl:w-2/5 mb-0 xl:mb-5 text-sm sm:text-base xl:text-lg 2xl:text-xl">
+                    class="w-5/6 lg:w-3/5 xl:w-4/5 2xl:w-9/10 mb-0 xl:mb-5 text-sm sm:text-base lg:text-lg xl:text-xl">
                     <p v-for="pair in [
                         { label: 'PERIOD', value: selectedProject ? selectedProject.period : '' },
                         { label: 'INFO', value: selectedProject ? selectedProject.info : ' '.repeat(380) }

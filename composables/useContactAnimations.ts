@@ -112,6 +112,14 @@ export const useContactAnimations = (
                 onEnter: () => selectedContact.value = contacts[key as keyof typeof contacts],
                 onLeaveBack: () => selectedContact.value = idx > 0 ? contacts[contactKeys[idx - 1] as keyof typeof contacts] : null,
             });
+            if (lg.value && idx === contactKeys.length - 1) {
+                ScrollTrigger.create({
+                    trigger: contact.value,
+                    start: () => `top+=${base + (idx + 1) * sectionHeight} top`,
+                    onEnter: () => selectedContact.value = null,
+                    onLeaveBack: () => selectedContact.value = contacts[contactKeys[idx] as keyof typeof contacts],
+                });
+            };
         });
     });
 

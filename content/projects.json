@@ -14,6 +14,30 @@
             "/svg/java.svg"
         ]
     },
+    "solarseg": {
+        "id": "solarseg",
+        "label": "SolarSeg",
+        "period": "10/2024 - 12/2024",
+        "links": [
+            {
+                "link": "https://github.com/jeanprbt/swiss-solar-panel-segmentation",
+                "svg": "/svg/github.svg"
+            },
+            {
+                "link": "https://huggingface.co/spaces/jeanprbt/swiss-solar-panels-segmentation",
+                "svg": "/svg/huggingface.svg"
+            },
+            {
+                "link": "/pdf/solarseg.pdf",
+                "svg": "/svg/arxiv.svg"
+            }
+        ],
+        "info": "With two frieds, we partnered with the Swiss Data Science Center to train CNNs to automatically segment photovoltaic installations from aerial images of Switzerland. We compared two architectures, namely U-Net and DeeplabV3+, trained over a corpus of nearly 700 images pre-processed for our needs, reaching a 0.81 F1-score on our best model. Feel free to try HF demo!",
+        "svgs": [
+            "/svg/python.svg",
+            "/svg/pytorch.svg"
+        ]
+    },
     "dataringz": {
         "id": "dataringz",
         "label": "DataRingz",
@@ -32,35 +56,12 @@
                 "svg": "/svg/safari.svg"
             }
         ],
-        "info": "With two friends, I built an interactive map visualizing Paris 2024 Olympics results, obtained through a Kaggle dataset. Starting from central Paris, users can explore venues, sports played there, the specific trials, corresponding athletes and their countries, switch to 'Globe Mode' to browse by country, or use the search bar to get insights about pretty much everything.",
+        "info": "Again, with two friends, I built an interactive map visualizing Paris 2024 Olympics results, obtained through a Kaggle dataset. Starting from central Paris, users can explore venues, sports played there, the specific trials, corresponding athletes and their countries, switch to 'Globe Mode' to browse by country, or use the search bar to get insights about pretty much everything.",
         "svgs": [
             "/svg/typescript.svg",
             "/svg/nuxt.svg",
             "/svg/kaggle.svg"
         ]
-    },
-    "solarseg": {
-        "id": "solarseg",
-        "label": "SolarSeg",
-        "period": "02/2025 - 05/2025",
-        "links": [
-            {
-                "link": "https://github.com/jeanprbt/swiss-solar-panel-segmentation",
-                "svg": "/svg/github.svg"
-            },
-            {
-                "link": "https://huggingface.co/spaces/jeanprbt/swiss-solar-panels-segmentation",
-                "svg": "/svg/huggingface.svg"
-            },
-            {
-                "link": "/pdf/solarseg.pdf",
-                "svg": "/svg/arxiv.svg"
-            }
-        ],
-        "info": "Again, with two frieds, we partnered with the Swiss Data Science Center to train CNNs to automatically segment photovoltaic installations from aerial images of Switzerland. We compared two architectures, namely U-Net and DeeplabV3+, trained over a corpus of nearly 700 images pre-processed for our needs, reaching a 0.81 F1-score on our best model. Feel free to try HF demo!",
-        "svgs": [
-            "/svg/python.svg",
-            "/svg/pytorch.svg"
-        ]
     }
 }
+

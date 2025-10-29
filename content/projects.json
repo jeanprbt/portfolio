@@ -6,13 +6,11 @@
         "links": [
             {
                 "link": "https://github.com/jeanprbt/javelo",
-                "svg": "/svg/github.svg"
+                "svg": "github"
             }
         ],
         "info": "Early in my studies, I built a cycling route planner for Switzerland in Java, using JavaFX for the GUI, to enhance my object-oriented programming skills. It enables users to select multiple points to connect, computes the optimal path with a custom cost function and the A* algorithm, and displays the elevation profile. You can even export it to GPX, download it from the repo!",
-        "svgs": [
-            "/svg/java.svg"
-        ]
+        "svgs": ["java"]
     },
     "solarseg": {
         "id": "solarseg",
@@ -21,22 +19,19 @@
         "links": [
             {
                 "link": "https://github.com/jeanprbt/swiss-solar-panel-segmentation",
-                "svg": "/svg/github.svg"
+                "svg": "github"
             },
             {
                 "link": "https://huggingface.co/spaces/jeanprbt/swiss-solar-panels-segmentation",
-                "svg": "/svg/huggingface.svg"
+                "svg": "huggingface"
             },
             {
                 "link": "/pdf/solarseg.pdf",
-                "svg": "/svg/arxiv.svg"
+                "svg": "arxiv"
             }
         ],
         "info": "With two frieds, we partnered with the Swiss Data Science Center to train CNNs to automatically segment photovoltaic installations from aerial images of Switzerland. We compared two architectures, namely U-Net and DeeplabV3+, trained over a corpus of nearly 700 images pre-processed for our needs, reaching a 0.81 F1-score on our best model. Feel free to try HF demo!",
-        "svgs": [
-            "/svg/python.svg",
-            "/svg/pytorch.svg"
-        ]
+        "svgs": ["python", "pytorch"]
     },
     "dataringz": {
         "id": "dataringz",
@@ -45,23 +40,19 @@
         "links": [
             {
                 "link": "https://github.com/jeanprbt/dataringz",
-                "svg": "/svg/github.svg"
+                "svg": "github"
             },
             {
                 "link": "https://www.youtube.com/watch?v=g1Jm5Clbjf8",
-                "svg": "/svg/youtube.svg"
+                "svg": "youtube"
             },
             {
                 "link": "https://dataringz.martinctl.dev",
-                "svg": "/svg/safari.svg"
+                "svg": "safari"
             }
         ],
         "info": "Again, with two friends, I built an interactive map visualizing Paris 2024 Olympics results, obtained through a Kaggle dataset. Starting from central Paris, users can explore venues, sports played there, the specific trials, corresponding athletes and their countries, switch to 'Globe Mode' to browse by country, or use the search bar to get insights about pretty much everything.",
-        "svgs": [
-            "/svg/typescript.svg",
-            "/svg/nuxt.svg",
-            "/svg/kaggle.svg"
-        ]
+        "svgs": ["typescript", "nuxt"]
     }
 }
 

@@ -108,14 +108,6 @@ export const useProjectsAnimations = (
                     start: `top+=${idx * sectionHeight} top`,
                     end: `top+=${(idx + 1) * sectionHeight - margin} top`,
                     scrub: true,
-                    snap: {
-                        snapTo: [0, 1],
-                        delay: 0,
-                        duration: {
-                            min: 0.3,
-                            max: 0.7
-                        },
-                    },
                 }
             })
             if (idx > 0) {

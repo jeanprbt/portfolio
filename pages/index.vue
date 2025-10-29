@@ -27,7 +27,7 @@
         <div class="w-full lg:w-3/5 flex flex-col gap-4 items-center justify-center">
             <p v-html="aboutHTML" ref="aboutText" :class="[
                 'w-4/5 font-text text-center',
-                'text-3xl sm:text-5xl md:text-6xl xl:text-7xl',
+                'text-3xl sm:text-5xl xl:text-6xl',
             ]">
             </p>
         </div>
@@ -45,8 +45,8 @@
                         class="w-full md:max-w-[85vw] lg:max-w-[75vw] xl:max-w-[65vw] 2xl:max-w-[60vw] transition-transform duration-300" />
                 </ClientOnly>
                 <div :class="[
-                    'w-5/6 lg:w-11/12 -mt-5 sm:-mt-10 md:-mt-20 lg:-mt-100 lg:mb-10 2xl:mb-15',
-                    'text-sm sm:text-base lg:text-lg xl:text-xl',
+                    'w-5/6 lg:w-11/12 -mt-5 sm:-mt-10 md:-mt-20 lg:-mt-100 lg:mb-5 xl:mb-10 2xl:mb-15',
+                    'text-sm sm:text-base xl:text-xl',
                 ]">
                     <p v-for="pair in [
                         { label: 'ROLE', value: selectedJob ? selectedJob.role : '' },
@@ -62,7 +62,7 @@
                                 :class="['font-text ml-2', { 'whitespace-break-spaces': !selectedJob }]">
                                 {{ pair.value }}
                                 <span v-if="pair.label === 'INFO' && selectedJob?.svgs" class="gap-2">
-                                    <img v-for="svg in selectedJob.svgs" :key="svg" :src="svg"
+                                    <img v-for="svg in selectedJob.svgs" :key="svg" :src="svgMap[svg]"
                                         class="mr-3 inline-block h-5 lg:h-6 w-5 lg:w-6 align-middle" alt="icon" />
                                 </span>
                             </span>
@@ -108,14 +108,14 @@
                     enter-to-class="opacity-100" leave-from-class="opacity-100"
                     leave-active-class="duration-100 ease-in" leave-to-class="opacity-0">
                     <img v-if="selectedProject" :src="`/img/${selectedProject.id}_${isDark ? 'dark' : 'light'}.png`"
-                        :class="['h-full object-contain transition-opacity duration-200', { 'opacity-0': !selectedProject }]"
+                        :class="['h-full object-contain transition-opacity duration-200 xl:mt-10', { 'opacity-0': !selectedProject }]"
                         alt="project overview" />
                 </transition>
             </div>
             <div
                 class="h-2/3 md:h-7/12 xl:h-2/5 flex flex-col lg:flex-row justify-start lg:justify-between items-center gap-2 lg:ml-10">
                 <div
-                    class="w-5/6 lg:w-3/5 xl:w-4/5 2xl:w-9/10 mb-0 xl:mb-5 text-sm sm:text-base lg:text-lg xl:text-xl">
+                    class="w-5/6 lg:w-3/5 xl:w-4/5 2xl:w-9/10 mb-0 xl:mb-5 text-sm sm:text-base xl:text-xl">
                     <p v-for="pair in [
                         { label: 'PERIOD', value: selectedProject ? selectedProject.period : '' },
                         { label: 'INFO', value: selectedProject ? selectedProject.info : ' '.repeat(380) }
@@ -128,7 +128,7 @@
                                 :class="['font-text ml-2', { 'whitespace-break-spaces': !selectedProject }]">
                                 {{ pair.value }}
                                  <span v-if="pair.label === 'INFO' && selectedProject?.svgs" class="gap-2">
-                                    <img v-for="svg in selectedProject.svgs" :key="svg" :src="svg"
+                                    <img v-for="svg in selectedProject.svgs" :key="svg" :src="svgMap[svg]"
                                         class="mr-3 inline-block h-5 lg:h-6 w-5 lg:w-6 align-middle" alt="icon" />
                                 </span>
                             </span>
@@ -146,9 +146,9 @@
                         <div
                             class="lg:w-2/3 flex justify-start lg:justify-around items-center gap-2 sm:gap-4 text-primary text-xl sm:text-2xl xl:text-4xl">
                             <a v-for="link in selectedProject.links" :href="link.link"
-                                class="flex items-center hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-1 lg:p-4 rounded-xl"
+                                class="flex items-center hover:opacity-50 transition-opacity duration-300 border-2 border-primary/20 p-1 lg:p-4 rounded-xl"
                                 target="_blank" rel="noopener noreferrer">
-                                <img :src="link.svg" class="h-5 lg:h-6 w-5 lg:w-6" alt="icon" />
+                                <img :src="svgMap[link.svg]" class="h-5 lg:h-6 w-5 lg:w-6" alt="icon" />
                             </a>
                         </div>
                     </div>
@@ -191,7 +191,7 @@
                         <div :key="selectedContact ? selectedContact!.link : ''">
                             <a :href="selectedContact?.link" target="_blank" rel="noopener noreferrer"
                                 :class="['flex items-center gap-2 hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-2 md:p-4 rounded-xl', { 'opacity-0': !selectedContact }]">
-                                <Icon :name="selectedContact ? selectedContact!.icon : 'mdi:github'" class="text-highlight text-2xl sm:text-3xl xl:text-4xl" />
+                                <img :src="selectedContact ? svgMap[selectedContact!.svg] : '~/assets/svg/github.sv'" class="text-highlight h-6 w-6 lg:mt-1" />
                                 <p>{{ selectedContact?.username || 0 }}</p>
                             </a>
                         </div>
@@ -215,6 +215,50 @@ import ab from '~/content/about.json';
 import jobs from '~/content/jobs.json';
 import projs from '~/content/projects.json';
 import contacts from '~/content/contact.json';
+
+import github from '~/assets/svg/github.svg';
+import huggingFace from '~/assets/svg/huggingface.svg';
+import arxiv from '~/assets/svg/arxiv.svg';
+import youtube from '~/assets/svg/youtube.svg';
+import safari from '~/assets/svg/safari.svg';
+import java from '~/assets/svg/java.svg';
+import python from '~/assets/svg/python.svg';
+import pytorch from '~/assets/svg/pytorch.svg';
+import typescript from '~/assets/svg/typescript.svg';
+import nuxt from '~/assets/svg/nuxt.svg';
+import ansible from '~/assets/svg/ansible.svg';
+import bash from '~/assets/svg/bash.svg';
+import pytest from '~/assets/svg/pytest.svg';
+import langchain from '~/assets/svg/langchain.svg';
+import sklearn from '~/assets/svg/sklearn.svg';
+import opensearch from '~/assets/svg/opensearch.svg';
+import kubernetes from '~/assets/svg/kubernetes.svg';
+import linkedin from '~/assets/svg/linkedin.svg';
+import email from '~/assets/svg/email.svg';
+import cv from '~/assets/svg/cv.svg';
+
+const svgMap: Record<string, string> = {
+    'github': github,
+    'huggingface': huggingFace,
+    'arxiv': arxiv,
+    'youtube': youtube,
+    'safari': safari,
+    'java': java,
+    'python': python,
+    'pytorch': pytorch,
+    'typescript': typescript,
+    'nuxt': nuxt,
+    'ansible': ansible,
+    'bash': bash,
+    'pytest': pytest,
+    'langchain': langchain,
+    'sklearn': sklearn,
+    'opensearch': opensearch,
+    'kubernetes': kubernetes,
+    'linkedin': linkedin,
+    'email': email,
+    'cv': cv
+}
 
 onMounted(() => window.scrollTo(0, 0));
 useHead({

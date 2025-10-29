@@ -6,7 +6,7 @@
         "period": "02/2024 - 05/2024",
         "city": "Stockholm",
         "info": "As a student assistant in the Ethical Hacking course, I was in charge of maintaining the team’s ad-hoc simulation tool to create virtual networks with security flaws to host a capture-the-flag. My work focused on improving and extending a test battery that monitored the status of multiple Ansible instances through pytest. In addition, I fixed various bugs in shell scripts.",
-        "svgs": ["/svg/python.svg", "/svg/ansible.svg", "/svg/bash.svg", "/svg/pytest.svg"]
+        "svgs": ["python", "ansible", "bash", "pytest"]
     },
     "finplify": {
         "id": "finplify",
@@ -15,7 +15,7 @@
         "period": "06/2024 - 08/2024",
         "city": "Geneva",
         "info": "My internship was split into two projects. First, I fine-tuned two small-scale LLMs to query a financial API from natural language inputs using sentence classification and named entity recognition, leveraging HuggingFace libraries. Then, I built a multi-agent pipeline with LangChain to process API responses and generate reports with visual charts, using cost-efficient LLMs.",
-        "svgs": ["/svg/python.svg", "/svg/langchain.svg"]
+        "svgs": ["python", "langchain"]
     },
     "epfl": {
         "id": "epfl",
@@ -24,7 +24,7 @@
         "period": "02/2025 - 05/2025",
         "city": "Lausanne",
         "info": "I joined the Lab of the Physics of Biological Systems to focus on data analysis and modeling for an ongoing thesis. The goal was to predict future worm behavior from their brain activity measurements, and to this extent I trained several ML models on time series forecasting, including linear/logistic regression, random forests, gradient boosting, and deep neural networks.",
-        "svgs": ["/svg/python.svg", "/svg/pytorch.svg", "/svg/sklearn.svg"]
+        "svgs": ["python", "pytorch", "sklearn"]
     },
     "cern": {
         "id": "cern",
@@ -33,6 +33,6 @@
         "period": "06/2025 - 08/2025",
         "city": "Geneva",
         "info": "During the summer, I integrated the Data & Analytics team to set up a benchmarking suite for the OpenSearch clusters they provide to various CERN teams and experiments for large-scale plain text search. This aimed at evaluating the impact of transitioning to Kubernetes as the underlying cluster management tool, and I measured no performance loss provided a suitable storage speed.",
-        "svgs": ["/svg/opensearch.svg", "/svg/kubernetes.svg", "/svg/bash.svg"]
+        "svgs": ["opensearch", "kubernetes", "bash"]
     }
 }

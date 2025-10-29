@@ -4,27 +4,27 @@
         "label": "GitHub",
         "link": "https://github.com/jeanprbt",
         "username": "jeanprbt",
-        "icon": "mdi:github"
+        "svg": "github"
     },
     "linkedin": {
         "id": "linkedin",
         "label": "LinkedIn",
         "link": "https://linkedin.com/in/jeanperbet",
         "username": "jeanperbet",
-        "icon": "mdi:linkedin"
+        "svg": "linkedin"
     },
     "email": {
         "id": "email",
         "label": "Email",
         "link": "mailto:jeanperbet@icloud.com",
         "username": "jeanperbet@icloud.com",
-        "icon": "mdi:email"
+        "svg": "email"
     },
     "resume": {
         "id": "resume",
         "label": "Resume",
         "link": "/pdf/resume.pdf",
         "username": "curriculum_vitae",
-        "icon": "mdi:file-document-check"
+        "svg": "cv"
     }
 }

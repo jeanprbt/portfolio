@@ -22,7 +22,7 @@ export const useContactAnimations = (
         label: string;
         link: string;
         username: string;
-        icon: string;
+        svg: string;
     };
     const selectedContact = ref<Contact | null>(null);
 

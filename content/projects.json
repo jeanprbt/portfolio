@@ -30,7 +30,7 @@
                 "svg": "arxiv"
             }
         ],
-        "info": "With two frieds, we partnered with the Swiss Data Science Center to train CNNs to automatically segment photovoltaic installations from aerial images of Switzerland. We compared two architectures, namely U-Net and DeeplabV3+, trained over a corpus of nearly 700 images pre-processed for our needs, reaching a 0.81 F1-score on our best model. Feel free to try HF demo!",
+        "info": "With two friends, we partnered with the Swiss Data Science Center to train CNNs to automatically segment photovoltaic installations from aerial images of Switzerland. We compared two architectures, namely U-Net and DeeplabV3+, trained over a corpus of nearly 700 images pre-processed for our needs, reaching a 0.81 F1-score on our best model. Feel free to try HF demo!",
         "svgs": ["python", "pytorch"]
     },
     "dataringz": {

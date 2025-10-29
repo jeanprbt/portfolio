@@ -191,7 +191,7 @@
                         <div :key="selectedContact ? selectedContact!.link : ''">
                             <a :href="selectedContact?.link" target="_blank" rel="noopener noreferrer"
                                 :class="['flex items-center gap-2 hover:opacity-50 transition-opacity duration-300 border-2 border-highlight p-2 md:p-4 rounded-xl', { 'opacity-0': !selectedContact }]">
-                                <img :src="selectedContact ? svgMap[selectedContact!.svg] : '~/assets/svg/github.sv'" class="text-highlight h-6 w-6 lg:mt-1" />
+                                <img v-if="selectedContact" :src="svgMap[selectedContact!.svg]" class="text-highlight h-6 w-6 lg:mt-1" />
                                 <p>{{ selectedContact?.username || 0 }}</p>
                             </a>
                         </div>
@@ -216,48 +216,46 @@ import jobs from '~/content/jobs.json';
 import projs from '~/content/projects.json';
 import contacts from '~/content/contact.json';
 
-import github from '~/assets/svg/github.svg';
-import huggingFace from '~/assets/svg/huggingface.svg';
-import arxiv from '~/assets/svg/arxiv.svg';
-import youtube from '~/assets/svg/youtube.svg';
-import safari from '~/assets/svg/safari.svg';
-import java from '~/assets/svg/java.svg';
 import python from '~/assets/svg/python.svg';
-import pytorch from '~/assets/svg/pytorch.svg';
-import typescript from '~/assets/svg/typescript.svg';
-import nuxt from '~/assets/svg/nuxt.svg';
-import ansible from '~/assets/svg/ansible.svg';
-import bash from '~/assets/svg/bash.svg';
-import pytest from '~/assets/svg/pytest.svg';
 import langchain from '~/assets/svg/langchain.svg';
+import huggingFace from '~/assets/svg/huggingface.svg';
+import pytorch from '~/assets/svg/pytorch.svg';
 import sklearn from '~/assets/svg/sklearn.svg';
 import opensearch from '~/assets/svg/opensearch.svg';
 import kubernetes from '~/assets/svg/kubernetes.svg';
+import bash from '~/assets/svg/bash.svg';
+import mistral from '~/assets/svg/mistral.svg';
+import java from '~/assets/svg/java.svg';
+import github from '~/assets/svg/github.svg';
+import arxiv from '~/assets/svg/arxiv.svg';
+import typescript from '~/assets/svg/typescript.svg';
+import nuxt from '~/assets/svg/nuxt.svg';
+import youtube from '~/assets/svg/youtube.svg';
+import safari from '~/assets/svg/safari.svg';
 import linkedin from '~/assets/svg/linkedin.svg';
 import email from '~/assets/svg/email.svg';
 import cv from '~/assets/svg/cv.svg';
 
 const svgMap: Record<string, string> = {
-    'github': github,
-    'huggingface': huggingFace,
-    'arxiv': arxiv,
-    'youtube': youtube,
-    'safari': safari,
-    'java': java,
     'python': python,
-    'pytorch': pytorch,
-    'typescript': typescript,
-    'nuxt': nuxt,
-    'ansible': ansible,
-    'bash': bash,
-    'pytest': pytest,
     'langchain': langchain,
+    'huggingface': huggingFace,
+    'pytorch': pytorch,
     'sklearn': sklearn,
     'opensearch': opensearch,
     'kubernetes': kubernetes,
+    'bash': bash,
+    'mistral': mistral,
+    'java': java,
+    'github': github,
+    'arxiv': arxiv,
+    'typescript': typescript,
+    'nuxt': nuxt,
+    'youtube': youtube,
+    'safari': safari,
     'linkedin': linkedin,
     'email': email,
-    'cv': cv
+    'cv': cv,
 }
 
 onMounted(() => window.scrollTo(0, 0));

@@ -61,7 +61,7 @@ export const useContactAnimations = (
             onLeaveBack: () => sphere.value!.material.uniforms.uTorusTransition.value = 3
         });
 
-        // SPHERE FADE OUT
+        // SPHERE TRANSLATION
         let tl = gsap.timeline({
             scrollTrigger: {
                 trigger: contact.value,
@@ -69,37 +69,27 @@ export const useContactAnimations = (
                 end: 'top+=30% top',
                 scrub: true
             }
-        }).to(sphere.value!.scale, {
-            x: 0,
-            y: 0,
-            z: 0
-        });
+        })
 
-        if (lg) {
-            tl.to(contactContent.value!, {
+        if (lg.value) {
+            tl.to(sphere.value!.position, {
+                x: 3,
+                y: 0,
+                z: -1.5
+            }).to(contactContent.value!, {
                 opacity: 1,
                 ease: "power3.out"
             }, "<+=10%");
         } else {
-            tl.to(contactContent.value!, {
+            tl.to(sphere.value!.position, {
+                x: 0,
+                y: -1.5,
+                z: -2
+            }).to(contactContent.value!, {
                 opacity: 1,
-                ease: "power3.out",
-            });
+                ease: "power3.out"
+            }, "<+=10%");
         };
-
-        // IMAGE REVEAL
-        ScrollTrigger.create({
-            trigger: contact.value,
-            start: 'top+=20% top',
-            onEnter: () => {
-                if (contactImage1.value) contactImage1.value!.style.opacity = 1;
-                if (contactImage2.value) contactImage2.value!.style.opacity = 1;
-            },
-            onLeaveBack: () => {
-                if (contactImage1.value) contactImage1.value!.style.opacity = 0;
-                if (contactImage2.value) contactImage2.value!.style.opacity = 0;
-            }
-        });
 
         // CONTACTS
         const base = window.innerHeight;

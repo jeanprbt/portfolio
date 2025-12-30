@@ -163,15 +163,9 @@
             'flex flex-col lg:flex-row px-10 gap-20 lg:gap-5 xl:gap-20 2xl:gap-40',
             selectedContact ? 'z-4' : 'z-2'
         ]">
-            <ClientOnly>
-                <img v-if="lg" ref="contactImage1" src="~/assets/me.png" alt="profile picture" :class="[
-                    'w-full rounded-xl my-20 object-cover overflow-hidden shadow-9xl dark:border-[0.15px] border-white',
-                    'opacity-0 transition-opacity duration-300'
-                ]" />
-            </ClientOnly>
-            <div class="flex flex-col gap-15 sm:gap-10 lg:gap-5 items-center lg:items-end">
+            <div class="flex flex-col gap-15 sm:gap-10 lg:gap-5 items-center lg:items-start">
                 <div :class="[
-                    'font-primary text-center lg:text-right',
+                    'font-primary text-center lg:text-left',
                     'text-[8vw] lg:text-[20vh] lg:leading-none',
                     'grid grid-cols-2 grid-rows-2 lg:flex lg:flex-col gap-5 md:gap-2 lg:gap-0',
                     'mt-30 sm:mt-20 md:mt-10 lg:mt-10 xl:mt-0'
@@ -198,13 +192,6 @@
                     </transition>
                 </div>
             </div>
-            <ClientOnly>
-                <img v-if="!lg" ref="contactImage2" src="~/assets/me.png" alt="profile picture" :class="[
-                    'h-1/4 sm:h-1/3 mb:h-1/2 sm:mx-10 md:mx-20 sm:mb-20 md:mb-10',
-                    'opacity-0 transition-opacity duration-300',
-                    'rounded-xl object-cover overflow-hidden shadow-9xl dark:border-[0.15px] border-white object-[15%_35%]'
-                ]" />
-            </ClientOnly>
         </div>
     </div>
     <Footer />

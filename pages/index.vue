@@ -273,6 +273,11 @@ const contactImage2 = ref(null);
 const introPlayed = ref(false);
 const aboutHTML = computed(() =>
     ab.text
+        .replace(/\[(\w+)\]/g, (match, p1) => 
+            svgMap[p1.toLowerCase()] 
+                ? `<img src="${svgMap[p1.toLowerCase()]}" class="inline-block h-[0.8em] w-auto pb-[0.1em]" alt="${p1}" />` 
+                : match
+        )
         .replace(/(:\))/g, '<span class="text-highlight">:)</span>')
         .replace(/([.,:;!?])(?=\s|$)/g, '<span class="text-highlight">$1</span>')
 );

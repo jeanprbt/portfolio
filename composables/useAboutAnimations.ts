@@ -30,7 +30,7 @@ export const useAboutAnimations = (about: Ref, aboutText: Ref, sphere: ShallowRe
                 end: 'bottom 60%',
                 scrub: true
             }
-        }).from(split.words, {
+        }).from(aboutText.value.children, {
             opacity: 0.1,
             stagger: 3,
             duration: 2,

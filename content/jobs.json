@@ -29,10 +29,10 @@
     "mistral": {
         "id": "mistral",
         "label": "Mistral",
-        "role": "Applied AI Engineer Intern",
-        "period": "02/2026 - 07/2026",
+        "role": "Applied AI Engineer",
+        "period": "02/2026 - ?",
         "city": "Paris",
-        "info": "For my end-of-studies internship, I joined the Applied AI Engineering team at Mistral, where I get to work on building and deploying advanced generative AI solutions for real-world, complex customer projects, ensuring solutions deliver measurable value. I also collaborate with the science team, using feedback from customers to help refine and improve both the products and the AI models themselves.",
+        "info": "I joined the Applied AI Engineering team at Mistral, where I get to work on building and deploying advanced generative AI solutions for real-world, complex customer projects, ensuring solutions deliver measurable value. I also collaborate with the science team, using feedback from customers to help refine and improve both the products and the AI models themselves.",
         "svgs": ["python", "mistral"]
     }
 }
